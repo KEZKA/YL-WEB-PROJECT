@@ -1,0 +1,195 @@
+# Создано https://www.gitignore.io/api/python,pycharm+all
+# Изменить на https://www.gitignore.io/?templates=python,pycharm+all
+
+# ## PyCharm + все ###
+# Охватывает интегрированные среды разработки JetBrains: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion, Android Studio и WebStorm
+# Ссылка: https://intellij-support.jetbrains.com/hc/en-us/articles/206544839
+
+# Пользовательские вещи
+.idea / ** / workspace.xml
+.idea / ** / tasks.xml
+.idea / ** / use.statistics.xml
+.idea / ** / словари
+.idea / ** / полка
+
+# Сгенерированные файлы
+.idea / ** / contentModel.xml
+
+# Чувствительные или высокоточные файлы
+.idea / ** / dataSources /
+.idea / ** / dataSources.ids
+.idea / ** / dataSources.local.xml
+.idea / ** / sqlDataSources.xml
+.idea / ** / dynamic.xml
+.idea / ** / uiDesigner.xml
+.idea / ** / dbnavigator.xml
+
+# Gradle
+.idea / ** / gradle.xml
+.idea / ** / библиотеки
+
+# Gradle и Maven с автоимпортом
+# При использовании Gradle или Maven с автоимпортом вы должны исключить файлы модулей,
+# так как они будут воссозданы и могут вызвать отток. Раскомментируйте, если используете
+# авто-импорт.
+# .idea / modules.xml
+# .idea / *. iml
+# .idea / modules
+# * .iml
+# * .ipr
+
+# CMake
+cmake-build- * /
+
+# Mongo Explorer плагин
+.idea / ** / mongoSettings.xml
+
+# Файловый формат проекта
+* .iws
+
+# IntelliJ
+вне /
+
+# mpeltonen / sbt-idea плагин
+.idea_modules /
+
+# JIRA плагин
+Atlassian-ида-plugin.xml
+
+# Cursive Clojure плагин
+.idea / replstate.xml
+
+# Crashlytics плагин (для Android Studio и IntelliJ)
+com_crashlytics_export_strings.xml
+crashlytics.properties
+crashlytics-build.properties
+fabric.properties
+
+# Редактор Rest Client
+.idea / httpRequests
+
+# Android studio 3.1+ сериализованный кеш файл
+.idea / кэша / build_file_checksums.ser
+
+# ## PyCharm + все патчи ###
+# Игнорирует всю папку .idea и все файлы .iml
+# См. Https://github.com/joeblau/gitignore.io/issues/186 и https://github.com/joeblau/gitignore.io/issues/360
+
+.idea /
+
+# Причина: https://github.com/joeblau/gitignore.io/issues/186#issuecomment-249601023
+
+* .iml
+modules.xml
+.idea / misc.xml
+* .ipr
+
+# Sonarlint плагин
+.idea / sonarlint
+
+# ## Python ###
+# Байт-скомпилированные / оптимизированные / DLL файлы
+__pycache__ /
+* .py [ cod ]
+* $ py.class
+
+# C расширения
+* .so
+
+# Распространение / упаковка
+.Python
+построить /
+развивающиеся яйца /
+dist /
+загрузки /
+яйца /
+.eggs /
+lib /
+lib64 /
+части /
+sdist /
+вар /
+колеса /
+метаданные pip-wheel /
+поделиться / python-wheel /
+* .egg-info /
+.installed.cfg
+* .egg
+МАНИФЕСТ
+
+# PyInstaller
+#   Обычно эти файлы пишутся скриптом Python из шаблона
+#   до того, как PyInstaller создаст исполняемый файл, чтобы добавить в него информацию о дате / другой информации.
+* .manifest
+* .spec
+
+# Установщик логов
+пип-log.txt
+пип-удаления-это-directory.txt
+
+# Юнит-тесты / отчеты о покрытии
+htmlcov /
+.tox /
+.nox /
+.coverage
+.coverage. *
+.cache
+nosetests.xml
+coverage.xml
+* .cover
+Гипотеза /
+.pytest_cache /
+
+# Переводы
+* .mo
+* .pot
+
+# Scrapy вещи:
+.scrapy
+
+# Сфинкс документация
+документы / _build /
+
+# PyBuilder
+цель /
+
+# pyenv
+.python-версия
+
+# pipenv
+#    Согласно pypa / pipenv # 598, рекомендуется включать Pipfile.lock в систему контроля версий.
+#    Однако, в случае сотрудничества, если есть зависимости от платформы или зависимости
+# не    имея кроссплатформенной поддержки, pipenv может устанавливать зависимости, которые не работают, или нет
+#    установить все необходимые зависимости.
+# Pipfile.lock
+
+# файл расписания ритма сельдерея
+celerybeat-график
+
+# SageMath проанализировал файлы
+* .sage.py
+
+# Настройки проекта Spyder
+.spyderproject
+.spyproject
+
+# Настройки проекта веревки
+.ropeproject
+
+# Mr Developer
+.mr.developer.cfg
+.project
+.pydevproject
+
+# документация mkdocs
+/ сайт
+
+# mypy
+.mypy_cache /
+.dmypy.json
+dmypy.json
+
+# Проверка типа Pyre
+.pyre /
+
+# Конец https://www.gitignore.io/api/python,pycharm
