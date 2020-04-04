@@ -1,10 +1,50 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>{{ title }}</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    {% block head %}{% endblock %}
 </head>
-<body>
 
+<body>
+    <nav class="navbar navbar-light bg-light navbar-expand-sm">
+        <h1 class="navbar-brand" href="#">SANANSAATTAJA</h1>
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href='/'>Главная</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href='/news'>Добавить новость</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href='/news/public'>Публичные новости</a>
+                </li>
+            </ul>
+            <ul class="navbar-nav ml-auto">
+                {% if current_user.is_authenticated %}
+                <li class="navbar-text">{{ current_user.name }}</li>
+                <li class="nav-item">
+                    <a class="nav-link" href='/logout'>Выход</a>
+                </li>
+                {% else %}
+                <li class="nav-item">
+                    <a class="nav-link" href='/login'>Вход</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href='/register'>Регистрация</a>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+
+    <h4 class="p-3 text-muted">Пишите, сохраняйте, делитесь</h4>
+
+    <main class="container-fluid">{% block content %}{% endblock %}</div>
 </body>
+
 </html>
