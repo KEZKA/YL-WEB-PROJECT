@@ -10,14 +10,12 @@ class User(SqlAlchemyBase):
     __tablename__ = 'users'
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    user_id = Column(String, index=True, unique=True, nullable=True)
     surname = Column(String, nullable=True)
     name = Column(String, nullable=True)
     age = Column(Integer, nullable=True)
     email = Column(String, index=True, unique=True, nullable=True)
     hashed_password = Column(String, nullable=True)
     modified_date = Column(DateTime, default=datetime.datetime.now)
-    about = Column(String, nullable=True)
 
     def __repr__(self):
         return f'<User> {self.id} {self.surname} {self.name}'
