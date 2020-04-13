@@ -13,13 +13,6 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = 'sanansaattaja_secret_key'
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=365)
 
-#api = Api(app)
-#api.add_resource(news_resources.NewsListResource, '/api/news')
-#api.add_resource(news_resources.NewsResource, '/api/news/<int:news_id>')
-#api.add_resource(users_resources.UserListResource, '/api/users')
-#api.add_resource(users_resources.UserResource, '/api/users/<int:user_id>')
-
-
 login_manager = LoginManager()
 login_manager.init_app(app)
 
