@@ -1,13 +1,12 @@
 import os
-from flask import Flask, render_template, redirect, url_for, make_response, jsonify
-from flask_login import LoginManager, login_user, current_user, logout_user, login_required
-from flask_restful import Api
 from datetime import timedelta
-from sanansaattaja.data import db_session
-from sanansaattaja.data.models.user import User
-from sanansaattaja.website.forms import LoginForm, RegisterForm
-from sanansaattaja import users_resources
 
+from flask import Flask, render_template, redirect, url_for
+from flask_login import LoginManager, login_user, logout_user, login_required
+
+from sanansaattaja.db.data import db_session
+from sanansaattaja.db.data.models.user import User
+from sanansaattaja.website.forms import LoginForm, RegisterForm
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'sanansaattaja_secret_key'
@@ -25,7 +24,6 @@ def load_user(user_id):
 
 @app.route('/')
 def index():
-    db = db_session.create_session()
     return render_template('base.html')
 
 
@@ -75,6 +73,10 @@ def reqister():
         db.commit()
         return redirect('/login')
     return render_template('register.html', title='Registration', form=form)
+
+
+db_session.global_init('db/sanansaattaja.db')
+
 
 def run():
     port = int(os.environ.get('PORT', 8080))
