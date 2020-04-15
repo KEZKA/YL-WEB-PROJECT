@@ -17,7 +17,6 @@ def global_init(db_file):
         raise Exception('Необходимо указать файл базы данных.')
 
     conn_str = f'sqlite:///{db_file.strip()}?check_same_thread=False'
-    # conn_str = 'postgresql://postgres:postgres@shgk.me:5434/mars_explorer'
     print(f'Подключение к базе данных по адресу {conn_str}')
 
     engine = sqlalchemy.create_engine(conn_str, echo=False)
