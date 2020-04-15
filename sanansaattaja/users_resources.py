@@ -1,7 +1,7 @@
 from flask import jsonify
 from flask_restful import reqparse, abort, Resource
-from sanansaattaja.data import db_session
-from sanansaattaja.data.models.user import User
+from sanansaattaja.db.data import db_session
+from sanansaattaja.db.data.models import User
 
 
 def abort_if_user_not_found(user_id):

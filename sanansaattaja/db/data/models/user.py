@@ -16,9 +16,10 @@ class User(SqlAlchemyBase):
     email = Column(String, index=True, unique=True, nullable=True)
     hashed_password = Column(String, nullable=True)
     modified_date = Column(DateTime, default=datetime.datetime.now)
+
     posts = orm.relation('Post', back_populates='author')
     messages = orm.relation('Message', back_populates='author')
-    received_messages = orm.relation('Message', back_populates='addressee')
+    # received_messages = orm.relation('Message', back_populates='addressee')
 
     def __repr__(self):
         return f'<User> {self.id} {self.surname} {self.name}'
