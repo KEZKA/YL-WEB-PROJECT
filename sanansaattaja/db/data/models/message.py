@@ -13,8 +13,8 @@ class Message(SqlAlchemyBase):
     addressee_id = Column(Integer, ForeignKey('users.id'))
     modified_date = Column(DateTime, default=datetime.datetime.now)
     text = Column(Text, nullable=False)
-    author = orm.relation('User', foreign_keys=[author_id], backref='User')
-    addressee = orm.relation('User', foreign_keys=[addressee_id], backref='User')
+    author = orm.relation('User', foreign_keys=[author_id])
+    addressee = orm.relation('User', foreign_keys=[addressee_id])
 
     def __repr__(self):
         return f'<Message> {self.id} {self.author_id} {self.addressee_id}'

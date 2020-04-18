@@ -2,6 +2,7 @@ import datetime
 
 from sqlalchemy import Column, Integer, String, DateTime, orm
 from werkzeug.security import generate_password_hash, check_password_hash
+from sanansaattaja.db.data.models.message import Message
 
 from ..db_session import SqlAlchemyBase
 
@@ -18,7 +19,7 @@ class User(SqlAlchemyBase):
     modified_date = Column(DateTime, default=datetime.datetime.now)
 
     posts = orm.relation('Post', back_populates='author')
-    messages = orm.relation('Message', back_populates='author')
+    messages = orm.relation('Message', back_populates='author', foreign_keys=[Message.author_id])
     # received_messages = orm.relation('Message', back_populates='addressee')
 
     def __repr__(self):
