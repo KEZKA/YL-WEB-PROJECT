@@ -75,7 +75,7 @@ def reqister():
     return render_template('register.html', title='Registration', form=form)
 
 
-db_session.global_init('db/sanansaattaja.db')
+db_session.global_init('sanansaattaja/db/sanansaattaja.db')
 
 
 def run():
