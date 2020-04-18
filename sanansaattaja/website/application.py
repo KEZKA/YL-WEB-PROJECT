@@ -26,13 +26,13 @@ def load_user(user_id):
 def index():
     return render_template('base.html')
 
-@app.route('/addpost')
-def index():
-    return render_template('post.html')
-
-@app.route('/addmessage')
-def index():
-    return render_template('message.html')
+#@app.route('/addpost')
+#def index():
+#    return render_template('post.html')
+#
+#@app.route('/addmessage')
+#def index():
+#    return render_template('message.html')
 
 
 @app.route('/login', methods=['GET', 'POST'])
