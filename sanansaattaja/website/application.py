@@ -3,8 +3,8 @@ from datetime import timedelta
 from flask import Flask, render_template, redirect, url_for
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 
-from sanansaattaja.db.data.models import Post, Message
 from sanansaattaja.db.data import db_session
+from sanansaattaja.db.data.models import Post, Message
 from sanansaattaja.db.data.models.user import User
 from sanansaattaja.website.forms import LoginForm, RegisterForm
 from sanansaattaja.website.forms.message_form import MessageForm
@@ -26,7 +26,9 @@ def load_user(user_id):
 
 @app.route('/')
 def index():
-    return render_template('base.html')
+    db = db_session.create_session()
+    posts = db.query(Post).filter(Post.is_public == True).all()
+    return render_template('main.html', posts=posts)
 
 
 @app.route('/add_post', methods=['GET', 'POST'])
@@ -59,7 +61,8 @@ def add_message():
             message.addressee_id = addressee.id
             addressee.received_messages.append(message)
         else:
-            return render_template('message.html', title='Отправка сообщение', form=form, message="Такого пользователя не существует")
+            return render_template('message.html', title='Отправка сообщение', form=form,
+                                   message="Такого пользователя не существует")
         current_user.messages.append(message)
         session.merge(current_user)
         session.commit()
