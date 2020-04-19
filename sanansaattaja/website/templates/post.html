@@ -25,7 +25,16 @@
     {% endfor %}
     </p>
     <p>{{ form.is_public() }} {{ form.is_public.label }}</p>
+     {% for error in form.is_public.errors %}
+    <p class="alert alert-danger" role="alert">
+        {{ error }}
+    </p>
+    {% endfor %}
     <p>{{ form.submit(type="submit", class="btn btn-primary") }}</p>
-    {{message}}
+     {% for error in form.submit.errors %}
+    <p class="alert alert-danger" role="alert">
+        {{ error }}
+    </p>
+    {% endfor %}
 </form>
 {% endblock %}

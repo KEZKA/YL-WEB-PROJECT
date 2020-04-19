@@ -31,7 +31,6 @@ def index():
 
 @app.route('/add_post', methods=['GET', 'POST'])
 @login_required
-
 def add_post():
     form = PostForm()
     if form.validate_on_submit():
@@ -49,7 +48,6 @@ def add_post():
 
 @app.route('/add_message', methods=['GET', 'POST'])
 @login_required
-
 def add_message():
     form = MessageForm()
     if form.validate_on_submit():
