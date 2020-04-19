@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{% for post in posts %}
+
+<div class="jumbotron jumbotron-fluid">
+    <div class="container">
+        <h1 class="display-4 text-info">{{post.topic}}</h1>
+        <h7 class="font-weight-light text-info text-right">{{post.author.name}} {{post.author.surname}}, {{post.modified_date}}</h7>
+        <p class="lead">{{post.text}}</p>
+    </div>
+</div>
+{% endfor %}
+
+{% endblock %}
