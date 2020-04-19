@@ -1,10 +1,32 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends "base.html" %}
 
-</body>
-</html>
+{% block content %}
+<h1>Отправить сообщение</h1>
+<form action="" method="post">
+        {{ form.hidden_tag() }}
+    {{ form.csrf_token }}
+    {% if message %}
+    <div class="alert alert-danger">{{ message }}</div>
+    {% endif %}
+    <p>
+        {{ form.addressee.label }}<br>
+        {{ form.addressee(class="form-control") }}<br>
+        {% for error in form.addressee.errors %}
+    <p class="alert alert-danger" role="alert">
+        {{ error }}
+    </p>
+    {% endfor %}
+    </p>
+    <p>
+        {{ form.text.label }}<br>
+        {{ form.text(class="form-control") }}<br>
+        {% for error in form.text.errors %}
+    <p class="alert alert-danger" role="alert">
+        {{ error }}
+    </p>
+    {% endfor %}
+    </p>
+    <p>{{ form.submit(type="submit", class="btn btn-primary") }}</p>
+    {{message}}
+</form>
+{% endblock %}

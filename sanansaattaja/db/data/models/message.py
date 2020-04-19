@@ -2,7 +2,7 @@ import datetime
 
 from sqlalchemy import Column, Integer, DateTime, ForeignKey, orm, Text
 
-from ..db_session import SqlAlchemyBase
+from sanansaattaja.db.data.db_session import SqlAlchemyBase
 
 
 class Message(SqlAlchemyBase):

@@ -10,44 +10,47 @@
 </head>
 
 <body>
-    <nav class="navbar navbar-light bg-light navbar-expand-sm">
-        <h1 class="navbar-brand" href="#">SANANSAATTAJA</h1>
+<nav class="navbar navbar-dark navbar-expand-sm" style="background-color: #1240AB;">
+    <h1 class="navbar-brand" href="#" >SANANSAATTAJA</h1>
         <div class="collapse navbar-collapse">
-            <ul class="navbar-nav mr-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href='/'>Общее</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href='/news'>+пост</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href='/news/public'>Личное</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href='/news/public'>+письмо</a>
-                </li>
-            </ul>
-            <ul class="navbar-nav ml-auto">
-                {% if current_user.is_authenticated %}
-                <li class="navbar-text">{{ current_user.name }}</li>
-                <li class="nav-item">
-                    <a class="nav-link" href='/logout'>Выход</a>
-                </li>
-                {% else %}
-                <li class="nav-item">
-                    <a class="nav-link" href='/login'>Вход</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href='/register'>Регистрация</a>
-                </li>
-                {% endif %}
-            </ul>
-        </div>
-    </nav>
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+                <a class="nav-link" href='/'>Общее</a>
+            </li>
+            {% if current_user.is_authenticated %}
+            <li class="nav-item">
+                <a class="nav-link" href='/news/public'>Личное</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href='/news/add_message'>+письмо</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href='/add_post'>+пост</a>
+            </li>
+            {% endif %}
 
-    <h4 class="p-3 text-muted">Пишите, сохраняйте, делитесь</h4>
+        </ul>
+        <ul class="navbar-nav ml-auto">
+            {% if current_user.is_authenticated %}
+            <li class="navbar-text">{{ current_user.name }}</li>
+            <li class="nav-item">
+                <a class="nav-link" href='/logout'>Выход</a>
+            </li>
+            {% else %}
+            <li class="nav-item">
+                <a class="nav-link" href='/login'>Вход</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href='/register'>Регистрация</a>
+            </li>
+            {% endif %}
+        </ul>
+    </div>
+</nav>
 
-    <main class="container-fluid">{% block content %}{% endblock %}</div>
+<h4 class="p-3 text-muted">Пишите, сохраняйте, делитесь</h4>
+
+<main class="container-fluid">{% block content %}{% endblock %}</div>
 </body>
 
 </html>
