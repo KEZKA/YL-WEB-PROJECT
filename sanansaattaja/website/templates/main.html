@@ -3,11 +3,12 @@
 {% block content %}
 {% for post in posts %}
 
-<div class="jumbotron jumbotron-fluid">
+<div class="jumbotron jumbotron-fluid" style="margin: 0px 100px 32px 100px;">
     <div class="container">
-        <h1 class="display-4 text-info">{{post.topic}}</h1>
-        <h7 class="font-weight-light text-info text-right">{{post.author.name}} {{post.author.surname}}, {{post.modified_date}}</h7>
-        <p class="lead">{{post.text}}</p>
+        <p align="right" class="font-weight-light text-info ">{{post.author.name}} {{post.author.surname}},
+            {{post.modified_date}} <br> {{post.author.email}}</p>
+        <h1 class="display-4 text-uppercase ">{{post.topic}}</h1>
+        <p class="lead"> {{post.text}}</p>
     </div>
 </div>
 {% endfor %}
