@@ -1,1 +1,1 @@
-# web: python -m sanansaattaja
+web: python main.py
