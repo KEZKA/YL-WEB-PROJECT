@@ -51,10 +51,7 @@ def add_post():
 @login_required
 def messages():
     db = db_session.create_session()
-    messages = db.query(Message).all()
-    print(messages)
     messages = db.query(Message).filter((Message.author_id == current_user.id) | (Message.addressee_id == current_user.id)).all()
-    print(messages)
     return render_template('private.html', messages=messages)
 
 
@@ -74,11 +71,11 @@ def add_message():
             session.commit()
 
         else:
-            return render_template('message.html', title='Отправка сообщение', form=form,
-                                   message="Такого пользователя не существует")
+            return render_template('message.html', title='Sending message', form=form,
+                                   message="There is no such user")
 
         return redirect('/private')
-    return render_template('message.html', title='Отправка сообщения', form=form)
+    return render_template('message.html', title='Sending message', form=form)
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -88,12 +85,12 @@ def login():
         db = db_session.create_session()
         user = db.query(User).filter(User.email == login_form.email.data).first()
         if not user:
-            return render_template('login.html', form=login_form, message="Такого пользователя не существует")
+            return render_template('login.html', form=login_form, message="There is no such user")
         if user.check_password(login_form.password.data):
             login_user(user, remember=login_form.remember_me.data)
             return redirect(url_for('index'))
         else:
-            return render_template('login.html', form=login_form, message="Неверный пароль")
+            return render_template('login.html', form=login_form, message="Wrong password")
     else:
         return render_template('login.html', form=login_form)
 
@@ -110,14 +107,14 @@ def reqister():
     form = RegisterForm()
     if form.validate_on_submit():
         if form.password.data != form.password_again.data:
-            return render_template('register.html', title='Регистрация',
+            return render_template('register.html', title='Registration',
                                    form=form,
-                                   message="Пароли не совпадают")
+                                   message="Passwords are different")
         db = db_session.create_session()
         if db.query(User).filter(User.email == form.email.data).first():
-            return render_template('register.html', title='Регистрация',
+            return render_template('register.html', title='Registration',
                                    form=form,
-                                   message="Почта уже используется")
+                                   message="This email is already used")
         user = User(
             name=form.name.data,
             email=form.email.data
@@ -126,7 +123,7 @@ def reqister():
         db.add(user)
         db.commit()
         return redirect('/login')
-    return render_template('register.html', title='Регистрация', form=form)
+    return render_template('register.html', title='Registration', form=form)
 
 
 db_session.global_init('sanansaattaja/db/sanansaattaja.db')
