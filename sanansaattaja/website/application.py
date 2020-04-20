@@ -47,6 +47,16 @@ def add_post():
         return redirect('/')
     return render_template('post.html', title='Публикация поста', form=form)
 
+@app.route('/private')
+@login_required
+def messages():
+    db = db_session.create_session()
+    messages = db.query(Message).all()
+    print(messages)
+    messages = db.query(Message).filter((Message.author_id == current_user.id) | (Message.addressee_id == current_user.id)).all()
+    print(messages)
+    return render_template('private.html', messages=messages)
+
 
 @app.route('/add_message', methods=['GET', 'POST'])
 @login_required
@@ -54,20 +64,21 @@ def add_message():
     form = MessageForm()
     if form.validate_on_submit():
         session = db_session.create_session()
-        message = Message()
-        message.text = form.text.data
-        addressee = session.query(User).filter(User.email == message.addressee.data)
+        addressee = session.query(User).filter(User.email == form.addressee.data).first()
         if addressee:
+            message = Message()
+            message.text = form.text.data
+            message.author_id = current_user.id
             message.addressee_id = addressee.id
-            addressee.received_messages.append(message)
+            session.add(message)
+            session.commit()
+
         else:
             return render_template('message.html', title='Отправка сообщение', form=form,
                                    message="Такого пользователя не существует")
-        current_user.messages.append(message)
-        session.merge(current_user)
-        session.commit()
-        return redirect('/')
-    return render_template('message.html', title='Публикация поста', form=form)
+
+        return redirect('/private')
+    return render_template('message.html', title='Отправка сообщения', form=form)
 
 
 @app.route('/login', methods=['GET', 'POST'])
