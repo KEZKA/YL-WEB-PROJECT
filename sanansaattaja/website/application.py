@@ -51,7 +51,10 @@ def add_post():
 @login_required
 def messages():
     db = db_session.create_session()
-    messages = db.query(Message).filter(Message.addressee_id == current_user.id or Message.author_id == current_user.id).all()
+    # Message.addressee_id == current_user.id or
+    print(current_user.id)
+    messages = db.query(Message).filter(Message.author_id == current_user.id).all()
+    print(messages)
     return render_template('main.html', messages=messages)
 
 
@@ -65,17 +68,21 @@ def add_message():
         message.text = form.text.data
         addressee = session.query(User.id).filter(User.email == form.addressee.data)
         if addressee:
+            message.author = current_user.id
+            message.author_id = current_user.id
             message.addressee = addressee
             message.addressee_id = addressee
-            current_user.messages.append(message)
-            addressee.received_messages.append(message)
+            #print(1)
+            #current_user.u_m.append(message)
+            #print(2)
+            #addressee.u_r_m.append(message)
         else:
             return render_template('message.html', title='Отправка сообщение', form=form,
                                    message="Такого пользователя не существует")
 
         session.merge(current_user)
         session.commit()
-        return redirect('/')
+        return redirect('/private')
     return render_template('message.html', title='Отправка сообщения', form=form)
 
 

@@ -1,12 +1,12 @@
 {% extends 'base.html' %}
 
 {% block content %}
-{% for messages in messages %}
+{% for message in messages %}
 
 <div class="jumbotron jumbotron-fluid" style="margin: 0px 100px 32px 100px;">
     <div class="container">
-        <p align="right" class="font-weight-light text-info ">{{message.author.name}} {{post.author.surname}},
-            {{post.modified_date}} <br> {{post.author.email}}</p>
+        <p align="right" class="font-weight-light text-info ">{{message.author.name}} {{message.author.surname}},
+            {{message.modified_date}} <br> {{message.author.email}}</p>
         <p class="lead"> {{message.text}}</p>
     </div>
 </div>
