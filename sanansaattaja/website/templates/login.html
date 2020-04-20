@@ -4,7 +4,7 @@
 
 <div class="container">
     <div class="card">
-        <header class="card-header">Аутентификация</header>
+        <header class="card-header">Вход в профиль</header>
         <form class="card-body" action="" method="POST">
             {% if message %}
             <div class="alert alert-danger">{{ message }}</div>
@@ -32,7 +32,6 @@
                 <label>{{ form.remember_me(class="form-check-input") }} {{ form.remember_me.label }}</label>
             </div>
 
-            
             {{ form.submit(class="btn btn-primary") }}
         </form>
     </div>

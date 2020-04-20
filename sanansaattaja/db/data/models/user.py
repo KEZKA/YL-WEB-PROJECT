@@ -1,12 +1,15 @@
 import datetime
 
+from flask_login import UserMixin
 from sqlalchemy import Column, Integer, String, DateTime, orm
+from sqlalchemy_serializer import SerializerMixin
 from werkzeug.security import generate_password_hash, check_password_hash
+from sanansaattaja.db.data.models.message import Message
 
-from ..db_session import SqlAlchemyBase
+from sanansaattaja.db.data.db_session import SqlAlchemyBase
 
 
-class User(SqlAlchemyBase):
+class User(SqlAlchemyBase, UserMixin, SerializerMixin):
     __tablename__ = 'users'
 
     id = Column(Integer, primary_key=True, autoincrement=True)
@@ -18,8 +21,8 @@ class User(SqlAlchemyBase):
     modified_date = Column(DateTime, default=datetime.datetime.now)
 
     posts = orm.relation('Post', back_populates='author')
-    messages = orm.relation('Message', back_populates='author')
-    # received_messages = orm.relation('Message', back_populates='addressee')
+    messages = orm.relation('Message', back_populates='author', foreign_keys=[Message.author_id])
+    received_messages = orm.relation('Message', back_populates='addressee', foreign_keys=[Message.addressee_id])
 
     def __repr__(self):
         return f'<User> {self.id} {self.surname} {self.name}'

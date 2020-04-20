@@ -2,7 +2,7 @@ import datetime
 
 from sqlalchemy import Column, Integer, DateTime, ForeignKey, orm, Text
 
-from ..db_session import SqlAlchemyBase
+from sanansaattaja.db.data.db_session import SqlAlchemyBase
 
 
 class Message(SqlAlchemyBase):
@@ -10,11 +10,11 @@ class Message(SqlAlchemyBase):
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     author_id = Column(Integer, ForeignKey('users.id'))
-    # addressee_id = Column(Integer, ForeignKey('users.id'))
+    addressee_id = Column(Integer, ForeignKey('users.id'))
     modified_date = Column(DateTime, default=datetime.datetime.now)
     text = Column(Text, nullable=False)
-    author = orm.relation('User')
-    # addressee = orm.relation('User')
+    author = orm.relation('User', foreign_keys=[author_id])
+    addressee = orm.relation('User', foreign_keys=[addressee_id])
 
     def __repr__(self):
         return f'<Message> {self.id} {self.author_id} {self.addressee_id}'
