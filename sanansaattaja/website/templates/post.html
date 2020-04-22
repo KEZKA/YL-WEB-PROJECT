@@ -1,8 +1,9 @@
 {% extends "base.html" %}
 
 {% block content %}
-
-<h1>Write post</h1>
+<div class="container">
+    <div class="card">
+        <header class="card-header">Write post</header>
 <form action="" method="post">
         {{ form.hidden_tag() }}
     {{ form.csrf_token }}
@@ -40,4 +41,7 @@
     </p>
     {% endfor %}
 </form>
+    </div>
+</div>
+
 {% endblock %}
