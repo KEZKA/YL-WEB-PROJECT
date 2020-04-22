@@ -4,7 +4,7 @@ from wtforms.validators import DataRequired
 
 
 class PostForm(FlaskForm):
-    topic = StringField('Тема')
-    text = TextAreaField("Текст", validators=[DataRequired()])
-    is_public = BooleanField('Видно всем', default=True)
-    submit = SubmitField('Опубликовать')
+    topic = StringField('Topic')
+    text = TextAreaField("Text", validators=[DataRequired()])
+    is_public = BooleanField('Everyone can see', default=True)
+    submit = SubmitField('Publish')

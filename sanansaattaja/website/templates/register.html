@@ -8,6 +8,10 @@
             <form class="card-body" action="" method="POST" enctype="multipart/form-data">
                 {{ form.hidden_tag() }}
                 {{ form.csrf_token }}
+                {% if message %}
+                <div class="alert alert-danger">{{ message }}</div>
+                {% endif %}
+
                 <p>
                     {{ form.email.label }}<br>
                     {{ form.email(class="form-control", type="email") }}<br>

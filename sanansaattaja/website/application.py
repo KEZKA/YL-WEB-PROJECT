@@ -12,7 +12,7 @@ from sanansaattaja.db.data.models.user import User
 from sanansaattaja.website.forms import LoginForm, RegisterForm
 from sanansaattaja.website.forms.message_form import MessageForm
 from sanansaattaja.website.forms.post_form import PostForm
-from sanansaattaja.core.utils import fullname, load_image, photos
+from sanansaattaja.core.utils import fullname, load_image
 
 load_dotenv()
 app = Flask(__name__)
@@ -52,6 +52,13 @@ def add_post():
         return redirect('/')
     return render_template('post.html', title='Публикация поста', form=form)
 
+@app.route('/private')
+@login_required
+def messages():
+    db = db_session.create_session()
+    messages = db.query(Message).filter((Message.author_id == current_user.id) | (Message.addressee_id == current_user.id)).all()
+    return render_template('private.html', messages=messages)
+
 
 @app.route('/add_message', methods=['GET', 'POST'])
 @login_required
@@ -59,20 +66,21 @@ def add_message():
     form = MessageForm()
     if form.validate_on_submit():
         session = db_session.create_session()
-        message = Message()
-        message.text = form.text.data
-        addressee = session.query(User).filter(User.email == message.addressee.data)
+        addressee = session.query(User).filter(User.email == form.addressee.data).first()
         if addressee:
+            message = Message()
+            message.text = form.text.data
+            message.author_id = current_user.id
             message.addressee_id = addressee.id
-            addressee.received_messages.append(message)
+            session.add(message)
+            session.commit()
+
         else:
-            return render_template('message.html', title='Отправка сообщение', form=form,
-                                   message="Такого пользователя не существует")
-        current_user.messages.append(message)
-        session.merge(current_user)
-        session.commit()
-        return redirect('/')
-    return render_template('message.html', title='Публикация поста', form=form)
+            return render_template('message.html', title='Sending message', form=form,
+                                   message="There is no such user")
+
+        return redirect('/private')
+    return render_template('message.html', title='Sending message', form=form)
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -82,13 +90,12 @@ def login():
         db = db_session.create_session()
         user = db.query(User).filter(User.email == login_form.email.data).first()
         if not user:
-            return render_template('login.html', form=login_form,
-                                   message="Такого пользователя не существует")
+            return render_template('login.html', form=login_form, message="There is no such user")
         if user.check_password(login_form.password.data):
             login_user(user, remember=login_form.remember_me.data)
             return redirect(url_for('index'))
         else:
-            return render_template('login.html', form=login_form, message="Неверный пароль")
+            return render_template('login.html', form=login_form, message="Wrong password")
     else:
         return render_template('login.html', form=login_form)
 
@@ -106,14 +113,14 @@ def register():
     if request.method == 'POST':
         if form.validate_on_submit():
             if form.password.data != form.password_again.data:
-                return render_template('register.html', title='Регистрация',
+                return render_template('register.html', title='Registration',
                                        form=form,
-                                       message="Пароли не совпадают")
+                                       message="Passwords are different")
             db = db_session.create_session()
             if db.query(User).filter(User.email == form.email.data).first():
-                return render_template('register.html', title='Регистрация',
+                return render_template('register.html', title='Registration',
                                        form=form,
-                                       message="Почта уже используется")
+                                       message="This email is already used")
             if request.files['photo']:
                 file = request.files['photo'].read()
             else:
@@ -146,19 +153,6 @@ def user_page():
 db_session.global_init(fullname('db/sanansaattaja.db'))
 
 
-# @app.route('/get_image')
-# @login_required
-# def get_image():
-    # name = randint(10 ** 20, 10 ** 21 - 1)
-    # with open(load_image(f'{name}.jpg'), mode='wb') as file:
-    #     file.write(current_user.profile_picture)
-    # return render_template('user_page.html', filename=name, current_user=current_user)
-    # db = db_session.create_session()
-    # user_data = db.query(User).filter(User.email == user.email).first()
-    # return send_file(io.BytesIO(current_user.profile_picture), mimetype='image/*')
-
-
 def run():
-    # port = int(os.environ.get('PORT', 8080))
-    # app.run(host='0.0.0.0', port=port, debug=False)
-    app.run(port=8080, host='127.0.0.1')
+    port = int(os.environ.get('PORT', 8080))
+    app.run(host='0.0.0.0', port=port, debug=False)
