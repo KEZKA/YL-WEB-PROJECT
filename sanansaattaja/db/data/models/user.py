@@ -1,7 +1,7 @@
 import datetime
 
 from flask_login import UserMixin
-from sqlalchemy import Column, Integer, String, DateTime, orm
+from sqlalchemy import Column, Integer, String, DateTime, orm, Binary
 from sqlalchemy_serializer import SerializerMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 from sanansaattaja.db.data.models.message import Message
@@ -19,6 +19,8 @@ class User(SqlAlchemyBase, UserMixin, SerializerMixin):
     email = Column(String, index=True, unique=True, nullable=True)
     hashed_password = Column(String, nullable=True)
     modified_date = Column(DateTime, default=datetime.datetime.now)
+    sex = Column(String, nullable=True)
+    profile_picture = Column(Binary, nullable=True)
 
     posts = orm.relation('Post', back_populates='author')
     messages = orm.relation('Message', back_populates='author', foreign_keys=[Message.author_id])

@@ -11,7 +11,7 @@
 
 <body>
 <nav class="navbar navbar-dark navbar-expand-sm" style="background-color: #1240AB;">
-    <h1 class="navbar-brand" href="#" >SANANSAATTAJA</h1>
+    <h1 class="navbar-brand">SANANSAATTAJA</h1>
         <div class="collapse navbar-collapse">
         <ul class="navbar-nav mr-auto">
             <li class="nav-item">
@@ -32,7 +32,9 @@
         </ul>
         <ul class="navbar-nav ml-auto">
             {% if current_user.is_authenticated %}
-            <li class="navbar-text">{{ current_user.name }}</li>
+            <li class="nav-text">
+                <a class="nav-link" href='/user_page'>{{ current_user.name }}</a>
+            </li>
             <li class="nav-item">
                 <a class="nav-link" href='/logout'>Выход</a>
             </li>
@@ -50,7 +52,7 @@
 
 <h4 class="p-3 font-weight-light" style="color: #FFAA00">Пишите, сохраняйте, делитесь</h4>
 
-<main class="container-fluid">{% block content %}{% endblock %}</div>
+<main class="container-fluid">{% block content %}{% endblock %}</main>
 </body>
 
 </html>
