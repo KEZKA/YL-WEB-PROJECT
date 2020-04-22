@@ -1,3 +1,4 @@
+import os
 from datetime import timedelta
 
 from flask import Flask, render_template, redirect, url_for
@@ -126,8 +127,9 @@ def reqister():
     return render_template('register.html', title='Registration', form=form)
 
 
-db_session.global_init('sanansaattaja/db/sanansaattaja.db')
+db_session.global_init('db/sanansaattaja.db')
+
+
 def run():
-    # port = int(os.environ.get('PORT', 8080))
-    # app.run(host='0.0.0.0', port=port, debug=False)
-    app.run(port=8080, host='127.0.0.1')
+    port = int(os.environ.get('PORT', 8080))
+    app.run(host='0.0.0.0', port=port, debug=False)
