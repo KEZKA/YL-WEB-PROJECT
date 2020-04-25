@@ -50,7 +50,7 @@ def add_post():
         session.merge(current_user)
         session.commit()
         return redirect('/')
-    return render_template('post.html', title='Публикация поста', form=form)
+    return render_template('post.html', title='Publishing post', form=form, width=800)
 
 
 @app.route('/private')
