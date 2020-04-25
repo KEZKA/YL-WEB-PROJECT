@@ -164,7 +164,7 @@ def user_page():
 @login_required
 def make_image():
     if not current_user.profile_picture:
-        with open(load_image(f"{'male' if current_user.sex == 'male' else 'female'}.jpg"),
+        with open(load_image(f"{current_user.sex}.jpg"),
                   mode='rb') as image:
             return send_file(io.BytesIO(image.read()), mimetype='image/*')
     return send_file(io.BytesIO(current_user.profile_picture), mimetype='image/*')
