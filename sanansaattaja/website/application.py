@@ -16,8 +16,9 @@ from sanansaattaja.core.utils import fullname, load_image
 
 load_dotenv()
 app = Flask(__name__)
-app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY')
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'takoy_neochevidniy_secret_key')
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=365)
+MAX_FILE_SIZE = 1024 ** 2
 
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -50,7 +51,7 @@ def add_post():
         session.merge(current_user)
         session.commit()
         return redirect('/')
-    return render_template('post.html', title='Публикация поста', form=form)
+    return render_template('post.html', title='Post publishing', form=form)
 
 
 @app.route('/private')
@@ -99,7 +100,8 @@ def login():
         else:
             return render_template('login.html', form=login_form, message="Wrong password")
     else:
-        return render_template('login.html', form=login_form)
+        return render_template('login.html', form=login_form, success=True if request.args.get(
+            'register-success') == 'true' else False)
 
 
 @app.route('/logout')
@@ -123,7 +125,16 @@ def register():
                                    form=form,
                                    message="This email is already in use")
         if request.files['photo']:
-            file = request.files['photo'].read()
+            filename = request.files['photo'].filename
+            if filename.split('.')[-1].lower() not in ('jpg', 'png', 'gif'):
+                return render_template('register.html', title='Registration',
+                                       form=form,
+                                       message="Invalid extension of image")
+            file = request.files['photo'].read(MAX_FILE_SIZE)
+            if len(file) == MAX_FILE_SIZE:
+                return render_template('register.html', title='Registration',
+                                       form=form,
+                                       message="File size is too large")
         else:
             file = None
 
@@ -138,8 +149,9 @@ def register():
         user.set_password(form.password.data)
         db.add(user)
         db.commit()
-        return redirect('/login')
-    return render_template('register.html', title='Регистрация', form=form)
+
+        return redirect('/login?register-success=true')
+    return render_template('register.html', title='Registration', form=form)
 
 
 @app.route('/user_page', methods=['GET', 'POST'])
@@ -147,17 +159,31 @@ def register():
 def user_page():
     form = RegisterForm()
     if request.method == 'POST':
+        if request.files['photo']:
+            filename = request.files['photo'].filename
+            if filename.split('.')[-1].lower() not in ('jpg', 'png', 'gif'):
+                return render_template('user_page.html', title='User page',
+                                       form=form,
+                                       message="Invalid extension of image")
+            file = request.files['photo'].read(MAX_FILE_SIZE)
+            if len(file) == MAX_FILE_SIZE:
+                return render_template('user_page.html', title='User page',
+                                       form=form,
+                                       message="File size is too large")
+        else:
+            file = None
         db = db_session.create_session()
 
         current_user.name = form.name.data
         current_user.surname = form.surname.data
         current_user.age = form.age.data
         current_user.sex = form.sex.data
+        current_user.profile_picture = file
 
         db.merge(current_user)
         db.commit()
         return redirect('/user_page')
-    return render_template('user_page.html', current_user=current_user, form=form)
+    return render_template('user_page.html', current_user=current_user, title='User page', form=form)
 
 
 @app.route('/make_image')
@@ -175,4 +201,8 @@ db_session.global_init(fullname('db/sanansaattaja.db'))
 
 def run():
     port = int(os.environ.get('PORT', 8080))
-    app.run(host='127.0.0.1', port=port, debug=False)
+    localhost = '127.0.0.1'
+    # globalhost = '0.0.0.0'
+
+    # change host before deploying on heroku
+    app.run(host=localhost, port=port, debug=False)

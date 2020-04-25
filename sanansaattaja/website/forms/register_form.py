@@ -11,6 +11,7 @@ class RegisterForm(FlaskForm):
     name = StringField('First name', validators=[DataRequired()])
     surname = StringField('Second name', validators=[DataRequired()])
     age = IntegerField('Age', validators=[DataRequired()])
-    sex = RadioField('Sex', choices=[('male', 'Мужской'), ('female', 'Женский')])
-    photo = FileField('Add image (jpg, png, gif)', validators=[FileAllowed(['jpg', 'png'], 'Только картинки!')])
+    sex = RadioField('Sex', choices=[('male', 'Male'), ('female', 'Female')])
+    photo = FileField('Add image (jpg, png, gif); max file size = 1 MB',
+                      validators=[FileAllowed(['jpg', 'png'], 'Only pictures!')])
     submit = SubmitField('Finish registration')
