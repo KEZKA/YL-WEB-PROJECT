@@ -1,8 +1,53 @@
-h4{
+h4 {
     color: #FFFF00;
 }
 
+.dropdown-menu-sw {
+    min-width: 180px;
+    max-width: 300px;
+    right: 0;
+    left: auto;
+}
+
+.username {
+    margin-left: 20px;
+    margin-right: 20px;
+}
+
+.unselectable::selection {
+    background: transparent;
+}
+
+.left-td {
+    width: 20%;
+    text-align: right;
+}
+
+.account-form {
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 800px;
+    min-width: 500px;
+    text-align: center;
+}
+
+.user-image {
+    width: 300px;
+    border-radius: 20%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.user-data {
+    width: 100%;
+    border-spacing: 10px;
+    border-collapse: unset;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 650px;
+}
+
 p {
-margin: 0px 0px 0px 20px;
-color: #006633;
+    margin: 0 0 0 0;
+    color: #006633;
 }

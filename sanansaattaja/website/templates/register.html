@@ -9,7 +9,7 @@
                 {{ form.hidden_tag() }}
                 {{ form.csrf_token }}
                 {% if message %}
-                <div class="alert alert-danger">{{ message }}</div>
+                    <div class="alert alert-danger">{{ message }}</div>
                 {% endif %}
 
                 <p>
@@ -91,7 +91,6 @@
                     {% endfor %}
                 </p>
                 <p>{{ form.submit(type="submit", class="btn btn-primary") }}</p>
-                {{ message }}
             </form>
         </div>
     </div>

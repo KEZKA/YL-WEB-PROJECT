@@ -32,7 +32,7 @@ def load_user(user_id):
 @app.route('/')
 def index():
     db = db_session.create_session()
-    posts = db.query(Post).filter(Post.is_public is True).all()
+    posts = db.query(Post).filter(Post.is_public == True).all()
     return render_template('main.html', posts=posts)
 
 
@@ -52,11 +52,13 @@ def add_post():
         return redirect('/')
     return render_template('post.html', title='Публикация поста', form=form)
 
+
 @app.route('/private')
 @login_required
 def messages():
     db = db_session.create_session()
-    messages = db.query(Message).filter((Message.author_id == current_user.id) | (Message.addressee_id == current_user.id)).all()
+    messages = db.query(Message).filter(
+        (Message.author_id == current_user.id) | (Message.addressee_id == current_user.id)).all()
     return render_template('private.html', messages=messages)
 
 
@@ -111,42 +113,49 @@ def logout():
 def register():
     form = RegisterForm()
     if request.method == 'POST':
-        if form.validate_on_submit():
-            if form.password.data != form.password_again.data:
-                return render_template('register.html', title='Registration',
-                                       form=form,
-                                       message="Passwords are different")
-            db = db_session.create_session()
-            if db.query(User).filter(User.email == form.email.data).first():
-                return render_template('register.html', title='Registration',
-                                       form=form,
-                                       message="This email is already used")
-            if request.files['photo']:
-                file = request.files['photo'].read()
-            else:
-                with open(load_image(
-                        f"{'male' if form.sex.data == 'male' else 'female'}.jpg"),
-                        mode='rb') as image:
-                    print(load_image(f"{'male' if form.sex.data == 'male' else 'female'}.jpg"))
-                    file = image.read()
+        if form.password.data != form.password_again.data:
+            return render_template('register.html', title='Registration',
+                                   form=form,
+                                   message="Passwords do not match")
+        db = db_session.create_session()
+        if db.query(User).filter(User.email == form.email.data).first():
+            return render_template('register.html', title='Registration',
+                                   form=form,
+                                   message="This email is already in use")
+        if request.files['photo']:
+            file = request.files['photo'].read()
+        else:
+            with open(load_image(
+                    f"{'male' if form.sex.data == 'male' else 'female'}.jpg"),
+                    mode='rb') as image:
+                print(load_image(f"{'male' if form.sex.data == 'male' else 'female'}.jpg"))
+                file = image.read()
 
-            user = User(
-                name=form.name.data,
-                surname=form.surname.data,
-                email=form.email.data,
-                sex=form.sex.data,
-                profile_picture=file
-            )
-            user.set_password(form.password.data)
-            db.add(user)
-            db.commit()
-            return redirect('/login')
+        user = User(
+            name=form.name.data,
+            surname=form.surname.data,
+            email=form.email.data,
+            age=form.age.data,
+            sex=form.sex.data,
+            profile_picture=file
+        )
+        user.set_password(form.password.data)
+        db.add(user)
+        db.commit()
+        return redirect('/login')
     return render_template('register.html', title='Регистрация', form=form)
 
 
 @app.route('/user_page')
 @login_required
 def user_page():
+    form = RegisterForm()
+    return render_template('user_page.html', current_user=current_user, form=form)
+
+
+@app.route('/make_image')
+@login_required
+def make_image():
     return send_file(io.BytesIO(current_user.profile_picture), mimetype='image/*')
 
 
@@ -155,4 +164,4 @@ db_session.global_init(fullname('db/sanansaattaja.db'))
 
 def run():
     port = int(os.environ.get('PORT', 8080))
-    app.run(host='0.0.0.0', port=port, debug=False)
+    app.run(host='127.0.0.1', port=port, debug=False)
