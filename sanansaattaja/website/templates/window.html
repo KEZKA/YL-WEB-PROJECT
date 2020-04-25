@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="container content-form" style="max-width: {{ width if width else 500 }}px;">
+        <div class="card">
+            {% block subcontent %}{% endblock %}
+        </div>
+    </div>
+{% endblock %}

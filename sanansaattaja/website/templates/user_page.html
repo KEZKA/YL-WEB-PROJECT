@@ -1,50 +1,46 @@
-{% extends "base.html" %}
+{% extends "window.html" %}
 
-{% block content %}
-    <div class="container account-form">
-        <div class="card" style="">
-            <img class="user-image" src="{{ url_for('make_image') }}">
-            <form class="card-body" action="" method="POST" enctype="multipart/form-data">
-                {{ form.hidden_tag() }}
-                {{ form.csrf_token }}
-                {% if message %}
-                    <div class="alert alert-danger">{{ message }}</div>
-                {% endif %}
+{% block subcontent %}
+    <img class="user-image" src="{{ url_for('make_image') }}?{{ range(100, 1000000000) | random }}">
+    <form class="card-body" action="" method="POST" enctype="multipart/form-data">
+        {{ form.hidden_tag() }}
+        {{ form.csrf_token }}
+        {% if message %}
+            <div class="alert alert-danger">{{ message }}</div>
+        {% endif %}
 
-                <table class="user-data">
-                    <tr>
-                        <td class="left-td">{{ form.name.label }}</td>
-                        <td colspan="4">{{ form.name(class="form-control", value=current_user.name) }}</td>
-                    </tr>
+        <table class="user-data">
+            <tr>
+                <td class="left-td">{{ form.name.label }}</td>
+                <td colspan="4">{{ form.name(class="form-control", value=current_user.name) }}</td>
+            </tr>
 
-                    <tr>
-                        <td class="left-td">{{ form.surname.label }}</td>
-                        <td colspan="4">{{ form.surname(class="form-control", value=current_user.surname) }}</td>
-                    </tr>
+            <tr>
+                <td class="left-td">{{ form.surname.label }}</td>
+                <td colspan="4">{{ form.surname(class="form-control", value=current_user.surname) }}</td>
+            </tr>
 
-                    <tr>
-                        <td class="left-td">{{ form.age.label }}</td>
-                        <td colspan="4">
-                            {{ form.age(class="form-control", type="number", value=current_user.age) }}
-                        </td>
-                    </tr>
+            <tr>
+                <td class="left-td">{{ form.age.label }}</td>
+                <td colspan="4">
+                    {{ form.age(class="form-control", type="number", value=current_user.age) }}
+                </td>
+            </tr>
 
-                    <tr>
-                        <td class="left-td">{{ form.sex.label }}</td>
-                        <td>
-                            {% for subfield in form.sex %}
-                                {% if current_user.sex == subfield.data %}
-                                    {{ subfield(required="required", checked="checked") }}
-                                {% else %}
-                                    {{ subfield(required="required") }}
-                                {% endif %}
-                                {{ subfield.label }}&nbsp;&nbsp;&nbsp;&nbsp;
-                            {% endfor %}
-                        </td>
-                    </tr>
-                </table>
-                <p>{{ form.submit(type="submit", class="btn btn-primary", value="Save changes") }}</p>
-            </form>
-        </div>
-    </div>
+            <tr>
+                <td class="left-td">{{ form.sex.label }}</td>
+                <td>
+                    {% for subfield in form.sex %}
+                        {% if current_user.sex == subfield.data %}
+                            {{ subfield(required="required", checked="checked") }}
+                        {% else %}
+                            {{ subfield(required="required") }}
+                        {% endif %}
+                        {{ subfield.label }}&nbsp;&nbsp;&nbsp;&nbsp;
+                    {% endfor %}
+                </td>
+            </tr>
+        </table>
+        <p>{{ form.submit(type="submit", class="btn btn-primary", value="Save changes") }}</p>
+    </form>
 {% endblock %}

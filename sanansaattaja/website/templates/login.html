@@ -1,39 +1,38 @@
-{% extends "base.html" %}
+{% extends "window.html" %}
 
-{% block content %}
+{% block subcontent %}
+    <header class="card-header">Log in</header>
+    <form class="card-body form-left" action="" method="POST">
 
-<div class="container" style="margin-left: auto; margin-right: auto; max-width: 500px;">
-    <div class="card">
-        <header class="card-header">Log in</header>
-        <form class="card-body" action="" method="POST">
-            {% if message %}
+        {% if message %}
             <div class="alert alert-danger">{{ message }}</div>
-            {% endif %}
+        {% endif %}
+        {% if successful %}
+            <div class="alert alert-successful">{{ successful }}</div>
+        {% endif %}
 
-            {{ form.hidden_tag() }}
+        {{ form.hidden_tag() }}
 
-            {% for error in form.email.errors %}
-                <div class="alert alert-danger">{{ error }}</div>
-            {% endfor %}
-            <div class="form-group">
-                <label>{{ form.email.label }}</label>
-                {{ form.email(class="form-control") }}
-            </div>
+        {% for error in form.email.errors %}
+            <div class="alert alert-danger">{{ error }}</div>
+        {% endfor %}
+        <div class="form-group">
+            <label>{{ form.email.label }}</label>
+            {{ form.email(class="form-control") }}
+        </div>
 
-            {% for error in form.password.errors %}
-                <div class="alert alert-danger">{{ error }}</div>
-            {% endfor %}
-            <div class="form-group">
-                <label>{{ form.password.label }}</label>
-                {{ form.password(class="form-control") }}
-            </div>
+        {% for error in form.password.errors %}
+            <div class="alert alert-danger">{{ error }}</div>
+        {% endfor %}
+        <div class="form-group">
+            <label>{{ form.password.label }}</label>
+            {{ form.password(class="form-control") }}
+        </div>
 
-            <div class="form-group  form-check">
-                <label>{{ form.remember_me(class="form-check-input") }} {{ form.remember_me.label }}</label>
-            </div>
+        <div class="form-group  form-check">
+            <label>{{ form.remember_me(class="form-check-input") }} {{ form.remember_me.label }}</label>
+        </div>
 
-            {{ form.submit(class="btn btn-primary") }}
-        </form>
-    </div>
-</div>
+        {{ form.submit(class="btn btn-primary") }}
+    </form>
 {% endblock %}

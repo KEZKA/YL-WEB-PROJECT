@@ -59,7 +59,7 @@ def messages():
     db = db_session.create_session()
     messages = db.query(Message).filter(
         (Message.author_id == current_user.id) | (Message.addressee_id == current_user.id)).all()
-    return render_template('private.html', messages=messages)
+    return render_template('private.html', messages=messages, width=800)
 
 
 @app.route('/add_message', methods=['GET', 'POST'])
@@ -79,10 +79,10 @@ def add_message():
 
         else:
             return render_template('message.html', title='Sending message', form=form,
-                                   message="There is no such user")
+                                   message="There is no such user", width=800)
 
         return redirect('/private')
-    return render_template('message.html', title='Sending message', form=form)
+    return render_template('message.html', title='Sending message', form=form, width=800)
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -125,11 +125,7 @@ def register():
         if request.files['photo']:
             file = request.files['photo'].read()
         else:
-            with open(load_image(
-                    f"{'male' if form.sex.data == 'male' else 'female'}.jpg"),
-                    mode='rb') as image:
-                print(load_image(f"{'male' if form.sex.data == 'male' else 'female'}.jpg"))
-                file = image.read()
+            file = None
 
         user = User(
             name=form.name.data,
@@ -146,16 +142,31 @@ def register():
     return render_template('register.html', title='Регистрация', form=form)
 
 
-@app.route('/user_page')
+@app.route('/user_page', methods=['GET', 'POST'])
 @login_required
 def user_page():
     form = RegisterForm()
+    if request.method == 'POST':
+        db = db_session.create_session()
+
+        current_user.name = form.name.data
+        current_user.surname = form.surname.data
+        current_user.age = form.age.data
+        current_user.sex = form.sex.data
+
+        db.merge(current_user)
+        db.commit()
+        return redirect('/user_page')
     return render_template('user_page.html', current_user=current_user, form=form)
 
 
 @app.route('/make_image')
 @login_required
 def make_image():
+    if not current_user.profile_picture:
+        with open(load_image(f"{'male' if current_user.sex == 'male' else 'female'}.jpg"),
+                  mode='rb') as image:
+            return send_file(io.BytesIO(image.read()), mimetype='image/*')
     return send_file(io.BytesIO(current_user.profile_picture), mimetype='image/*')
 
 
