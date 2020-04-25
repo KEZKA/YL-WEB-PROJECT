@@ -32,7 +32,7 @@ def load_user(user_id):
 @app.route('/')
 def index():
     db = db_session.create_session()
-    posts = db.query(Post).filter(Post.is_public == True).all()
+    posts = db.query(Post).filter(Post.is_public == True).order_by(Post.modified_date.desc()).all()
     return render_template('main.html', posts=posts)
 
 
@@ -58,7 +58,7 @@ def add_post():
 def messages():
     db = db_session.create_session()
     messages = db.query(Message).filter(
-        (Message.author_id == current_user.id) | (Message.addressee_id == current_user.id)).all()
+        (Message.author_id == current_user.id) | (Message.addressee_id == current_user.id)).order_by(Message.modified_date.desc()).all()
     return render_template('private.html', messages=messages, width=800)
 
 
