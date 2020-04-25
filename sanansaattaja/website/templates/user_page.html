@@ -1,8 +1,11 @@
 {% extends "window.html" %}
 
+{% block head %}<title>{{ current_user.name }}'s page</title>{% endblock %}
+
 {% block subcontent %}
-    <img class="user-image" src="{{ url_for('make_image') }}?{{ range(100, 1000000000) | random }}">
+
     <form class="card-body" action="" method="POST" enctype="multipart/form-data">
+        <center><img class="user-image" src="{{ url_for('make_image') }}?{{ range(100, 1000000000) | random }}"></center>
         {{ form.hidden_tag() }}
         {{ form.csrf_token }}
         {% if message %}

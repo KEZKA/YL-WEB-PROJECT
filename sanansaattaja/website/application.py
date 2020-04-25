@@ -16,7 +16,7 @@ from sanansaattaja.core.utils import fullname, load_image
 
 load_dotenv()
 app = Flask(__name__)
-app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'takoy_neochevidniy_secret_key')
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'secret key')
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=365)
 MAX_FILE_SIZE = 1024 ** 2
 
@@ -33,7 +33,7 @@ def load_user(user_id):
 @app.route('/')
 def index():
     db = db_session.create_session()
-    posts = db.query(Post).filter(Post.is_public == True).all()
+    posts = db.query(Post).filter(Post.is_public == True).order_by(Post.modified_date.desc()).all()
     return render_template('main.html', posts=posts)
 
 
@@ -59,7 +59,7 @@ def add_post():
 def messages():
     db = db_session.create_session()
     messages = db.query(Message).filter(
-        (Message.author_id == current_user.id) | (Message.addressee_id == current_user.id)).all()
+        (Message.author_id == current_user.id) | (Message.addressee_id == current_user.id)).order_by(Message.modified_date.desc()).all()
     return render_template('private.html', messages=messages, width=800)
 
 
@@ -190,8 +190,7 @@ def user_page():
 @login_required
 def make_image():
     if not current_user.profile_picture:
-        with open(load_image(f"{'male' if current_user.sex == 'male' else 'female'}.jpg"),
-                  mode='rb') as image:
+        with open(load_image(f"{current_user.sex}.jpg"), mode='rb') as image:
             return send_file(io.BytesIO(image.read()), mimetype='image/*')
     return send_file(io.BytesIO(current_user.profile_picture), mimetype='image/*')
 

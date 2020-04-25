@@ -1,8 +1,13 @@
 {% extends "window.html" %}
 
+{% block head %}
+    <title>New post</title>
+{% endblock %}
+
 {% block subcontent %}
-    <h1>Write post</h1>
-    <form action="" method="post">
+
+    <header class="card-header">Write post</header>
+    <form class="card-body form-left" action="" method="POST">
         {{ form.hidden_tag() }}
         {{ form.csrf_token }}
         {% if message %}
