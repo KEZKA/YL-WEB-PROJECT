@@ -13,4 +13,4 @@ class RegisterForm(FlaskForm):
     age = IntegerField('Age', validators=[DataRequired()])
     sex = RadioField('Sex', choices=[('male', 'Мужской'), ('female', 'Женский')])
     photo = FileField('Add image (jpg, png, gif)', validators=[FileAllowed(['jpg', 'png'], 'Только картинки!')])
-    submit = SubmitField('Finish registration')
+    submit = SubmitField('Finish')

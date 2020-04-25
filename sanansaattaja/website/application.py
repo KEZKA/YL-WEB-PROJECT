@@ -16,7 +16,7 @@ from sanansaattaja.core.utils import fullname, load_image
 
 load_dotenv()
 app = Flask(__name__)
-app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY')
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'secret key')
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=365)
 
 login_manager = LoginManager()
