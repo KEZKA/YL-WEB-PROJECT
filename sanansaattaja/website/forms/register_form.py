@@ -1,5 +1,6 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, StringField, IntegerField
+from flask_wtf.file import FileField, FileAllowed
+from wtforms import StringField, PasswordField, SubmitField, IntegerField, RadioField
 from wtforms.validators import DataRequired
 
 
@@ -10,4 +11,8 @@ class RegisterForm(FlaskForm):
     name = StringField('First name', validators=[DataRequired()])
     surname = StringField('Second name', validators=[DataRequired()])
     age = IntegerField('Age', validators=[DataRequired()])
-    submit = SubmitField('End registration')
+    sex = RadioField('Sex', choices=[('male', 'Male'), ('female', 'Female'), ('helicopter', 'Helicopter')])
+    photo = FileField('Add image (jpg, png, gif); max file size = 1 MB',
+                      validators=[FileAllowed(['jpg', 'png'], 'Only pictures!')])
+    submit = SubmitField('Finish')
+    check_deletion = StringField('stay', validators=[DataRequired()])

@@ -1,19 +1,24 @@
+import io
 import os
+
+from dotenv import load_dotenv
 from datetime import timedelta
 
-from flask import Flask, render_template, redirect, url_for
+from flask import Flask, render_template, redirect, url_for, request, send_file
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
-
 from sanansaattaja.db.data import db_session
 from sanansaattaja.db.data.models import Post, Message
 from sanansaattaja.db.data.models.user import User
 from sanansaattaja.website.forms import LoginForm, RegisterForm
 from sanansaattaja.website.forms.message_form import MessageForm
 from sanansaattaja.website.forms.post_form import PostForm
+from sanansaattaja.core.utils import fullname, load_image
 
+load_dotenv()
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'sanansaattaja_secret_key'
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'secret key')
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=365)
+MAX_FILE_SIZE = 1024 ** 2
 
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -28,7 +33,7 @@ def load_user(user_id):
 @app.route('/')
 def index():
     db = db_session.create_session()
-    posts = db.query(Post).filter(Post.is_public == True).all()
+    posts = db.query(Post).filter(Post.is_public == True).order_by(Post.modified_date.desc()).all()
     return render_template('main.html', posts=posts)
 
 
@@ -46,14 +51,17 @@ def add_post():
         session.merge(current_user)
         session.commit()
         return redirect('/')
-    return render_template('post.html', title='Публикация поста', form=form)
+    return render_template('post.html', title='Post publishing', form=form, width=800)
+
 
 @app.route('/private')
 @login_required
 def messages():
     db = db_session.create_session()
-    messages = db.query(Message).filter((Message.author_id == current_user.id) | (Message.addressee_id == current_user.id)).all()
-    return render_template('private.html', messages=messages)
+    messages = db.query(Message).filter(
+        (Message.author_id == current_user.id) | (Message.addressee_id == current_user.id)).order_by(
+        Message.modified_date.desc()).all()
+    return render_template('private.html', messages=messages, width=800)
 
 
 @app.route('/add_message', methods=['GET', 'POST'])
@@ -73,10 +81,10 @@ def add_message():
 
         else:
             return render_template('message.html', title='Sending message', form=form,
-                                   message="There is no such user")
+                                   message="There is no such user", width=800)
 
         return redirect('/private')
-    return render_template('message.html', title='Sending message', form=form)
+    return render_template('message.html', title='Sending message', form=form, width=800)
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -93,7 +101,9 @@ def login():
         else:
             return render_template('login.html', form=login_form, message="Wrong password")
     else:
-        return render_template('login.html', form=login_form)
+        print(request.args.get('register-success'))
+        return render_template('login.html', form=login_form, success=True if request.args.get(
+            'register-success') == 'true' else False)
 
 
 @app.route('/logout')
@@ -104,32 +114,100 @@ def logout():
 
 
 @app.route('/register', methods=['GET', 'POST'])
-def reqister():
+def register():
     form = RegisterForm()
-    if form.validate_on_submit():
+    if request.method == 'POST':
         if form.password.data != form.password_again.data:
             return render_template('register.html', title='Registration',
                                    form=form,
-                                   message="Passwords are different")
+                                   message="Passwords do not match")
         db = db_session.create_session()
         if db.query(User).filter(User.email == form.email.data).first():
             return render_template('register.html', title='Registration',
                                    form=form,
-                                   message="This email is already used")
+                                   message="This email is already in use")
+        if request.files['photo']:
+            filename = request.files['photo'].filename
+            if filename.split('.')[-1].lower() not in ('jpg', 'png', 'gif'):
+                return render_template('register.html', title='Registration',
+                                       form=form,
+                                       message="Invalid extension of image")
+            file = request.files['photo'].read(MAX_FILE_SIZE)
+            if len(file) == MAX_FILE_SIZE:
+                return render_template('register.html', title='Registration',
+                                       form=form,
+                                       message="File size is too large")
+        else:
+            file = None
+
         user = User(
             name=form.name.data,
-            email=form.email.data
+            surname=form.surname.data,
+            email=form.email.data,
+            age=form.age.data,
+            sex=form.sex.data,
+            profile_picture=file
         )
         user.set_password(form.password.data)
         db.add(user)
         db.commit()
-        return redirect('/login')
+
+        return redirect('/login?register-success=true')
     return render_template('register.html', title='Registration', form=form)
 
 
-db_session.global_init('db/sanansaattaja.db')
+@app.route('/user_page', methods=['GET', 'POST'])
+@login_required
+def user_page():
+    form = RegisterForm()
+    if request.method == 'POST':
+        if request.files['photo']:
+            print(form.photo.data.filename)
+            filename = request.files['photo'].filename
+            if filename.split('.')[-1].lower() not in ('jpg', 'png', 'gif'):
+                return render_template('user_page.html', title='User page',
+                                       form=form,
+                                       message="Invalid extension of image")
+            file = request.files['photo'].read(MAX_FILE_SIZE)
+            if len(file) == MAX_FILE_SIZE:
+                return render_template('user_page.html', title='User page',
+                                       form=form,
+                                       message="File size is too large")
+        else:
+            if form.check_deletion.data == 'delete':
+                file = None
+            else:
+                file = current_user.profile_picture
+        db = db_session.create_session()
+
+        current_user.name = form.name.data
+        current_user.surname = form.surname.data
+        current_user.age = form.age.data
+        current_user.sex = form.sex.data
+        current_user.profile_picture = file
+
+        db.merge(current_user)
+        db.commit()
+        return redirect('/user_page')
+    return render_template('user_page.html', current_user=current_user, title='User page', form=form)
+
+
+@app.route('/make_image')
+@login_required
+def make_image():
+    if not current_user.profile_picture:
+        with open(load_image(f"{current_user.sex}.jpg"), mode='rb') as image:
+            return send_file(io.BytesIO(image.read()), mimetype='image/*')
+    return send_file(io.BytesIO(current_user.profile_picture), mimetype='image/*')
+
+
+db_session.global_init(fullname('db/sanansaattaja.db'))
 
 
 def run():
     port = int(os.environ.get('PORT', 8080))
-    app.run(host='0.0.0.0', port=port, debug=False)
+    localhost = '127.0.0.1'
+    # globalhost = '0.0.0.0'
+
+    # change host before deploying on heroku
+    app.run(host=localhost, port=port, debug=False)
