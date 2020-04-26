@@ -51,7 +51,7 @@ def add_post():
         session.merge(current_user)
         session.commit()
         return redirect('/')
-    return render_template('post.html', title='Post publishing', form=form)
+    return render_template('post.html', title='Post publishing', form=form, width=800)
 
 
 @app.route('/private')
@@ -101,6 +101,7 @@ def login():
         else:
             return render_template('login.html', form=login_form, message="Wrong password")
     else:
+        print(request.args.get('register-success'))
         return render_template('login.html', form=login_form, success=True if request.args.get(
             'register-success') == 'true' else False)
 

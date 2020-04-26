@@ -31,18 +31,29 @@
     <div class="collapse navbar-collapse">
         <ul class="navbar-nav mr-auto">
             <li class="nav-item">
-                <a class="nav-link" href='/'><i class="far fa-newspaper"></i></a>
+                <a class="nav-link" href='/'>
+                    <i class="far fa-newspaper"></i>
+                    General
+                </a>
             </li>
             {% if current_user.is_authenticated %}
                 <li class="nav-item">
-                    <a class="nav-link" href='/add_post'><i class="far fa-plus-square"></i></a>
+                    <a class="nav-link" href='/add_post'>
+                        <i class="far fa-plus-square"></i>
+                        Add post
+                    </a>
                 </li>
-                <li class="nav-item"><p><font color="1240AB">....</font></p></li>
                 <li class="nav-item">
-                    <a class="nav-link" href='/private'><i class="fas fa-envelope-open-text"></i></a>
+                    <a class="nav-link" href='/private'>
+                        <i class="fas fa-envelope-open-text"></i>
+                        Messages
+                    </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href='/add_message'><i class="fas fa-feather-alt"></i></a>
+                    <a class="nav-link" href='/add_message'>
+                        <i class="fas fa-feather-alt"></i>
+                        Write message
+                    </a>
                 </li>
             {% endif %}
 
@@ -74,7 +85,7 @@
             {% else %}
                 <li class="nav-item">
                     <a class="nav-link" href='/login'>
-                        <i class="fas fa-sign-in-alt"></i> Log in
+                        <i class="fas fa-sign-in-alt"></i> Sign in
                     </a>
                 </li>
                 <li class="nav-item">

@@ -9,8 +9,8 @@
         {% if message %}
             <div class="alert alert-danger">{{ message }}</div>
         {% endif %}
-        {% if successful %}
-            <div class="alert alert-successful">Registration completed successfully</div>
+        {% if success %}
+            <div class="alert alert-success">Registration completed successfully</div>
         {% endif %}
 
         {{ form.hidden_tag() }}
