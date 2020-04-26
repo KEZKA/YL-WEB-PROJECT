@@ -59,7 +59,8 @@ def add_post():
 def messages():
     db = db_session.create_session()
     messages = db.query(Message).filter(
-        (Message.author_id == current_user.id) | (Message.addressee_id == current_user.id)).order_by(Message.modified_date.desc()).all()
+        (Message.author_id == current_user.id) | (Message.addressee_id == current_user.id)).order_by(
+        Message.modified_date.desc()).all()
     return render_template('private.html', messages=messages, width=800)
 
 
@@ -160,6 +161,7 @@ def user_page():
     form = RegisterForm()
     if request.method == 'POST':
         if request.files['photo']:
+            print(form.photo.data.filename)
             filename = request.files['photo'].filename
             if filename.split('.')[-1].lower() not in ('jpg', 'png', 'gif'):
                 return render_template('user_page.html', title='User page',
@@ -171,7 +173,10 @@ def user_page():
                                        form=form,
                                        message="File size is too large")
         else:
-            file = None
+            if form.check_deletion.data == 'delete':
+                file = None
+            else:
+                file = current_user.profile_picture
         db = db_session.create_session()
 
         current_user.name = form.name.data

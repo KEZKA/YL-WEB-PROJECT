@@ -5,16 +5,24 @@
 {% block subcontent %}
 
     <form class="card-body" action="" method="POST" enctype="multipart/form-data">
-        <center><img class="user-image" src="{{ url_for('make_image') }}?{{ range(100, 1000000000) | random }}"></center>
         {{ form.hidden_tag() }}
         {{ form.csrf_token }}
+        {{ form.check_deletion(class="form-control", style="display: none;", id="check-deletion", value="do-not-delete") }}
+        <div style="position: relative;">
+            <img class="user-image changeable"
+                 title="Change image"
+                 src="{{ url_for('make_image') }}?{{ range(100, 1000000000) | random }}"
+                 onclick="document.getElementById('form-photo').click();">
+            <i class="fa fa-times fa-2x escape changeable"
+               onclick="document.getElementById('check-deletion').value = 'delete'; document.getElementById('confirm').click();"
+               aria-hidden="true"></i>
+        </div>
+
+        {{ form.photo(class="form-control-file", accept="image/*", style="display: none;", id="form-photo", onchange="document.getElementById('confirm').click();") }}
+
         {% if message %}
             <div class="alert alert-danger">{{ message }}</div>
         {% endif %}
-        Change image?
-        <div style="max-width: 300px; margin-left: auto; margin-right: auto">
-            {{ form.photo(class="form-control-file", accept="image/*") }}
-        </div>
 
         <table class="user-data">
             <tr>
@@ -48,6 +56,6 @@
                 </td>
             </tr>
         </table>
-        <p>{{ form.submit(type="submit", class="btn btn-primary", value="Save changes") }}</p>
+        <p>{{ form.submit(type="submit", class="btn btn-primary", value="Save changes", id="confirm") }}</p>
     </form>
 {% endblock %}

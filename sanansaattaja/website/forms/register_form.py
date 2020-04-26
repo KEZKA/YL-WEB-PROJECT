@@ -15,3 +15,4 @@ class RegisterForm(FlaskForm):
     photo = FileField('Add image (jpg, png, gif); max file size = 1 MB',
                       validators=[FileAllowed(['jpg', 'png'], 'Only pictures!')])
     submit = SubmitField('Finish')
+    check_deletion = StringField('stay', validators=[DataRequired()])
