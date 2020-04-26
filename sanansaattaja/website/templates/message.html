@@ -1,36 +1,35 @@
-{% extends "base.html" %}
+{% extends "window.html" %}
 
-{% block content %}
-<div class="container">
-    <div class="card">
-        <header class="card-header">Write message</header>
-        <form action="" method="post">
-            {{ form.hidden_tag() }}
-            {{ form.csrf_token }}
-            {% if message %}
+{% block head %}<title>New message</title>{% endblock %}
+
+{% block subcontent %}
+
+<header class="card-header">Write message</header>
+    <form class="card-body form-left" action="" method="POST">
+        {{ form.hidden_tag() }}
+        {{ form.csrf_token }}
+        {% if message %}
             <div class="alert alert-danger">{{ message }}</div>
-            {% endif %}
-            <p>
-                {{ form.addressee.label }}<br>
-                {{ form.addressee(class="form-control") }}<br>
-                {% for error in form.addressee.errors %}
-            <p class="alert alert-danger" role="alert">
-                {{ error }}
-            </p>
+        {% endif %}
+        <p>
+            {{ form.addressee.label }}<br>
+            {{ form.addressee(class="form-control") }}<br>
+            {% for error in form.addressee.errors %}
+                <p class="alert alert-danger" role="alert">
+                    {{ error }}
+                </p>
             {% endfor %}
-            </p>
-            <p>
-                {{ form.text.label }}<br>
-                {{ form.text(class="form-control") }}<br>
-                {% for error in form.text.errors %}
-            <p class="alert alert-danger" role="alert">
-                {{ error }}
-            </p>
+        </p>
+        <p>
+            {{ form.text.label }}<br>
+            {{ form.text(class="form-control") }}<br>
+            {% for error in form.text.errors %}
+                <p class="alert alert-danger" role="alert">
+                    {{ error }}
+                </p>
             {% endfor %}
-            </p>
-            <p>{{ form.submit(type="submit", class="btn btn-primary") }}</p>
-            {{message}}
-        </form>
-    </div>
-</div>
-        {% endblock %}
+        </p>
+        <p>{{ form.submit(type="submit", class="btn btn-primary") }}</p>
+        {{ message }}
+    </form>
+{% endblock %}
