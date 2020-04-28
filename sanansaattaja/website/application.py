@@ -9,6 +9,7 @@ from flask_login import LoginManager, login_user, logout_user, login_required, c
 from sanansaattaja.db.data import db_session
 from sanansaattaja.db.data.models import Post, Message
 from sanansaattaja.db.data.models.user import User
+from sanansaattaja.db.servicees.user_service import add_user
 from sanansaattaja.website.forms import LoginForm, RegisterForm
 from sanansaattaja.website.forms.message_form import MessageForm
 from sanansaattaja.website.forms.post_form import PostForm
@@ -78,11 +79,9 @@ def add_message():
             message.addressee_id = addressee.id
             session.add(message)
             session.commit()
-
         else:
             return render_template('message.html', title='Sending message', form=form,
                                    message="There is no such user", width=800)
-
         return redirect('/private')
     return render_template('message.html', title='Sending message', form=form, width=800)
 
@@ -116,43 +115,15 @@ def logout():
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     form = RegisterForm()
-    if request.method == 'POST':
-        if form.password.data != form.password_again.data:
+    if form.validate_on_submit():
+        try:
+            add_user(form, request)
+            return redirect('/login?register-success=true')
+        except Exception as e:
+            print(e)
             return render_template('register.html', title='Registration',
                                    form=form,
-                                   message="Passwords do not match")
-        db = db_session.create_session()
-        if db.query(User).filter(User.email == form.email.data).first():
-            return render_template('register.html', title='Registration',
-                                   form=form,
-                                   message="This email is already in use")
-        if request.files['photo']:
-            filename = request.files['photo'].filename
-            if filename.split('.')[-1].lower() not in ('jpg', 'png', 'gif'):
-                return render_template('register.html', title='Registration',
-                                       form=form,
-                                       message="Invalid extension of image")
-            file = request.files['photo'].read(MAX_FILE_SIZE)
-            if len(file) == MAX_FILE_SIZE:
-                return render_template('register.html', title='Registration',
-                                       form=form,
-                                       message="File size is too large")
-        else:
-            file = None
-
-        user = User(
-            name=form.name.data,
-            surname=form.surname.data,
-            email=form.email.data,
-            age=form.age.data,
-            sex=form.sex.data,
-            profile_picture=file
-        )
-        user.set_password(form.password.data)
-        db.add(user)
-        db.commit()
-
-        return redirect('/login?register-success=true')
+                                   message=str(e))
     return render_template('register.html', title='Registration', form=form)
 
 
