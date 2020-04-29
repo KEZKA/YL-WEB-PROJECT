@@ -20,15 +20,15 @@ def email_check(email: str):
 
 
 def add_user(form, file):
-    db = db_session.create_session()
+    session = db_session.create_session()
     password_check(form.password.data, form.password_again.data)
     email_check(form.email.data)
 
     user = User()
     user = user_add_data(user, form, file)
 
-    db.add(user)
-    db.commit()
+    session.add(user)
+    session.commit()
 
 
 def user_add_data(user: User, form, file):
@@ -43,25 +43,25 @@ def user_add_data(user: User, form, file):
 
 
 def edit_user(user: User, form, file):
-    db = db_session.create_session()
+    session = db_session.create_session()
     password_check(form.password.data, form.password_again.data)
     if form.email.data != user.email:
         email_check(form.email.data)
     user = user_add_data(user, form, file)
 
-    db.merge(user)
-    db.commit()
+    session.merge(user)
+    session.commit()
 
 
 def get_user_by_id(user_id: int):
-    db = db_session.create_session()
-    user = db.query(User).get(user_id)
+    session = db_session.create_session()
+    user = session.query(User).get(user_id)
     return user
 
 
 def get_user_by_email(email: str):
-    db = db_session.create_session()
-    user = db.query(User).filter(User.email == email).first()
+    session = db_session.create_session()
+    user = session.query(User).filter(User.email == email).first()
     if not user:
         raise UserError(msg="There is no such user")
     return user

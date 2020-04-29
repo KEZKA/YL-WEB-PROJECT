@@ -10,6 +10,7 @@ from sanansaattaja.core.utils import load_image, get_photo_from_request, fullnam
 from sanansaattaja.db.data import db_session
 from sanansaattaja.db.data.models import Post, Message
 from sanansaattaja.db.data.models.user import User
+from sanansaattaja.db.servicees.post_service import get_all_public_posts, append_post
 from sanansaattaja.db.servicees.user_service import add_user, get_user_by_id, get_user_by_email, \
     password_verification, edit_user
 from sanansaattaja.website.forms import LoginForm, RegisterForm
@@ -33,8 +34,7 @@ def load_user(user_id):
 
 @app.route('/')
 def index():
-    db = db_session.create_session()
-    posts = db.query(Post).filter(Post.is_public is True).order_by(Post.modified_date.desc()).all()
+    posts = get_all_public_posts()
     return render_template('main.html', posts=posts)
 
 
@@ -43,14 +43,7 @@ def index():
 def add_post():
     form = PostForm()
     if form.validate_on_submit():
-        session = db_session.create_session()
-        post = Post()
-        post.topic = form.topic.data
-        post.text = form.text.data
-        post.is_public = form.is_public.data
-        current_user.posts.append(post)
-        session.merge(current_user)
-        session.commit()
+        append_post(form, current_user)
         return redirect('/')
     return render_template('post.html', title='Post publishing', form=form, width=800)
 
