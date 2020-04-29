@@ -1,19 +1,20 @@
 import io
 import os
-
-from dotenv import load_dotenv
 from datetime import timedelta
 
+from dotenv import load_dotenv
 from flask import Flask, render_template, redirect, url_for, request, send_file
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
+
+from sanansaattaja.core.utils import load_image, get_photo_from_request, fullname
 from sanansaattaja.db.data import db_session
 from sanansaattaja.db.data.models import Post, Message
 from sanansaattaja.db.data.models.user import User
-from sanansaattaja.db.servicees.user_service import add_user
+from sanansaattaja.db.servicees.user_service import add_user, get_user_by_id, get_user_by_email, \
+    password_verification, edit_user
 from sanansaattaja.website.forms import LoginForm, RegisterForm
 from sanansaattaja.website.forms.message_form import MessageForm
 from sanansaattaja.website.forms.post_form import PostForm
-from sanansaattaja.core.utils import fullname, load_image
 
 load_dotenv()
 app = Flask(__name__)
@@ -27,14 +28,13 @@ login_manager.init_app(app)
 
 @login_manager.user_loader
 def load_user(user_id):
-    db = db_session.create_session()
-    return db.query(User).get(user_id)
+    return get_user_by_id(user_id)
 
 
 @app.route('/')
 def index():
     db = db_session.create_session()
-    posts = db.query(Post).filter(Post.is_public == True).order_by(Post.modified_date.desc()).all()
+    posts = db.query(Post).filter(Post.is_public is True).order_by(Post.modified_date.desc()).all()
     return render_template('main.html', posts=posts)
 
 
@@ -81,7 +81,7 @@ def add_message():
             session.commit()
         else:
             return render_template('message.html', title='Sending message', form=form,
-                                   message="There is no such user", width=800)
+                message="There is no such user", width=800)
         return redirect('/private')
     return render_template('message.html', title='Sending message', form=form, width=800)
 
@@ -90,15 +90,14 @@ def add_message():
 def login():
     login_form = LoginForm()
     if login_form.validate_on_submit():
-        db = db_session.create_session()
-        user = db.query(User).filter(User.email == login_form.email.data).first()
-        if not user:
-            return render_template('login.html', form=login_form, message="There is no such user")
-        if user.check_password(login_form.password.data):
+        try:
+            user = get_user_by_email(login_form.email.data)
+            password_verification(user, login_form.password.data)
             login_user(user, remember=login_form.remember_me.data)
-            return redirect(url_for('index'))
-        else:
-            return render_template('login.html', form=login_form, message="Wrong password")
+        except Exception as e:
+            return render_template('login.html', form=login_form, message=str(e))
+
+        return redirect(url_for('index'))
     else:
         print(request.args.get('register-success'))
         return render_template('login.html', form=login_form, success=True if request.args.get(
@@ -117,13 +116,13 @@ def register():
     form = RegisterForm()
     if form.validate_on_submit():
         try:
-            add_user(form, request)
-            return redirect('/login?register-success=true')
+            file = get_photo_from_request(request)
+            add_user(form, file)
         except Exception as e:
-            print(e)
             return render_template('register.html', title='Registration',
-                                   form=form,
-                                   message=str(e))
+                form=form,
+                message=str(e))
+        return redirect('/login?register-success=true')
     return render_template('register.html', title='Registration', form=form)
 
 
@@ -131,34 +130,15 @@ def register():
 @login_required
 def user_page():
     form = RegisterForm()
-    if request.method == 'POST':
-        if request.files['photo']:
-            print(form.photo.data.filename)
-            filename = request.files['photo'].filename
-            if filename.split('.')[-1].lower() not in ('jpg', 'png', 'gif'):
-                return render_template('user_page.html', title='User page',
-                                       form=form,
-                                       message="Invalid extension of image")
-            file = request.files['photo'].read(MAX_FILE_SIZE)
-            if len(file) == MAX_FILE_SIZE:
-                return render_template('user_page.html', title='User page',
-                                       form=form,
-                                       message="File size is too large")
-        else:
-            if form.check_deletion.data == 'delete':
-                file = None
-            else:
+    if form.validate_on_submit():
+        try:
+            file = get_photo_from_request(request)
+            if file is None and form.check_deletion.data != 'delete':
                 file = current_user.profile_picture
-        db = db_session.create_session()
-
-        current_user.name = form.name.data
-        current_user.surname = form.surname.data
-        current_user.age = form.age.data
-        current_user.sex = form.sex.data
-        current_user.profile_picture = file
-
-        db.merge(current_user)
-        db.commit()
+            edit_user(current_user, form, file)
+        except Exception as e:
+            return render_template('user_page.html', current_user=current_user, title='User page', form=form,
+                message=str(e))
         return redirect('/user_page')
     return render_template('user_page.html', current_user=current_user, title='User page', form=form)
 

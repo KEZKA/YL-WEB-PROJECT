@@ -10,3 +10,8 @@ class BaseError(Exception):
 class UserError(BaseError):
 	def __init__(self, msg='User error', *args, **kwargs):
 		super().__init__(msg=msg, *args, **kwargs)
+
+
+class PhotoError(BaseError):
+	def __init__(self, msg='Photo error', *args, **kwargs):
+		super().__init__(msg=msg, *args, **kwargs)

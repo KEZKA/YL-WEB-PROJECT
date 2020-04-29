@@ -5,31 +5,69 @@ from sanansaattaja.db.data.models import User
 MAX_FILE_SIZE = 1024 ** 2
 
 
-def add_user(form, request):
-	db = db_session.create_session()
-	if form.password.data != form.password_again.data:
-		raise UserError(msg="Passwords do not match")
+def password_check(password, password_again):
+    if password != password_again:
+        raise UserError(msg="Passwords do not match")
+    return True
 
-	if db.query(User).filter(User.email == form.email.data).first():
-		raise UserError(msg="This email is already in use")
 
-	if request.files['photo']:
-		filename = request.files['photo'].filename
-		if filename.split('.')[-1].lower() not in ('jpg', 'png', 'gif'):
-			raise UserError(msg="Invalid extension of image")
-		file = request.files['photo'].read(MAX_FILE_SIZE)
-		if len(file) == MAX_FILE_SIZE:
-			return UserError(msg="File size is too large")
-	else:
-		file = None
-	user = User()
-	print(form.name.data)
-	user.name = form.name.data,
-	user.surname = form.surname.data,
-	user.email = form.email.data,
-	user.age = form.age.data,
-	user.sex = form.sex.data,
-	user.profile_picture = file
-	user.set_password(form.password.data)
-	db.add(user)
-	db.commit()
+def email_check(email: str):
+    try:
+        get_user_by_email(email)
+    except Exception:
+        return True
+    raise UserError(msg="This email is already in use")
+
+
+def add_user(form, file):
+    db = db_session.create_session()
+    password_check(form.password.data, form.password_again.data)
+    email_check(form.email.data)
+
+    user = User()
+    user = user_add_data(user, form, file)
+
+    db.add(user)
+    db.commit()
+
+
+def user_add_data(user: User, form, file):
+    user.name = form.name.data
+    user.surname = form.surname.data
+    user.email = form.email.data
+    user.age = form.age.data
+    user.sex = form.sex.data
+    user.profile_picture = file
+    user.set_password(form.password.data)
+    return user
+
+
+def edit_user(user: User, form, file):
+    db = db_session.create_session()
+    password_check(form.password.data, form.password_again.data)
+    if form.email.data != user.email:
+        email_check(form.email.data)
+    user = user_add_data(user, form, file)
+
+    db.merge(user)
+    db.commit()
+
+
+def get_user_by_id(user_id: int):
+    db = db_session.create_session()
+    user = db.query(User).get(user_id)
+    return user
+
+
+def get_user_by_email(email: str):
+    db = db_session.create_session()
+    user = db.query(User).filter(User.email == email).first()
+    if not user:
+        raise UserError(msg="There is no such user")
+    return user
+
+
+def password_verification(user: User, password: str):
+    if not user.check_password(password):
+        raise UserError(msg="Wrong password")
+    return True
