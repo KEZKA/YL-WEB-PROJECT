@@ -207,7 +207,7 @@ db_session.global_init(fullname('db/sanansaattaja.db'))
 def run():
     port = int(os.environ.get('PORT', 8080))
     localhost = '127.0.0.1'
-    # globalhost = '0.0.0.0'
+    globalhost = '0.0.0.0'
 
     # change host before deploying on heroku
-    app.run(host=localhost, port=port, debug=False)
+    app.run(host=globalhost, port=port, debug=False)
