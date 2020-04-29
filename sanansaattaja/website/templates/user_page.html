@@ -42,6 +42,24 @@
                 </td>
             </tr>
 
+
+            <tr>
+                <td class="left-td">{{ form.email.label }}</td>
+                <td colspan="4">{{ form.email(class="form-control", value=current_user.email) }}</td>
+            </tr>
+
+            <tr>
+                <td class="left-td">{{ form.password.label }}</td>
+                <td colspan="4">
+                    {{ form.password(class="form-control", type="password", value=current_user.password) }}
+                </td>
+            </tr>
+
+            <tr>
+                <td class="left-td">{{ form.password_again.label }}</td>
+                <td colspan="4">{{ form.password_again(class="form-control", type="password") }}</td>
+            </tr>
+
             <tr>
                 <td class="left-td">{{ form.sex.label }}</td>
                 <td>
