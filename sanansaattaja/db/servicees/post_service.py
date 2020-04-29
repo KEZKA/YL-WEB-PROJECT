@@ -8,11 +8,17 @@ def get_all_public_posts():
     return posts
 
 
-def get_all_user_posts(user_id, is_public: bool):
+def get_all_user_posts(user_id):
     session = db_session.create_session()
-    posts = session.query(Post).filter(Post.is_public == is_public & Post.author_id == user_id).order_by(
+    posts = session.query(Post).filter((Post.is_public == True) & (Post.author_id == user_id)).order_by(
         Post.modified_date.desc()).all()
     return posts
+
+def get_user_notes(cur_user_id):
+    session = db_session.create_session()
+    notes = session.query(Post).filter((Post.is_public == False) & (Post.author_id == cur_user_id)).order_by(
+        Post.modified_date.desc()).all()
+    return notes
 
 
 def append_post(form, user: User):
