@@ -9,7 +9,7 @@ from flask_login import LoginManager, login_user, logout_user, login_required, c
 from sanansaattaja.core.utils import load_image, get_photo_from_request, fullname
 from sanansaattaja.db.data import db_session
 from sanansaattaja.db.servicees.message_service import get_all_user_messages, append_message
-from sanansaattaja.db.servicees.post_service import get_all_public_posts, append_post
+from sanansaattaja.db.servicees.post_service import get_all_public_posts, append_post, get_all_user_posts
 from sanansaattaja.db.servicees.user_service import add_user, get_user_by_id, get_user_by_email, \
     password_verification, edit_user
 from sanansaattaja.website.forms import LoginForm, RegisterForm
@@ -128,6 +128,14 @@ def make_image():
         with open(load_image(f"{current_user.sex}.jpg"), mode='rb') as image:
             return send_file(io.BytesIO(image.read()), mimetype='image/*')
     return send_file(io.BytesIO(current_user.profile_picture), mimetype='image/*')
+
+@app.route('/user_posts/<int:user_id>')
+@login_required
+def user_posts(user_id):
+    posts = get_all_user_posts(user_id)
+    print(posts)
+    user_name = get_user_by_id(user_id).name
+    return render_template('user_posts.html', posts=posts, user_name=user_name)
 
 
 db_session.global_init(fullname('db/sanansaattaja.db'))
