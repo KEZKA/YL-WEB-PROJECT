@@ -80,8 +80,8 @@ def add_message():
             session.add(message)
             session.commit()
         else:
-            return render_template('message.html', title='Sending message', form=form,
-                message="There is no such user", width=800)
+            return render_template('message.html', title='Sending message', form=form, message="There is no such user",
+                width=800)
         return redirect('/private')
     return render_template('message.html', title='Sending message', form=form, width=800)
 

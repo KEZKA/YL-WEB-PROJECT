@@ -14,7 +14,7 @@ def password_check(password, password_again):
 def email_check(email: str):
     try:
         get_user_by_email(email)
-    except Exception:
+    except UserError:
         return True
     raise UserError(msg="This email is already in use")
 

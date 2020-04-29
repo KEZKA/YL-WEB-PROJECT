@@ -4,9 +4,9 @@ from flask_login import UserMixin
 from sqlalchemy import Column, Integer, String, DateTime, orm, Binary
 from sqlalchemy_serializer import SerializerMixin
 from werkzeug.security import generate_password_hash, check_password_hash
-from sanansaattaja.db.data.models.message import Message
 
 from sanansaattaja.db.data.db_session import SqlAlchemyBase
+from sanansaattaja.db.data.models.message import Message
 
 
 class User(SqlAlchemyBase, UserMixin, SerializerMixin):
@@ -25,6 +25,7 @@ class User(SqlAlchemyBase, UserMixin, SerializerMixin):
     posts = orm.relation('Post', back_populates='author')
     messages = orm.relation('Message', back_populates='author', foreign_keys=[Message.author_id])
     received_messages = orm.relation('Message', back_populates='addressee', foreign_keys=[Message.addressee_id])
+
     # u_m = []
     # u_r_m = []
 
