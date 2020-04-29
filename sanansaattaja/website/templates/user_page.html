@@ -1,79 +1,18 @@
-{% extends "window.html" %}
+{% extends 'base.html' %}
 
-{% block head %}<title>{{ current_user.name }}'s page</title>{% endblock %}
+{% block head %}<title>Main</title>{% endblock %}
 
-{% block subcontent %}
+{% block content %}
+{% for post in posts %}
 
-    <form class="card-body" action="" method="POST" enctype="multipart/form-data">
-        {{ form.hidden_tag() }}
-        {{ form.csrf_token }}
-        {{ form.check_deletion(class="form-control", style="display: none;", id="check-deletion", value="do-not-delete") }}
-        <div style="position: relative;">
-            <img class="user-image changeable"
-                 title="Change image"
-                 src="{{ url_for('make_image') }}?{{ range(100, 1000000000) | random }}"
-                 onclick="document.getElementById('form-photo').click();">
-            <i class="fa fa-times fa-2x escape changeable" title="Delete image"
-               onclick="document.getElementById('check-deletion').value = 'delete'; document.getElementById('confirm').click();"
-               aria-hidden="true"></i>
-        </div>
+<div class="jumbotron jumbotron-fluid" style="margin: 0px 100px 32px 100px;">
+    <div class="container">
+        <p align="right" class="font-weight-light text-info ">{{post.author.name}} {{post.author.surname}},
+            {{post.modified_date}} <br> {{post.author.email}}</p>
+        <h1 class="display-4 text-uppercase ">{{post.topic}}</h1>
+        <p class="lead"> {{post.text}}</p>
+    </div>
+</div>
+{% endfor %}
 
-        {{ form.photo(class="form-control-file", accept="image/*", style="display: none;", id="form-photo", onchange="document.getElementById('confirm').click();") }}
-
-        {% if message %}
-            <div class="alert alert-danger">{{ message }}</div>
-        {% endif %}
-
-        <table class="user-data">
-            <tr>
-                <td class="left-td">{{ form.name.label }}</td>
-                <td colspan="4">{{ form.name(class="form-control", value=current_user.name) }}</td>
-            </tr>
-
-            <tr>
-                <td class="left-td">{{ form.surname.label }}</td>
-                <td colspan="4">{{ form.surname(class="form-control", value=current_user.surname) }}</td>
-            </tr>
-
-            <tr>
-                <td class="left-td">{{ form.age.label }}</td>
-                <td colspan="4">
-                    {{ form.age(class="form-control", type="number", value=current_user.age) }}
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="left-td">{{ form.email.label }}</td>
-                <td colspan="4">{{ form.email(class="form-control", value=current_user.email) }}</td>
-            </tr>
-
-            <tr>
-                <td class="left-td">{{ form.password.label }}</td>
-                <td colspan="4">
-                    {{ form.password(class="form-control", type="password", value=current_user.password) }}
-                </td>
-            </tr>
-
-            <tr>
-                <td class="left-td">{{ form.password_again.label }}</td>
-                <td colspan="4">{{ form.password_again(class="form-control", type="password") }}</td>
-            </tr>
-
-            <tr>
-                <td class="left-td">{{ form.sex.label }}</td>
-                <td>
-                    {% for subfield in form.sex %}
-                        {% if current_user.sex == subfield.data %}
-                            {{ subfield(required="required", checked="checked") }}
-                        {% else %}
-                            {{ subfield(required="required") }}
-                        {% endif %}
-                        {{ subfield.label }}&nbsp;&nbsp;&nbsp;&nbsp;
-                    {% endfor %}
-                </td>
-            </tr>
-        </table>
-        <p>{{ form.submit(type="submit", class="btn btn-primary", value="Save changes", id="confirm") }}</p>
-    </form>
 {% endblock %}

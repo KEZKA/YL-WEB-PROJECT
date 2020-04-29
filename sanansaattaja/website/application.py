@@ -105,9 +105,9 @@ def register():
     return render_template('register.html', title='Registration', form=form)
 
 
-@app.route('/user_page', methods=['GET', 'POST'])
+@app.route('/edit_page', methods=['GET', 'POST'])
 @login_required
-def user_page():
+def edit_page():
     form = RegisterForm()
     if form.validate_on_submit():
         try:
@@ -116,9 +116,9 @@ def user_page():
                 file = current_user.profile_picture
             edit_user(current_user, form, file)
         except Exception as e:
-            return render_template('user_page.html', current_user=current_user, title='User page', form=form, message=str(e))
-        return redirect('/user_page')
-    return render_template('user_page.html', current_user=current_user, title='User page', form=form)
+            return render_template('edit_page.html', current_user=current_user, title='Edit page', form=form, message=str(e))
+        return redirect('edit_page')
+    return render_template('edit_page.html', current_user=current_user, title='Edit page', form=form)
 
 
 @app.route('/make_image')
@@ -139,4 +139,4 @@ def run():
     globalhost = '0.0.0.0'
 
     # change host before deploying on heroku
-    app.run(host=globalhost, port=port, debug=False)
+    app.run(host=localhost, port=port, debug=False)
