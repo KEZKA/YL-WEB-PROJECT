@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block head %}<title>Your notes</title>{% endblock %}
+
+{% block content %}
+{% for note in notes %}
+
+<div class="jumbotron jumbotron-fluid" style="margin: 0px 100px 32px 100px;">
+    <div class="container">
+        <p align="right" class="font-weight-light text-info ">{{note.modified_date}}</p>
+        <h1 class="display-4 text-uppercase ">{{note.topic}}</h1>
+        <p class="lead"> {{note.text}}</p>
+    </div>
+</div>
+{% endfor %}
+
+{% endblock %}

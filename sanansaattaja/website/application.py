@@ -9,7 +9,8 @@ from flask_login import LoginManager, login_user, logout_user, login_required, c
 from sanansaattaja.core.utils import load_image, get_photo_from_request, fullname
 from sanansaattaja.db.data import db_session
 from sanansaattaja.db.servicees.message_service import get_all_user_messages, append_message
-from sanansaattaja.db.servicees.post_service import get_all_public_posts, append_post, get_all_user_posts
+from sanansaattaja.db.servicees.post_service import get_all_public_posts, append_post, get_all_user_posts, \
+    get_user_notes
 from sanansaattaja.db.servicees.user_service import add_user, get_user_by_id, get_user_by_email, \
     password_verification, edit_user
 from sanansaattaja.website.forms import LoginForm, RegisterForm
@@ -136,6 +137,12 @@ def user_posts(user_id):
     print(posts)
     user_name = get_user_by_id(user_id).name
     return render_template('user_posts.html', posts=posts, user_name=user_name)
+
+@app.route('/notes')
+@login_required
+def notes():
+    notes = get_user_notes(current_user.id)
+    return render_template('notes.html', notes=notes)
 
 
 db_session.global_init(fullname('db/sanansaattaja.db'))
