@@ -147,6 +147,10 @@ def notes():
 
 db_session.global_init(fullname('db/sanansaattaja.db'))
 
+@app.errorhandler(404)
+def not_found(error):
+    return render_template('error.html')
+
 
 def run():
     port = int(os.environ.get('PORT', 8080))
