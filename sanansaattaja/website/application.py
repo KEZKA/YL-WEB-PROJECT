@@ -8,8 +8,7 @@ from flask_login import LoginManager, login_user, logout_user, login_required, c
 
 from sanansaattaja.core.utils import load_image, get_photo_from_request, fullname
 from sanansaattaja.db.data import db_session
-from sanansaattaja.db.data.models import Post, Message
-from sanansaattaja.db.data.models.user import User
+from sanansaattaja.db.servicees.message_service import get_all_user_messages, append_message
 from sanansaattaja.db.servicees.post_service import get_all_public_posts, append_post
 from sanansaattaja.db.servicees.user_service import add_user, get_user_by_id, get_user_by_email, \
     password_verification, edit_user
@@ -50,11 +49,8 @@ def add_post():
 
 @app.route('/private')
 @login_required
-def messages():
-    db = db_session.create_session()
-    messages = db.query(Message).filter(
-        (Message.author_id == current_user.id) | (Message.addressee_id == current_user.id)).order_by(
-        Message.modified_date.desc()).all()
+def private():
+    messages = get_all_user_messages(current_user)
     return render_template('private.html', messages=messages, width=800)
 
 
@@ -63,18 +59,10 @@ def messages():
 def add_message():
     form = MessageForm()
     if form.validate_on_submit():
-        session = db_session.create_session()
-        addressee = session.query(User).filter(User.email == form.addressee.data).first()
-        if addressee:
-            message = Message()
-            message.text = form.text.data
-            message.author_id = current_user.id
-            message.addressee_id = addressee.id
-            session.add(message)
-            session.commit()
-        else:
-            return render_template('message.html', title='Sending message', form=form, message="There is no such user",
-                width=800)
+        try:
+            append_message(form, current_user)
+        except Exception as e:
+            return render_template('message.html', title='Sending message', form=form, message=str(e), width=800)
         return redirect('/private')
     return render_template('message.html', title='Sending message', form=form, width=800)
 
@@ -112,9 +100,7 @@ def register():
             file = get_photo_from_request(request)
             add_user(form, file)
         except Exception as e:
-            return render_template('register.html', title='Registration',
-                form=form,
-                message=str(e))
+            return render_template('register.html', title='Registration', form=form, message=str(e))
         return redirect('/login?register-success=true')
     return render_template('register.html', title='Registration', form=form)
 
@@ -130,8 +116,7 @@ def user_page():
                 file = current_user.profile_picture
             edit_user(current_user, form, file)
         except Exception as e:
-            return render_template('user_page.html', current_user=current_user, title='User page', form=form,
-                message=str(e))
+            return render_template('user_page.html', current_user=current_user, title='User page', form=form, message=str(e))
         return redirect('/user_page')
     return render_template('user_page.html', current_user=current_user, title='User page', form=form)
 
