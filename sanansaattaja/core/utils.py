@@ -10,7 +10,7 @@ def fullname(name):
 
 
 def load_image(name):
-    return fullname('website\\static\\images\\' + name)
+    return fullname('website/static/images/' + name)
 
 
 def get_photo_from_request(request):
