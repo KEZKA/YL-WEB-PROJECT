@@ -1,10 +1,21 @@
-{% extends 'base.html' %}
+{% extends 'window.html' %}
 
-{% block head %}<title>{{ user_name }}'s posts</title>{% endblock %}
+{% block head %}<title>{{ user.name }}'s page</title>{% endblock %}
 
 {% block content %}
+<center>
+<header  class="card-header" style="width:40%">{{ user.name }} {{ user.surname}}
+        <div style="position: relative;">
+            <img src="{{ user.image }}">
+        </div>
+        <p> Email: {{ user.email }} </p>
+        <p> Age: {{ user.age }} </p>
+        <p> Sex: {{ user.sex[:4] }} </p>
+        <p> ID: {{ user.id }} </p>
+</header>
+<p>---------------</p>
+</center>
 {% for post in posts %}
-
 <div class="jumbotron jumbotron-fluid" style="margin: 0px 100px 32px 100px;">
     <div class="container">
         <p align="right" class="font-weight-light text-info ">{{post.author.name}} {{post.author.surname}},
@@ -14,5 +25,4 @@
     </div>
 </div>
 {% endfor %}
-
 {% endblock %}
