@@ -61,6 +61,11 @@ def get_user_by_id(user_id: int):
     return user
 
 
+def get_users():
+    session = db_session.create_session()
+    users = session.query(User).all()
+    return users
+
 def get_user_by_email(email: str):
     session = db_session.create_session()
     user = session.query(User).filter(User.email == email).first()

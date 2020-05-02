@@ -1,0 +1,27 @@
+{% extends "window.html" %}
+
+{% block head %}<title>New message</title>{% endblock %}
+{% block subcontent %}
+{% if users == [] %}
+<div class="jumbotron jumbotron-fluid" style="margin: 0px 100px 32px 100px;">
+    <div class="container">
+        <h1 class="display-4 text-uppercase ">There's nothing here yet</h1>
+    </div>
+</div>
+
+{% endif %}
+{% for user in users %}
+<center>
+    <header class="card-header" style="width:40%">{{ user.name }} {{ user.surname}}
+        <div style="position: relative;">
+            <img src="{{ user.image }}">
+        </div>
+        <p> Email: {{ user.email }} </p>
+        <p> Age: {{ user.age }} </p>
+        <p> Sex: {{ user.sex[:4] }} </p>
+        <p> ID: {{ user.id }} </p>
+    </header>
+    <p>---------------</p>
+</center>
+{% endfor %}
+{% endblock %}

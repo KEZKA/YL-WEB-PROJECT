@@ -12,7 +12,7 @@ from sanansaattaja.db.servicees.message_service import get_all_user_messages, ap
 from sanansaattaja.db.servicees.post_service import get_all_public_posts, append_post, get_all_user_posts, \
     get_user_notes
 from sanansaattaja.db.servicees.user_service import add_user, get_user_by_id, get_user_by_email, \
-    password_verification, edit_user
+    password_verification, edit_user, get_users
 from sanansaattaja.website.forms import LoginForm, RegisterForm
 from sanansaattaja.website.forms.message_form import MessageForm
 from sanansaattaja.website.forms.post_form import PostForm
@@ -149,6 +149,15 @@ def user_posts(user_id):
 def notes():
     notes = get_user_notes(current_user.id)
     return render_template('notes.html', notes=notes)
+
+
+@app.route('/users')
+def users():
+    try:
+        users = get_users()
+    except Exception:
+        return render_template('all_users.html', users=[])
+    return render_template('all_users.html', users=users)
 
 
 db_session.global_init(fullname('db/sanansaattaja.db'))
