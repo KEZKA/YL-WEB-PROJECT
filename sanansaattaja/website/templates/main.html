@@ -18,8 +18,8 @@
 
 <div class="jumbotron jumbotron-fluid" style="margin: 0px 100px 32px 100px;">
     <div class="container">
-        <p align="right" class="font-weight-light text-info ">{{post.author.name}} {{post.author.surname}},
-            {{post.modified_date}} <br> {{post.author.email}}</p>
+        <p align="right" class="font-weight-light text-info ">
+            {{post.modified_date}} <br> <a class="nav-link" href='/user_posts/{{post.author.id}}'> {{post.author.name}} {{post.author.surname}}</a>, {{post.author.email}}</p>
         <h1 class="display-4 text-uppercase ">{{post.topic}}</h1>
         <p class="lead"> {{post.text}}</p>
     </div>
