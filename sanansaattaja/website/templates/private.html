@@ -3,19 +3,30 @@
 {% block head %}<title>Messages</title>{% endblock %}
 
 {% block content %}
-{% for message in messages %}
+{% if message %}
+            <div class="alert alert-danger">{{ message }}</div>
+{% endif %}
+{% if messages == [] %}
+<div class="jumbotron jumbotron-fluid" style="margin: 0px 100px 32px 100px;">
+    <div class="container">
+        <h1 class="display-4 text-uppercase ">There's nothing here yet</h1>
+    </div>
+</div>
+
+{% endif %}
+{% for msg in messages %}
 
 <div class="jumbotron jumbotron-fluid" style="margin: 0px 100px 32px 100px;">
     <div class="container">
-        {% if message.author_id == current_user.id %}
-        <p align="right" class="font-weight-light text-info ">{{message.addressee.name}} {{message.addressee.surname}},
-            {{message.modified_date}} <br> {{message.addressee.email}}</p>
-        <p class="lead"> {{message.text}}</p>
-        <a class="btn btn-primary btn-lg" href="#" role="button">Texting</a>
+        {% if msg.author_id == current_user.id %}
+        <p align="right" class="font-weight-light text-info ">to {{msg.addressee.name}} {{msg.addressee.surname}},
+            {{msg.modified_date}} <br> {{msg.addressee.email}}</p>
+        <p class="lead"> {{msg.text}}</p>
+        <a class="btn btn-primary btn-lg" href="/add_message?email={{msg.addressee.email}}" role="button">Texting</a>
         {% else %}
-        <p align="right" class="font-weight-light text-info ">{{message.author_id.name}} {{message.author_id.surname}},
-            {{message.modified_date}} <br> {{message.author_id.email}}</p>
-        <p class="lead"> {{message.text}}</p>
+        <p align="right" class="font-weight-light text-info ">from {{msg.author_id.name}} {{msg.author_id.surname}},
+            {{msg.modified_date}} <br> {{msg.author_id.email}}</p>
+        <p class="lead"> {{msg.text}}</p>
         <a class="btn btn-primary btn-lg" href="#" role="button">Reply to</a>
         {% endif %}
     </div>

@@ -24,3 +24,4 @@ def get_photo_from_request(request):
     else:
         file = None
     return file
+
