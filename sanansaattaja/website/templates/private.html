@@ -19,15 +19,15 @@
 <div class="jumbotron jumbotron-fluid" style="margin: 0px 100px 32px 100px;">
     <div class="container">
         {% if msg.author_id == current_user.id %}
-        <p align="right" class="font-weight-light text-info ">to {{msg.addressee.name}} {{msg.addressee.surname}},
-            {{msg.modified_date}} <br> {{msg.addressee.email}}</p>
+        <p align="right" class="font-weight-light text-info ">to <a class="nav-link" href='/user_posts/{{post.author.id}}'>{{msg.addressee.name}} {{msg.addressee.surname}}</a>,
+            {{msg.addressee.email}} <br> {{msg.modified_date}}</p>
         <p class="lead"> {{msg.text}}</p>
         <a class="btn btn-primary btn-lg" href="/add_message?email={{msg.addressee.email}}" role="button">Texting</a>
         {% else %}
-        <p align="right" class="font-weight-light text-info ">from {{msg.author_id.name}} {{msg.author_id.surname}},
-            {{msg.modified_date}} <br> {{msg.author_id.email}}</p>
+        <p align="right" class="font-weight-light text-info ">from <a class="nav-link" href='/user_posts/{{post.author.id}}'>{{msg.author_id.name}} {{msg.author_id.surname}}</a>,
+            {{msg.author_id.email}}<br>{{msg.modified_date}}  </p>
         <p class="lead"> {{msg.text}}</p>
-        <a class="btn btn-primary btn-lg" href="#" role="button">Reply to</a>
+        <a class="btn btn-primary btn-lg" href="/add_message?email={{msg.addressee.email}}" role="button">Reply to</a>
         {% endif %}
     </div>
 </div>

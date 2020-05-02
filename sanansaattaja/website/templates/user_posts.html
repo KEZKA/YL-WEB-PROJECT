@@ -13,8 +13,10 @@
         </div>
         <p> Email: {{ user.email }} </p>
         <p> Age: {{ user.age }} </p>
-        <p> Sex: {{ user.sex[:4] }} </p>
+        <p> Sex: {{ user.sex }} </p>
         <p> ID: {{ user.id }} </p>
+    <a class="btn btn-primary btn-lg" href="/add_message?email={{user.email}}" role="button">Texting</a>
+
 </header>
 <p>---------------</p>
 </center>
@@ -29,8 +31,8 @@
 {% for post in posts %}
 <div class="jumbotron jumbotron-fluid" style="margin: 0px 100px 32px 100px;">
     <div class="container">
-        <p align="right" class="font-weight-light text-info ">{{post.author.name}} {{post.author.surname}},
-            {{post.modified_date}} <br> {{post.author.email}}</p>
+        <p align="right" class="font-weight-light text-info ">
+            {{post.modified_date}} <br> {{post.author.name}} {{post.author.surname}}, {{post.author.email}}</p>
         <h1 class="display-4 text-uppercase ">{{post.topic}}</h1>
         <p class="lead"> {{post.text}}</p>
     </div>
