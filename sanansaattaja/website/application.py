@@ -76,8 +76,12 @@ def add_message():
             append_message(form, current_user)
         except Exception as e:
             return render_template('message.html', title='Sending message', form=form, message=str(e), width=800)
-        return redirect('/private')
-    return render_template('message.html', title='Sending message', form=form, width=800)
+        return redirect(url_for('private'))
+    else:
+        email = request.args.get('email')
+        if email:
+            return render_template('message.html', title='Sending message', form=form, width=800, addressee=email)
+        return render_template('message.html', title='Sending message', form=form, width=800, addressee="")
 
 
 @app.route('/login', methods=['GET', 'POST'])

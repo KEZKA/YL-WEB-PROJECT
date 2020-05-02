@@ -22,7 +22,7 @@
         <p align="right" class="font-weight-light text-info ">to {{msg.addressee.name}} {{msg.addressee.surname}},
             {{msg.modified_date}} <br> {{msg.addressee.email}}</p>
         <p class="lead"> {{msg.text}}</p>
-        <a class="btn btn-primary btn-lg" href="#" role="button">Texting</a>
+        <a class="btn btn-primary btn-lg" href="/add_message?email={{msg.addressee.email}}" role="button">Texting</a>
         {% else %}
         <p align="right" class="font-weight-light text-info ">from {{msg.author_id.name}} {{msg.author_id.surname}},
             {{msg.modified_date}} <br> {{msg.author_id.email}}</p>

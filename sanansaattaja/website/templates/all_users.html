@@ -21,8 +21,9 @@
         </div>
         <p> Email: {{ user.email }} </p>
         <p> Age: {{ user.age }} </p>
-        <p> Sex: {{ user.sex[:4] }} </p>
+        <p> Sex: {{ user.sex }} </p>
         <p> ID: {{ user.id }} </p>
+        <a class="btn btn-primary btn-lg" href="/add_message?email={{user.email}}" role="button">Texting</a>
     </header>
     <p>---------------</p>
 </center>
