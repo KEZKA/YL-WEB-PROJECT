@@ -37,7 +37,10 @@ def load_user(user_id):
 
 @app.route('/')
 def index():
-    posts = get_all_public_posts()
+    try:
+        posts = get_all_public_posts()
+    except Exception as e:
+        return render_template('main.html', posts=[], message=str(e))
     return render_template('main.html', posts=posts)
 
 
@@ -46,7 +49,10 @@ def index():
 def add_post():
     form = PostForm()
     if form.validate_on_submit():
-        append_post(form, current_user)
+        try:
+            append_post(form, current_user)
+        except Exception as e:
+            return render_template('post.html', title='Post publishing', form=form, message=str(e), width=800)
         return redirect('/')
     return render_template('post.html', title='Post publishing', form=form, width=800)
 
@@ -54,7 +60,10 @@ def add_post():
 @app.route('/private')
 @login_required
 def private():
-    messages = get_all_user_messages(current_user)
+    try:
+        messages = get_all_user_messages(current_user)
+    except Exception as e:
+        return render_template('private.html', messages=[], message=str(e), width=800)
     return render_template('private.html', messages=messages, width=800)
 
 
@@ -84,7 +93,6 @@ def login():
 
         return redirect(url_for('index'))
     else:
-        print(request.args.get('register-success'))
         return render_template('login.html', form=login_form, success=True if request.args.get(
             'register-success') == 'true' else False)
 
@@ -138,16 +146,21 @@ def make_image():
 @app.route('/user_posts/<int:user_id>')
 @login_required
 def user_posts(user_id):
-    posts = get_all_user_posts(user_id)
-    print(posts)
-    user = get_user_by_id(user_id)
+    try:
+        posts = get_all_user_posts(user_id)
+        user = get_user_by_id(user_id)
+    except Exception as e:
+        return render_template('main.html', posts=[], message=str(e))
     return render_template('user_posts.html', posts=posts, user=user)
 
 
 @app.route('/notes')
 @login_required
 def notes():
-    notes = get_user_notes(current_user.id)
+    try:
+        notes = get_user_notes(current_user.id)
+    except Exception as e:
+        return render_template('notes.html', notes=[], message=str(e))
     return render_template('notes.html', notes=notes)
 
 
@@ -155,8 +168,8 @@ def notes():
 def users():
     try:
         users = get_users()
-    except Exception:
-        return render_template('all_users.html', users=[])
+    except Exception as e:
+        return render_template('all_users.html', users=[], message=str(e))
     return render_template('all_users.html', users=users)
 
 

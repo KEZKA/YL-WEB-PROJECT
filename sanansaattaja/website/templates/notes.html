@@ -3,6 +3,9 @@
 {% block head %}<title>Your notes</title>{% endblock %}
 
 {% block content %}
+{% if message %}
+            <div class="alert alert-danger">{{ message }}</div>
+{% endif %}
 {% if notes == [] %}
 <div class="jumbotron jumbotron-fluid" style="margin: 0px 100px 32px 100px;">
     <div class="container">

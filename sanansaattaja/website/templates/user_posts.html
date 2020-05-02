@@ -3,6 +3,9 @@
 {% block head %}<title>{{ user.name }}'s page</title>{% endblock %}
 
 {% block content %}
+{% if message %}
+            <div class="alert alert-danger">{{ message }}</div>
+{% endif %}
 <center>
 <header  class="card-header" style="width:40%">{{ user.name }} {{ user.surname}}
         <div style="position: relative;">

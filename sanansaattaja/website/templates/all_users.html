@@ -10,6 +10,9 @@
 </div>
 
 {% endif %}
+{% if message %}
+            <div class="alert alert-danger">{{ message }}</div>
+{% endif %}
 {% for user in users %}
 <center>
     <header class="card-header" style="width:40%">{{ user.name }} {{ user.surname}}
