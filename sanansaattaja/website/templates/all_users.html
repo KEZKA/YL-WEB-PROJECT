@@ -15,7 +15,10 @@
 {% endif %}
 {% for user in users %}
 <center>
-    <header class="card-header" style="width:40%">{{ user.name }} {{ user.surname}}
+    <header class="card-header" style="">
+        <a class="nav-link" href='/user_posts/{{user.id}}'>
+        {{ user.name }} {{ user.surname}}
+        </a>
         <div style="position: relative;">
             <img src="{{ user.image }}">
         </div>
