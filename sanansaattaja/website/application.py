@@ -29,7 +29,10 @@ login_manager.init_app(app)
 
 @login_manager.user_loader
 def load_user(user_id):
-    return get_user_by_id(user_id)
+    try:
+        return get_user_by_id(user_id)
+    except Exception:
+        return None
 
 
 @app.route('/')
@@ -135,8 +138,8 @@ def make_image():
 def user_posts(user_id):
     posts = get_all_user_posts(user_id)
     print(posts)
-    user_name = get_user_by_id(user_id).name
-    return render_template('user_posts.html', posts=posts, user_name=user_name)
+    user = get_user_by_id(user_id)
+    return render_template('user_posts.html', posts=posts, user=user)
 
 @app.route('/notes')
 @login_required
@@ -158,4 +161,4 @@ def run():
     globalhost = '0.0.0.0'
 
     # change host before deploying on heroku
-    app.run(host=localhost, port=port, debug=False)
+    app.run(host=globalhost, port=port, debug=False)
