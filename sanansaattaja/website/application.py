@@ -120,7 +120,8 @@ def edit_page():
                 file = current_user.profile_picture
             edit_user(current_user, form, file)
         except Exception as e:
-            return render_template('edit_page.html', current_user=current_user, title='Edit page', form=form, message=str(e))
+            return render_template('edit_page.html', current_user=current_user, title='Edit page', form=form,
+                message=str(e))
         return redirect('edit_page')
     return render_template('edit_page.html', current_user=current_user, title='Edit page', form=form)
 
@@ -133,6 +134,7 @@ def make_image():
             return send_file(io.BytesIO(image.read()), mimetype='image/*')
     return send_file(io.BytesIO(current_user.profile_picture), mimetype='image/*')
 
+
 @app.route('/user_posts/<int:user_id>')
 @login_required
 def user_posts(user_id):
@@ -140,6 +142,7 @@ def user_posts(user_id):
     print(posts)
     user = get_user_by_id(user_id)
     return render_template('user_posts.html', posts=posts, user=user)
+
 
 @app.route('/notes')
 @login_required
@@ -149,6 +152,7 @@ def notes():
 
 
 db_session.global_init(fullname('db/sanansaattaja.db'))
+
 
 @app.errorhandler(404)
 def not_found(error):

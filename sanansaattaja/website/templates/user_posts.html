@@ -15,6 +15,14 @@
 </header>
 <p>---------------</p>
 </center>
+{% if posts == [] %}
+<div class="jumbotron jumbotron-fluid" style="margin: 0px 100px 32px 100px;">
+    <div class="container">
+        <h1 class="display-4 text-uppercase ">There's nothing here yet</h1>
+    </div>
+</div>
+
+{% endif %}
 {% for post in posts %}
 <div class="jumbotron jumbotron-fluid" style="margin: 0px 100px 32px 100px;">
     <div class="container">
