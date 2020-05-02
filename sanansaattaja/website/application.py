@@ -12,7 +12,7 @@ from sanansaattaja.db.servicees.message_service import get_all_user_messages, ap
 from sanansaattaja.db.servicees.post_service import get_all_public_posts, append_post, get_all_user_posts, \
     get_user_notes
 from sanansaattaja.db.servicees.user_service import add_user, get_user_by_id, get_user_by_email, \
-    password_verification, edit_user
+    password_verification, edit_user, get_users
 from sanansaattaja.website.forms import LoginForm, RegisterForm
 from sanansaattaja.website.forms.message_form import MessageForm
 from sanansaattaja.website.forms.post_form import PostForm
@@ -37,7 +37,10 @@ def load_user(user_id):
 
 @app.route('/')
 def index():
-    posts = get_all_public_posts()
+    try:
+        posts = get_all_public_posts()
+    except Exception as e:
+        return render_template('main.html', posts=[], message=str(e))
     return render_template('main.html', posts=posts)
 
 
@@ -46,7 +49,10 @@ def index():
 def add_post():
     form = PostForm()
     if form.validate_on_submit():
-        append_post(form, current_user)
+        try:
+            append_post(form, current_user)
+        except Exception as e:
+            return render_template('post.html', title='Post publishing', form=form, message=str(e), width=800)
         return redirect('/')
     return render_template('post.html', title='Post publishing', form=form, width=800)
 
@@ -54,7 +60,10 @@ def add_post():
 @app.route('/private')
 @login_required
 def private():
-    messages = get_all_user_messages(current_user)
+    try:
+        messages = get_all_user_messages(current_user)
+    except Exception as e:
+        return render_template('private.html', messages=[], message=str(e), width=800)
     return render_template('private.html', messages=messages, width=800)
 
 
@@ -67,8 +76,12 @@ def add_message():
             append_message(form, current_user)
         except Exception as e:
             return render_template('message.html', title='Sending message', form=form, message=str(e), width=800)
-        return redirect('/private')
-    return render_template('message.html', title='Sending message', form=form, width=800)
+        return redirect(url_for('private'))
+    else:
+        email = request.args.get('email')
+        if email:
+            return render_template('message.html', title='Sending message', form=form, width=800, addressee=email)
+        return render_template('message.html', title='Sending message', form=form, width=800, addressee="")
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -84,7 +97,6 @@ def login():
 
         return redirect(url_for('index'))
     else:
-        print(request.args.get('register-success'))
         return render_template('login.html', form=login_form, success=True if request.args.get(
             'register-success') == 'true' else False)
 
@@ -120,7 +132,8 @@ def edit_page():
                 file = current_user.profile_picture
             edit_user(current_user, form, file)
         except Exception as e:
-            return render_template('edit_page.html', current_user=current_user, title='Edit page', form=form, message=str(e))
+            return render_template('edit_page.html', current_user=current_user, title='Edit page', form=form,
+                message=str(e))
         return redirect('edit_page')
     return render_template('edit_page.html', current_user=current_user, title='Edit page', form=form)
 
@@ -133,22 +146,39 @@ def make_image():
             return send_file(io.BytesIO(image.read()), mimetype='image/*')
     return send_file(io.BytesIO(current_user.profile_picture), mimetype='image/*')
 
+
 @app.route('/user_posts/<int:user_id>')
 @login_required
 def user_posts(user_id):
-    posts = get_all_user_posts(user_id)
-    print(posts)
-    user = get_user_by_id(user_id)
+    try:
+        posts = get_all_user_posts(user_id)
+        user = get_user_by_id(user_id)
+    except Exception as e:
+        return render_template('main.html', posts=[], message=str(e))
     return render_template('user_posts.html', posts=posts, user=user)
+
 
 @app.route('/notes')
 @login_required
 def notes():
-    notes = get_user_notes(current_user.id)
+    try:
+        notes = get_user_notes(current_user.id)
+    except Exception as e:
+        return render_template('notes.html', notes=[], message=str(e))
     return render_template('notes.html', notes=notes)
 
 
+@app.route('/users')
+def users():
+    try:
+        users = get_users()
+    except Exception as e:
+        return render_template('all_users.html', users=[], message=str(e))
+    return render_template('all_users.html', users=users)
+
+
 db_session.global_init(fullname('db/sanansaattaja.db'))
+
 
 @app.errorhandler(404)
 def not_found(error):

@@ -3,6 +3,9 @@
 {% block head %}<title>{{ user.name }}'s page</title>{% endblock %}
 
 {% block content %}
+{% if message %}
+            <div class="alert alert-danger">{{ message }}</div>
+{% endif %}
 <center>
 <header  class="card-header" style="width:40%">{{ user.name }} {{ user.surname}}
         <div style="position: relative;">
@@ -15,6 +18,14 @@
 </header>
 <p>---------------</p>
 </center>
+{% if posts == [] %}
+<div class="jumbotron jumbotron-fluid" style="margin: 0px 100px 32px 100px;">
+    <div class="container">
+        <h1 class="display-4 text-uppercase ">There's nothing here yet</h1>
+    </div>
+</div>
+
+{% endif %}
 {% for post in posts %}
 <div class="jumbotron jumbotron-fluid" style="margin: 0px 100px 32px 100px;">
     <div class="container">

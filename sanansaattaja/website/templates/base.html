@@ -36,6 +36,12 @@
                     Main
                 </a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link" href='/users?filter=False'>
+                    Users
+                </a>
+            </li>
+
             {% if current_user.is_authenticated %}
                 <li class="nav-item">
                     <a class="nav-link" href='/add_post'>
