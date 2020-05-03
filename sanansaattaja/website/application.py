@@ -177,9 +177,9 @@ def notes():
 def users():
     try:
         users = get_users()
+        return render_template('all_users.html', users=users)
     except Exception as e:
         return render_template('all_users.html', users=[], message=str(e))
-    return render_template('all_users.html', users=users)
 
 
 @app.route('/users_filter', methods=['GET', 'POST'])
@@ -200,7 +200,12 @@ db_session.global_init(fullname('db/sanansaattaja.db'))
 
 @app.errorhandler(404)
 def not_found(error):
-    return render_template('error.html')
+    return render_template('error.html', text="page not found")
+
+
+@app.errorhandler(401)
+def unauthorized(error):
+    return render_template('error.html', text="you don't have access to this page")
 
 
 def run():
