@@ -21,6 +21,7 @@
         <p align="right" class="font-weight-light text-info ">{{note.modified_date}}</p>
         <h1 class="display-4 text-uppercase ">{{note.topic}}</h1>
         <p class="lead"> {{note.text}}</p>
+        <a class="btn btn-primary btn-lg" href="/notes?post_id={{note.id}}" role="button">Delete</a>
     </div>
 </div>
 {% endfor %}

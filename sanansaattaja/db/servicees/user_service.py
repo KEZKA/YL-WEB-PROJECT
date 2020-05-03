@@ -23,10 +23,8 @@ def add_user(form, file):
     session = db_session.create_session()
     password_check(form.password.data, form.password_again.data)
     email_check(form.email.data)
-
     user = User()
     user = user_add_data(user, form, file)
-
     session.add(user)
     session.commit()
 
@@ -42,13 +40,13 @@ def user_add_data(user: User, form, file):
     return user
 
 
-def edit_user(user: User, form, file):
+def edit_user(user_id: int, form, file):
     session = db_session.create_session()
+    user = session.query(User).get(user_id)
     password_check(form.password.data, form.password_again.data)
     if form.email.data != user.email:
         email_check(form.email.data)
     user = user_add_data(user, form, file)
-
     session.merge(user)
     session.commit()
 
