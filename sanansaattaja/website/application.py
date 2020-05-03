@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 from flask import Flask, render_template, redirect, url_for, request, send_file
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 
-from sanansaattaja.core.utils import load_image, get_photo_from_request, fullname
+from sanansaattaja.core.utils import load_image, fullname
 from sanansaattaja.db.data import db_session
 from sanansaattaja.db.servicees.message_service import get_all_user_messages, append_message
 from sanansaattaja.db.servicees.post_service import get_all_public_posts, append_post, get_all_user_posts, \
@@ -16,6 +16,8 @@ from sanansaattaja.db.servicees.user_service import add_user, get_user_by_id, ge
 from sanansaattaja.website.forms import LoginForm, RegisterForm
 from sanansaattaja.website.forms.message_form import MessageForm
 from sanansaattaja.website.forms.post_form import PostForm
+from sanansaattaja.website.forms.users_filter_form import FilterForm
+from sanansaattaja.website.utils import get_photo_from_request, get_data_from_filter_form
 
 load_dotenv()
 app = Flask(__name__)
@@ -39,9 +41,10 @@ def load_user(user_id):
 def index():
     try:
         posts = get_all_public_posts()
+        return render_template('main.html', posts=posts)
+
     except Exception as e:
         return render_template('main.html', posts=[], message=str(e))
-    return render_template('main.html', posts=posts)
 
 
 @app.route('/add_post', methods=['GET', 'POST'])
@@ -51,9 +54,9 @@ def add_post():
     if form.validate_on_submit():
         try:
             append_post(form, current_user)
+            return redirect('/')
         except Exception as e:
             return render_template('post.html', title='Post publishing', form=form, message=str(e), width=800)
-        return redirect('/')
     return render_template('post.html', title='Post publishing', form=form, width=800)
 
 
@@ -62,9 +65,9 @@ def add_post():
 def private():
     try:
         messages = get_all_user_messages(current_user)
+        return render_template('private.html', messages=messages, width=800)
     except Exception as e:
         return render_template('private.html', messages=[], message=str(e), width=800)
-    return render_template('private.html', messages=messages, width=800)
 
 
 @app.route('/add_message', methods=['GET', 'POST'])
@@ -74,9 +77,9 @@ def add_message():
     if form.validate_on_submit():
         try:
             append_message(form, current_user)
+            return redirect(url_for('private'))
         except Exception as e:
             return render_template('message.html', title='Sending message', form=form, message=str(e), width=800)
-        return redirect(url_for('private'))
     else:
         email = request.args.get('email')
         if email:
@@ -92,10 +95,11 @@ def login():
             user = get_user_by_email(login_form.email.data)
             password_verification(user, login_form.password.data)
             login_user(user, remember=login_form.remember_me.data)
+            return redirect(url_for('index'))
+
         except Exception as e:
             return render_template('login.html', form=login_form, message=str(e))
 
-        return redirect(url_for('index'))
     else:
         return render_template('login.html', form=login_form, success=True if request.args.get(
             'register-success') == 'true' else False)
@@ -115,9 +119,9 @@ def register():
         try:
             file = get_photo_from_request(request)
             add_user(form, file)
+            return redirect('/login?register-success=true')
         except Exception as e:
             return render_template('register.html', title='Registration', form=form, message=str(e))
-        return redirect('/login?register-success=true')
     return render_template('register.html', title='Registration', form=form)
 
 
@@ -131,10 +135,10 @@ def edit_page():
             if file is None and form.check_deletion.data != 'delete':
                 file = current_user.profile_picture
             edit_user(current_user, form, file)
+            return redirect('edit_page')
         except Exception as e:
             return render_template('edit_page.html', current_user=current_user, title='Edit page', form=form,
                 message=str(e))
-        return redirect('edit_page')
     return render_template('edit_page.html', current_user=current_user, title='Edit page', form=form)
 
 
@@ -153,9 +157,9 @@ def user_posts(user_id):
     try:
         posts = get_all_user_posts(user_id)
         user = get_user_by_id(user_id)
+        return render_template('user_posts.html', posts=posts, user=user)
     except Exception as e:
         return render_template('main.html', posts=[], message=str(e))
-    return render_template('user_posts.html', posts=posts, user=user)
 
 
 @app.route('/notes')
@@ -169,12 +173,26 @@ def notes():
 
 
 @app.route('/users')
+@login_required
 def users():
     try:
         users = get_users()
     except Exception as e:
         return render_template('all_users.html', users=[], message=str(e))
     return render_template('all_users.html', users=users)
+
+
+@app.route('/users_filter', methods=['GET', 'POST'])
+@login_required
+def users_filter():
+    form = FilterForm()
+    if request.method == 'POST':
+        try:
+            params = get_data_from_filter_form(form)
+            return redirect(f'/users?{params}')
+        except Exception as e:
+            return render_template('user_filter.html', form=form, message=str(e))
+    return render_template('user_filter.html', form=form)
 
 
 db_session.global_init(fullname('db/sanansaattaja.db'))
