@@ -16,9 +16,10 @@
 
 <div class="jumbotron" style="margin: 0px 100px 22px 100px;">
     <h4> <a class="nav-link" href='/user_posts/{{post.author.id}}'> {{post.author.name}} {{post.author.surname}} </a></h4>
-    <p class="lead"> {{ get_date(post.modified_date) }} </p>
-    <p class="display"> {{post.topic.upper()}} </p>
-    <p>{{post.text}}</p>
+    <p align="left" class="font-weight-light text-info">  {{ get_date(post.modified_date) }} by {{post.author.email}}</p>
+    <h3> {{post.topic.upper()}} </h3>
+    <p class="lead" style="white-space: pre-line">{{post.text}}</p>
+
 </div>
 {% endfor %}
 
