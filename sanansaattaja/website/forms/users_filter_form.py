@@ -6,7 +6,7 @@ class FilterForm(FlaskForm):
     email = StringField('Email')
     name = StringField('First name')
     surname = StringField('Second name')
-    age = IntegerField('Age')
+    age = IntegerField('More than')
     sex = RadioField('Sex', choices=[('male', 'Male'),
                                       ('female', 'Female'), ('helicopter', 'Helicopter'), ('all', 'All')])
     submit = SubmitField('Find')

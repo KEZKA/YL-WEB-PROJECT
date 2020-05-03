@@ -12,7 +12,7 @@ from sanansaattaja.db.servicees.message_service import get_all_user_messages, ap
 from sanansaattaja.db.servicees.post_service import get_all_public_posts, append_post, get_all_user_posts, \
     get_user_notes
 from sanansaattaja.db.servicees.user_service import add_user, get_user_by_id, get_user_by_email, \
-    password_verification, edit_user, get_users
+    password_verification, edit_user, get_users, get_filer_users
 from sanansaattaja.website.forms import LoginForm, RegisterForm
 from sanansaattaja.website.forms.message_form import MessageForm
 from sanansaattaja.website.forms.post_form import PostForm
@@ -45,7 +45,6 @@ def index():
 
     except Exception as e:
         return render_template('main.html', posts=[], message=str(e))
-
 
 
 @app.route('/add_post', methods=['GET', 'POST'])
@@ -177,10 +176,14 @@ def notes():
 @login_required
 def users():
     try:
-        users = get_users()
+        is_filter = request.args.get('filter')
+        if is_filter:
+            users = get_filer_users(request.args)
+        else:
+            users = get_users()
         return render_template('all_users.html', users=users)
     except Exception as e:
-        return render_template('all_users.html', users=[], message=str(e))
+        return render_template('all_users.html', users=None, message=str(e))
 
 
 @app.route('/users_filter', methods=['GET', 'POST'])
