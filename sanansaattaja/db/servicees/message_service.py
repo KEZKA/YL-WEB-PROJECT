@@ -8,7 +8,6 @@ def get_all_user_messages(user_id: int):
     messages = session.query(Message).filter(
         (Message.author_id == user_id) | (Message.addressee_id == user_id)).order_by(
         Message.modified_date.desc()).all()
-    session.close()
     return messages
 
 

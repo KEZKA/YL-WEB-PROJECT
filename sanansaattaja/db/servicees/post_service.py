@@ -6,7 +6,6 @@ from sanansaattaja.db.data.models import Post
 def get_all_public_posts():
     session = db_session.create_session()
     posts = session.query(Post).filter(Post.is_public == True).order_by(Post.modified_date.desc()).all()
-    session.close()
     return posts
 
 
@@ -14,8 +13,6 @@ def get_all_user_posts(user_id):
     session = db_session.create_session()
     posts = session.query(Post).filter((Post.is_public == True) & (Post.author_id == user_id)).order_by(
         Post.modified_date.desc()).all()
-    session.close()
-
     return posts
 
 
@@ -23,7 +20,6 @@ def get_user_notes(cur_user_id):
     session = db_session.create_session()
     notes = session.query(Post).filter((Post.is_public == False) & (Post.author_id == cur_user_id)).order_by(
         Post.modified_date.desc()).all()
-    session.close()
     return notes
 
 

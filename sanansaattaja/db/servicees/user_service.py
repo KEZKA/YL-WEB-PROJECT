@@ -56,7 +56,6 @@ def edit_user(user_id: int, form, file):
 def get_user_by_id(user_id: int):
     session = db_session.create_session()
     user = session.query(User).get(user_id)
-    session.close()
     if not user:
         raise UserError(msg="There is no such user")
     return user
@@ -65,14 +64,12 @@ def get_user_by_id(user_id: int):
 def get_users():
     session = db_session.create_session()
     users = session.query(User).all()
-    session.close()
     return users
 
 
 def get_user_by_email(email: str):
     session = db_session.create_session()
     user = session.query(User).filter(User.email == email).first()
-    session.close()
     if not user:
         raise UserError(msg="There is no such user")
     return user
