@@ -1,3 +1,5 @@
+from sqlalchemy.orm import selectinload
+
 from sanansaattaja.core.errors import PostError
 from sanansaattaja.db.data import db_session
 from sanansaattaja.db.data.models import Post
@@ -5,13 +7,13 @@ from sanansaattaja.db.data.models import Post
 
 def get_all_public_posts():
     session = db_session.create_session()
-    posts = session.query(Post).filter(Post.is_public == True).order_by(Post.modified_date.desc()).all()
+    posts = session.query(Post).options(selectinload(Post.author)).filter(Post.is_public == True).order_by(Post.modified_date.desc()).all()
     return posts
 
 
 def get_all_user_posts(user_id):
     session = db_session.create_session()
-    posts = session.query(Post).filter((Post.is_public == True) & (Post.author_id == user_id)).order_by(
+    posts = session.query(Post).options(selectinload(Post.author)).filter((Post.is_public == True) & (Post.author_id == user_id)).order_by(
         Post.modified_date.desc()).all()
     return posts
 

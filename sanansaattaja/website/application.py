@@ -5,6 +5,7 @@ from datetime import timedelta
 from dotenv import load_dotenv
 from flask import Flask, render_template, redirect, url_for, request, send_file
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
+from sqlalchemy.orm.exc import DetachedInstanceError
 
 from sanansaattaja.core.errors import PostError
 from sanansaattaja.core.utils import load_image, fullname
@@ -149,9 +150,9 @@ def make_image():
     return send_file(io.BytesIO(current_user.profile_picture), mimetype='image/*')
 
 
-@app.route('/user_posts/<user_email>')
+@app.route('/user_posts/<int:user_id>')
 @login_required
-def user_posts(user_email):
+def user_posts(user_id):
     try:
         post_id = request.args.get('post_id')
         if post_id:
@@ -159,8 +160,8 @@ def user_posts(user_email):
                 delete_post(post_id)
             except PostError:
                 pass
-        user = get_user_by_email(user_email)
-        posts = get_all_user_posts(user.id)
+        user = get_user_by_id(user_id)
+        posts = get_all_user_posts(user_id)
         return render_template('user_posts.html', posts=posts, user=user)
     except Exception as e:
         return render_template('main.html', posts=[], message=str(e))

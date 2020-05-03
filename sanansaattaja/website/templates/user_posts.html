@@ -37,7 +37,7 @@
         <h1 class="display-4 text-uppercase ">{{post.topic}}</h1>
         <p class="lead"> {{post.text}}</p>
         {% if current_user== user%}
-            <a class="btn btn-primary btn-lg" href="/user_posts/{{user.email}}?post_id={{post.id}}" role="button">Delete</a>
+            <a class="btn btn-primary btn-lg" href="/user_posts/{{user.id}}?post_id={{post.id}}" role="button">Delete</a>
         {% endif %}
 
     </div>
