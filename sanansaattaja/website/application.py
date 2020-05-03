@@ -47,6 +47,7 @@ def index():
         return render_template('main.html', posts=[], message=str(e))
 
 
+
 @app.route('/add_post', methods=['GET', 'POST'])
 @login_required
 def add_post():
@@ -206,6 +207,11 @@ def not_found(error):
 @app.errorhandler(401)
 def unauthorized(error):
     return render_template('error.html', text="you don't have access to this page")
+
+
+@app.errorhandler(500)
+def unauthorized(error):
+    return render_template('error.html', text="oops something went wrong")
 
 
 def run():
