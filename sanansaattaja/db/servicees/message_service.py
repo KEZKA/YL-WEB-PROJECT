@@ -19,7 +19,6 @@ def append_message(form, user_id: id):
     message = message_add_data(message, form, user_id, addressee.id)
     session.add(message)
     session.commit()
-    session.close()
 
 
 

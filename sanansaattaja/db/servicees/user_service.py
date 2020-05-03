@@ -27,7 +27,6 @@ def add_user(form, file):
     user = user_add_data(user, form, file)
     session.add(user)
     session.commit()
-    session.close()
 
 
 def user_add_data(user: User, form, file):
@@ -50,12 +49,12 @@ def edit_user(user_id: int, form, file):
     user = user_add_data(user, form, file)
     session.merge(user)
     session.commit()
-    session.close()
 
 
 def get_user_by_id(user_id: int):
     session = db_session.create_session()
     user = session.query(User).get(user_id)
+    session.close()
     if not user:
         raise UserError(msg="There is no such user")
     return user

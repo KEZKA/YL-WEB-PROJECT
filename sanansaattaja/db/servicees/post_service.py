@@ -29,7 +29,6 @@ def append_post(form, user_id: int):
     post = post_add_data(post, form, user_id)
     session.add(post)
     session.commit()
-    session.close()
 
 
 def post_add_data(post: Post, form, user_id: int):
@@ -47,4 +46,3 @@ def delete_post(post_id: int):
         raise PostError(msg="There is no such post")
     session.delete(post)
     session.commit()
-    session.close()

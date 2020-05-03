@@ -65,7 +65,6 @@ def add_post():
 def private():
     try:
         messages = get_all_user_messages(current_user.id)
-        print(messages)
         return render_template('private.html', messages=messages, width=800)
     except Exception as e:
         return render_template('private.html', messages=[], message=str(e), width=800)
@@ -150,9 +149,9 @@ def make_image():
     return send_file(io.BytesIO(current_user.profile_picture), mimetype='image/*')
 
 
-@app.route('/user_posts/<int:user_id>')
+@app.route('/user_posts/<user_email>')
 @login_required
-def user_posts(user_id):
+def user_posts(user_email):
     try:
         post_id = request.args.get('post_id')
         if post_id:
@@ -160,8 +159,8 @@ def user_posts(user_id):
                 delete_post(post_id)
             except PostError:
                 pass
-        user = get_user_by_id(user_id)
-        posts = get_all_user_posts(user_id)
+        user = get_user_by_email(user_email)
+        posts = get_all_user_posts(user.id)
         return render_template('user_posts.html', posts=posts, user=user)
     except Exception as e:
         return render_template('main.html', posts=[], message=str(e))
