@@ -66,12 +66,28 @@ def get_users():
     users = session.query(User).all()
     return users
 
+
 def get_user_by_email(email: str):
     session = db_session.create_session()
     user = session.query(User).filter(User.email == email).first()
     if not user:
         raise UserError(msg="There is no such user")
     return user
+
+
+def get_filer_users(args):
+    users = get_users()
+    if 'email' in args:
+        users = filter(lambda x: args['email'] in x.email, users)
+    if 'name' in args:
+        users = filter(lambda x: args['name'] in x.name, users)
+    if 'surname' in args:
+        users = filter(lambda x: args['surname'] in x.surname, users)
+    if 'age' in args:
+        users = filter(lambda x: int(args['age']) <= x.age, users)
+    if 'sex' in args:
+        users = filter(lambda x: args['sex'] in x.sex, users)
+    return list(users)
 
 
 def password_verification(user: User, password: str):
