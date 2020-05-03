@@ -15,8 +15,9 @@
         <p> Age: {{ user.age }} </p>
         <p> Sex: {{ user.sex }} </p>
         <p> ID: {{ user.id }} </p>
+    {% if current_user != user%}
     <a class="btn btn-primary btn-lg" href="/add_message?email={{user.email}}" role="button">Texting</a>
-
+    {% endif %}
 </header>
 <p>---------------</p>
 </center>
@@ -35,6 +36,10 @@
             {{post.modified_date}} <br> {{post.author.name}} {{post.author.surname}}, {{post.author.email}}</p>
         <h1 class="display-4 text-uppercase ">{{post.topic}}</h1>
         <p class="lead"> {{post.text}}</p>
+        {% if current_user== user%}
+            <a class="btn btn-primary btn-lg" href="/user_posts/{{user.id}}?post_id={{post.id}}" role="button">Delete</a>
+        {% endif %}
+
     </div>
 </div>
 {% endfor %}
