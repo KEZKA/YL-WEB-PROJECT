@@ -54,7 +54,6 @@ def edit_user(user_id: int, form, file):
 def get_user_by_id(user_id: int):
     session = db_session.create_session()
     user = session.query(User).get(user_id)
-    session.close()
     if not user:
         raise UserError(msg="There is no such user")
     return user
