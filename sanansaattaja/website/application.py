@@ -65,7 +65,7 @@ def add_post():
 def private():
     try:
         messages = get_all_user_messages(current_user)
-        return render_template('private.html', messages=messages, width=800)
+        return render_template('private.html', messages=messages, width=800, get_date=get_date)
     except Exception as e:
         return render_template('private.html', messages=[], message=str(e), width=800)
 

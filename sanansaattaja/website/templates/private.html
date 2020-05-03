@@ -6,31 +6,29 @@
 {% if message %}
             <div class="alert alert-danger">{{ message }}</div>
 {% endif %}
-{% if messages == [] %}
-<div class="jumbotron jumbotron-fluid" style="margin: 0px 100px 32px 100px;">
-    <div class="container">
-        <h1 class="display-4 text-uppercase ">There's nothing here yet</h1>
-    </div>
-</div>
 
+{% if posts == [] %}
+<div class="jumbotron">
+    <h1 class="display-4 text-uppercase" align="center">You have no messages yet</h1>
+</div>
 {% endif %}
+
 {% for msg in messages %}
 
-<div class="jumbotron jumbotron-fluid" style="margin: 0px 100px 32px 100px;">
-    <div class="container">
-        {% if msg.author_id == current_user.id %}
-        <p align="right" class="font-weight-light text-info ">to <a class="nav-link" href='/user_posts/{{msg.addressee.id}}'>{{msg.addressee.name}} {{msg.addressee.surname}}</a>
-            {{msg.addressee.email}} <br> {{msg.modified_date}}</p>
-        <p class="lead"> {{msg.text}}</p>
-        <a class="btn btn-primary btn-lg" href="/add_message?email={{msg.addressee.email}}" role="button">Texting</a>
-        {% else %}
-        <p align="right" class="font-weight-light text-info ">from <a class="nav-link" href='/user_posts/{{msg.author.id}}'>{{msg.author.name}} {{msg.author.surname}}</a>
-            {{msg.author_id.email}}<br>{{msg.modified_date}}  </p>
-        <p class="lead"> {{msg.text}}</p>
-        <a class="btn btn-primary btn-lg" href="/add_message?email={{msg.addressee.email}}" role="button">Reply to</a>
-        {% endif %}
-    </div>
+<div class="jumbotron" style="margin: 0px 100px 22px 100px;">
+    {% if msg.author_id == current_user.id %}
+    <h4> <a class="nav-link" href='/user_posts/{{msg.addressee.id}}'> to  {{msg.addressee.name}} {{msg.addressee.surname}} </a></h4>
+    <p align="left" class="font-weight-light text-info">  {{ get_date(msg.modified_date) }} by {{msg.author.email}}</p>
+    <p class="lead" style="white-space: pre-line">{{msg.text}}</p><br>
+    <a class="btn btn-primary btn-lg" href="/add_message?email={{msg.addressee.email}}" role="button">Write again</a>
+    {% else %}
+    <h4> <a class="nav-link" href='/user_posts/{{msg.author.id}}'> from  {{msg.author.name}} {{msg.author.surname}} </a></h4>
+    <p align="left" class="font-weight-light text-info"> {{ get_date(msg.modified_date) }} by {{msg.author.email}}</p>
+    <p class="lead" style="white-space: pre-line">{{msg.text}}</p><br>
+    <a class="btn btn-primary btn-lg" href="/add_message?email={{msg.author.email}}" role="button">Reply</a>
+    {% endif %}
 </div>
+
 {% endfor %}
 
 {% endblock %}

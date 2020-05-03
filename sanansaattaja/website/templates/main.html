@@ -6,12 +6,13 @@
 {% if message %}
             <div class="alert alert-danger">{{ message }}</div>
 {% endif %}
+
 {% if posts == [] %}
 <div class="jumbotron">
     <h1 class="display-4 text-uppercase" align="center">There're no posts here yet</h1>
 </div>
-
 {% endif %}
+
 {% for post in posts %}
 
 <div class="jumbotron" style="margin: 0px 100px 22px 100px;">
@@ -19,8 +20,8 @@
     <p align="left" class="font-weight-light text-info">  {{ get_date(post.modified_date) }} by {{post.author.email}}</p>
     <h3> {{post.topic.upper()}} </h3>
     <p class="lead" style="white-space: pre-line">{{post.text}}</p>
-
 </div>
+
 {% endfor %}
 
 {% endblock %}
