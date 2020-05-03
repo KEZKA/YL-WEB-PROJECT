@@ -11,6 +11,7 @@ from sanansaattaja.db.data import db_session
 from sanansaattaja.db.servicees.message_service import get_all_user_messages, append_message
 from sanansaattaja.db.servicees.post_service import get_all_public_posts, append_post, get_all_user_posts, \
     get_user_notes
+from sanansaattaja.db.servicees.date_service import get_date
 from sanansaattaja.db.servicees.user_service import add_user, get_user_by_id, get_user_by_email, \
     password_verification, edit_user, get_users, get_filer_users
 from sanansaattaja.website.forms import LoginForm, RegisterForm
@@ -41,8 +42,7 @@ def load_user(user_id):
 def index():
     try:
         posts = get_all_public_posts()
-        return render_template('main.html', posts=posts)
-
+        return render_template('main.html', posts=posts, get_date=get_date)
     except Exception as e:
         return render_template('main.html', posts=[], message=str(e))
 
@@ -223,4 +223,4 @@ def run():
     globalhost = '0.0.0.0'
 
     # change host before deploying on heroku
-    app.run(host=globalhost, port=port, debug=False)
+    app.run(host=localhost, port=port, debug=False)

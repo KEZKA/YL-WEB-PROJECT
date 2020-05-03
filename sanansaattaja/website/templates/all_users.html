@@ -1,13 +1,13 @@
 {% extends "window.html" %}
 
-{% block head %}<title>All users</title>{% endblock %}
+{% block head %}<title>Users list</title>{% endblock %}
 {% block subcontent %}
 <a class="btn btn-primary btn-lg" href="/users_filter" role="button", style="margin: 0px 100px 32px 100px;">Filter</a>
 
 {% if users == [] %}
 <div class="jumbotron jumbotron-fluid" style="">
     <div class="container">
-        <h1 class="display-4 text-uppercase ">There's nothing here yet</h1>
+        <h1 class="display-4 text-uppercase ">There's no users</h1>
     </div>
 </div>
 {% endif %}
@@ -29,7 +29,6 @@
         <p> ID: {{ user.id }} </p>
         <a class="btn btn-primary btn-lg" href="/add_message?email={{user.email}}" role="button">Texting</a>
     </header>
-    <p>---------------</p>
 </center>
 {% endfor %}
 {% endblock %}
