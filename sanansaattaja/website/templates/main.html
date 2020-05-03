@@ -7,19 +7,17 @@
             <div class="alert alert-danger">{{ message }}</div>
 {% endif %}
 {% if posts == [] %}
-<div class="jumbotron jumbotron-fluid" style="margin: 0px 100px 32px 100px;">
-    <div class="container">
-        <h1 class="display-4 text-uppercase ">There's nothing here yet</h1>
-    </div>
+<div class="jumbotron">
+    <h1 class="display-4 text-uppercase" align="center">There're no posts here yet</h1>
 </div>
 
 {% endif %}
 {% for post in posts %}
 
-<div class="jumbotron" style="margin: 0px 100px 10px 100px;">
+<div class="jumbotron" style="margin: 0px 100px 22px 100px;">
     <h4> <a class="nav-link" href='/user_posts/{{post.author.id}}'> {{post.author.name}} {{post.author.surname}} </a></h4>
-    <p> {{ get_date(post.modified_date) }} </p>
-    <p class="lead">{{post.topic.upper()}}</p>
+    <p class="lead"> {{ get_date(post.modified_date) }} </p>
+    <p class="display"> {{post.topic.upper()}} </p>
     <p>{{post.text}}</p>
 </div>
 {% endfor %}
