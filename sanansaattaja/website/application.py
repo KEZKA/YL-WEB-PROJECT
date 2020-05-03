@@ -6,11 +6,12 @@ from dotenv import load_dotenv
 from flask import Flask, render_template, redirect, url_for, request, send_file
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 
+from sanansaattaja.core.errors import PostError
 from sanansaattaja.core.utils import load_image, fullname
 from sanansaattaja.db.data import db_session
 from sanansaattaja.db.servicees.message_service import get_all_user_messages, append_message
 from sanansaattaja.db.servicees.post_service import get_all_public_posts, append_post, get_all_user_posts, \
-    get_user_notes
+    get_user_notes, delete_post
 from sanansaattaja.db.servicees.user_service import add_user, get_user_by_id, get_user_by_email, \
     password_verification, edit_user, get_users, get_filer_users
 from sanansaattaja.website.forms import LoginForm, RegisterForm
@@ -42,7 +43,6 @@ def index():
     try:
         posts = get_all_public_posts()
         return render_template('main.html', posts=posts)
-
     except Exception as e:
         return render_template('main.html', posts=[], message=str(e))
 
@@ -53,7 +53,7 @@ def add_post():
     form = PostForm()
     if form.validate_on_submit():
         try:
-            append_post(form, current_user)
+            append_post(form, current_user.id)
             return redirect('/')
         except Exception as e:
             return render_template('post.html', title='Post publishing', form=form, message=str(e), width=800)
@@ -64,7 +64,8 @@ def add_post():
 @login_required
 def private():
     try:
-        messages = get_all_user_messages(current_user)
+        messages = get_all_user_messages(current_user.id)
+        print(messages)
         return render_template('private.html', messages=messages, width=800)
     except Exception as e:
         return render_template('private.html', messages=[], message=str(e), width=800)
@@ -76,7 +77,7 @@ def add_message():
     form = MessageForm()
     if form.validate_on_submit():
         try:
-            append_message(form, current_user)
+            append_message(form, current_user.id)
             return redirect(url_for('private'))
         except Exception as e:
             return render_template('message.html', title='Sending message', form=form, message=str(e), width=800)
@@ -96,10 +97,8 @@ def login():
             password_verification(user, login_form.password.data)
             login_user(user, remember=login_form.remember_me.data)
             return redirect(url_for('index'))
-
         except Exception as e:
             return render_template('login.html', form=login_form, message=str(e))
-
     else:
         return render_template('login.html', form=login_form, success=True if request.args.get(
             'register-success') == 'true' else False)
@@ -134,7 +133,7 @@ def edit_page():
             file = get_photo_from_request(request)
             if file is None and form.check_deletion.data != 'delete':
                 file = current_user.profile_picture
-            edit_user(current_user, form, file)
+            edit_user(current_user.id, form, file)
             return redirect('edit_page')
         except Exception as e:
             return render_template('edit_page.html', current_user=current_user, title='Edit page', form=form,
@@ -155,8 +154,14 @@ def make_image():
 @login_required
 def user_posts(user_id):
     try:
-        posts = get_all_user_posts(user_id)
+        post_id = request.args.get('post_id')
+        if post_id:
+            try:
+                delete_post(post_id)
+            except PostError:
+                pass
         user = get_user_by_id(user_id)
+        posts = get_all_user_posts(user_id)
         return render_template('user_posts.html', posts=posts, user=user)
     except Exception as e:
         return render_template('main.html', posts=[], message=str(e))
@@ -166,10 +171,16 @@ def user_posts(user_id):
 @login_required
 def notes():
     try:
+        post_id = request.args.get('post_id')
+        if post_id:
+            try:
+                delete_post(post_id)
+            except PostError:
+                pass
         notes = get_user_notes(current_user.id)
+        return render_template('notes.html', notes=notes)
     except Exception as e:
         return render_template('notes.html', notes=[], message=str(e))
-    return render_template('notes.html', notes=notes)
 
 
 @app.route('/users')
