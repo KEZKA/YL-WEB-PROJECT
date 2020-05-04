@@ -167,9 +167,10 @@ def user_posts(user_id):
 def notes():
     try:
         notes = get_user_notes(current_user.id)
+        return render_template('notes.html', notes=notes, get_date=get_date, user=current_user)
     except Exception as e:
         return render_template('notes.html', notes=[], message=str(e))
-    return render_template('notes.html', notes=notes)
+
 
 
 @app.route('/users')

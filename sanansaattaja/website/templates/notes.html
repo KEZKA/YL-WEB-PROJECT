@@ -1,3 +1,4 @@
+
 {% extends 'base.html' %}
 
 {% block head %}<title>Your notes</title>{% endblock %}
@@ -6,22 +7,20 @@
 {% if message %}
             <div class="alert alert-danger">{{ message }}</div>
 {% endif %}
+
 {% if notes == [] %}
-<div class="jumbotron jumbotron-fluid" style="margin: 0px 100px 32px 100px;">
-    <div class="container">
-        <h1 class="display-4 text-uppercase ">There's nothing here yet</h1>
-    </div>
+<div class="jumbotron">
+    <h1 class="display-4 text-uppercase" align="center">You have no notes yet</h1>
 </div>
-
 {% endif %}
-{% for note in notes %}
 
-<div class="jumbotron jumbotron-fluid" style="margin: 0px 100px 32px 100px;">
-    <div class="container">
-        <p align="right" class="font-weight-light text-info ">{{note.modified_date}}</p>
-        <h1 class="display-4 text-uppercase ">{{note.topic}}</h1>
-        <p class="lead"> {{note.text}}</p>
-    </div>
+{% for note in notes %}
+<div class="jumbotron" style="margin: 0px 100px 22px 100px;">
+    <p align="left" class="font-weight-light text-info">  {{ get_date(note.modified_date) }} by {{note.author.email}}</p>
+    <h3> {{note.topic.upper()}} </h3>
+    <p class="lead" style="white-space: pre-line">{{note.text}}</p>
+    </br>
+    <a class="btn btn-outline-danger" href="/notes?post_id={{note.id}}" role="button">Delete</a>
 </div>
 {% endfor %}
 
