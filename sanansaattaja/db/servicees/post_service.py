@@ -15,7 +15,7 @@ def get_all_public_posts():
 def get_all_user_posts(user_id):
     session = db_session.create_session()
     posts = session.query(Post).options(selectinload(Post.author)).filter(
-        not_(Post.is_public) & (Post.author_id == user_id)).order_by(
+        (Post.is_public) & (Post.author_id == user_id)).order_by(
         Post.modified_date.desc()).all()
     return posts
 
@@ -23,7 +23,7 @@ def get_all_user_posts(user_id):
 def get_user_notes(cur_user_id):
     session = db_session.create_session()
     notes = session.query(Post).options(selectinload(Post.author)).filter(
-        (Post.is_public) & (Post.author_id == cur_user_id)).order_by(
+        not_(Post.is_public) & (Post.author_id == cur_user_id)).order_by(
         Post.modified_date.desc()).all()
     return notes
 
