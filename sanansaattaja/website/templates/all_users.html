@@ -3,7 +3,8 @@
 {% block head %}<title>Users list</title>{% endblock %}
 {% block subcontent %}
 <br>
-<a class="btn btn-success" href="/users_filter" role="button", style="margin: 0px 100px 32px 100px;">Filter</a>
+<a class="btn btn-success" href="/users_filter" role="button", style="margin: 0px 100px 32px 100px;">
+     <h5><i class="fas fa-search"></i> Filter</h5></a>
 
 {% if users == [] %}
 <div class="jumbotron">
