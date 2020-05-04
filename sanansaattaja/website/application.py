@@ -40,11 +40,8 @@ def load_user(user_id):
 
 @app.route('/')
 def index():
-    try:
-        posts = get_all_public_posts()
-        return render_template('main.html', posts=posts)
-    except Exception as e:
-        return render_template('main.html', posts=[], message=str(e))
+    posts = get_all_public_posts()
+    return render_template('main.html', posts=posts)
 
 
 @app.route('/add_post', methods=['GET', 'POST'])
@@ -187,15 +184,12 @@ def notes():
 @app.route('/users')
 @login_required
 def users():
-    try:
-        is_filter = request.args.get('filter')
-        if is_filter:
-            users = get_filer_users(request.args)
-        else:
-            users = get_users()
-        return render_template('all_users.html', users=users)
-    except Exception as e:
-        return render_template('all_users.html', users=None, message=str(e))
+    is_filter = request.args.get('filter')
+    if is_filter:
+        users = get_filer_users(request.args)
+    else:
+        users = get_users()
+    return render_template('all_users.html', users=users)
 
 
 @app.route('/users_filter', methods=['GET', 'POST'])
@@ -213,6 +207,20 @@ def users_filter():
 
 db_session.global_init(fullname('db/sanansaattaja.db'))
 
+@app.route('/info/about')
+def info():
+    try:
+        return render_template('info.html')
+    except Exception as e:
+        return render_template('info.html', message=str(e))
+
+@app.route('/info/faq')
+def faq():
+    try:
+        return render_template('faq.html')
+    except Exception as e:
+        return render_template('faq.html', message=str(e))
+
 
 @app.errorhandler(404)
 def not_found(error):
@@ -225,7 +233,7 @@ def unauthorized(error):
 
 
 @app.errorhandler(500)
-def unauthorized(error):
+def server_error(error):
     return render_template('error.html', text="oops something went wrong")
 
 

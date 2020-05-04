@@ -6,5 +6,5 @@ from wtforms.validators import DataRequired
 class PostForm(FlaskForm):
     topic = StringField('Topic')
     text = TextAreaField("Text", validators=[DataRequired()])
-    is_public = BooleanField('Everyone can see', default=True)
+    is_public = BooleanField(' It\'s not a personal note', default=True)
     submit = SubmitField('Publish')
