@@ -11,11 +11,11 @@ from sanansaattaja.core.errors import PostError
 from sanansaattaja.core.utils import load_image, fullname
 from sanansaattaja.db.data import db_session
 from sanansaattaja.db.servicees.message_service import get_all_user_messages, append_message
-from sanansaattaja.db.servicees.post_service import get_all_public_posts, append_post, get_all_user_posts, \
-    get_user_notes, delete_post
+from sanansaattaja.db.servicees.post_service import get_all_public_posts, append_post, \
+    get_all_user_posts, get_user_notes, delete_post
 from sanansaattaja.db.servicees.user_service import add_user, get_user_by_id, get_user_by_email, \
     password_verification, edit_user, get_users, get_filer_users
-from sanansaattaja.website.forms import LoginForm, RegisterForm
+from sanansaattaja.website.forms import LoginForm, RegisterForm, PasswordChangeForm, EditProfileForm
 from sanansaattaja.website.forms.message_form import MessageForm
 from sanansaattaja.website.forms.post_form import PostForm
 from sanansaattaja.website.forms.users_filter_form import FilterForm
@@ -127,7 +127,8 @@ def register():
 @app.route('/edit_page', methods=['GET', 'POST'])
 @login_required
 def edit_page():
-    form = RegisterForm()
+    form = EditProfileForm()
+    # password_form = PasswordChangeForm()
     if form.validate_on_submit():
         try:
             file = get_photo_from_request(request)
@@ -136,8 +137,10 @@ def edit_page():
             edit_user(current_user.id, form, file)
             return redirect('edit_page')
         except Exception as e:
-            return render_template('edit_page.html', current_user=current_user, title='Edit page', form=form,
-                message=str(e))
+            return render_template('edit_page.html', current_user=current_user, title='Edit page',
+                                   form=form, message=str(e))
+    # elif password_form.validate_on_submit():
+    #     pass
     return render_template('edit_page.html', current_user=current_user, title='Edit page', form=form)
 
 
@@ -234,4 +237,4 @@ def run():
     globalhost = '0.0.0.0'
 
     # change host before deploying on heroku
-    app.run(host=globalhost, port=port, debug=False)
+    app.run(host=localhost, port=port, debug=False)

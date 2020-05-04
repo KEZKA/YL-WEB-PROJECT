@@ -36,14 +36,14 @@ def user_add_data(user: User, form, file):
     user.age = form.age.data
     user.sex = form.sex.data
     user.profile_picture = file
-    user.set_password(form.password.data)
+    # user.set_password(form.password.data)
     return user
 
 
 def edit_user(user_id: int, form, file):
     session = db_session.create_session()
     user = session.query(User).get(user_id)
-    password_check(form.password.data, form.password_again.data)
+    # password_check(form.password.data, form.password_again.data)
     if form.email.data != user.email:
         email_check(form.email.data)
     user = user_add_data(user, form, file)

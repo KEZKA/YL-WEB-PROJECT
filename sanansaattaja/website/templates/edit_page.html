@@ -4,7 +4,7 @@
 
 {% block subcontent %}
 
-    <form class="card-body" action="" method="POST" enctype="multipart/form-data">
+    <form class="card-body" action="" method="POST" enctype="multipart/form-data" id="data-change">
         {{ form.hidden_tag() }}
         {{ form.csrf_token }}
         {{ form.check_deletion(class="form-control", style="display: none;", id="check-deletion", value="do-not-delete") }}
@@ -49,18 +49,6 @@
             </tr>
 
             <tr>
-                <td class="left-td">{{ form.password.label }}</td>
-                <td colspan="4">
-                    {{ form.password(class="form-control", type="password", value=current_user.password) }}
-                </td>
-            </tr>
-
-            <tr>
-                <td class="left-td">{{ form.password_again.label }}</td>
-                <td colspan="4">{{ form.password_again(class="form-control", type="password") }}</td>
-            </tr>
-
-            <tr>
                 <td class="left-td">{{ form.sex.label }}</td>
                 <td>
                     {% for subfield in form.sex %}
@@ -76,4 +64,33 @@
         </table>
         <p>{{ form.submit(type="submit", class="btn btn-primary", value="Save changes", id="confirm") }}</p>
     </form>
+
+{#    <form class="card-body" action="" method="POST" id="pass-change">#}
+{#        {{ password_form.hidden_tag() }}#}
+{#        {{ password_form.csrf_token }}#}
+{#        <br><br><br><br>#}
+{#        <table class="user-data">#}
+{#            <tr>#}
+{#                <td class="left-td">{{ password_form.old_password.label }}</td>#}
+{#                <td colspan="4">#}
+{#                    {{ password_form.old_password(class="form-control", type="password") }}#}
+{#                </td>#}
+{#            </tr>#}
+{##}
+{#            <tr>#}
+{#                <td class="left-td">{{ password_form.password.label }}</td>#}
+{#                <td colspan="4">#}
+{#                    {{ password_form.password(class="form-control", type="password") }}#}
+{#                </td>#}
+{#            </tr>#}
+{##}
+{#            <tr>#}
+{#                <td class="left-td">{{ password_form.password_again.label }}</td>#}
+{#                <td colspan="4">#}
+{#                    {{ password_form.password_again(class="form-control", type="password") }}#}
+{#                </td>#}
+{#            </tr>#}
+{#        </table>#}
+{#        <p>{{ password_form.submit(type="submit", class="btn btn-primary", value="Change Password") }}</p>#}
+{#    </form>#}
 {% endblock %}
