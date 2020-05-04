@@ -8,3 +8,4 @@ wtforms
 SQLAlchemy-serializer
 psycopg2
 python-dotenv
+gunicorn

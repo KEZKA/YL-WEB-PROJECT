@@ -1,1 +1,1 @@
-web: python -m sanansaattaja
+gunicorn sanansaattaja.website.application:app
