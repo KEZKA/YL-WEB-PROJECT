@@ -60,6 +60,8 @@ def edit_password(user_id: int, password_form):
     session = db_session.create_session()
     user = session.query(User).get(user_id)
     password_check(password_form.password.data, password_form.password_again.data, changing=True)
+    if password_form.password.data == password_form.old_password.data:
+        raise UserError(msg="Old and new passwords mustn't match")
     check_password_security(password_form.password.data)
     user = user_change_password(user, password_form)
     session.merge(user)
