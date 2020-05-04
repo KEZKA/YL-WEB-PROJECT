@@ -5,7 +5,6 @@ from datetime import timedelta
 from dotenv import load_dotenv
 from flask import Flask, render_template, redirect, url_for, request, send_file
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
-from sqlalchemy.orm.exc import DetachedInstanceError
 
 from sanansaattaja.core.errors import PostError
 from sanansaattaja.core.utils import load_image, fullname
@@ -97,8 +96,10 @@ def login():
             password_verification(user, login_form.password.data)
             login_user(user, remember=login_form.remember_me.data)
             return redirect(url_for('index'))
+
         except Exception as e:
             return render_template('login.html', form=login_form, message=str(e))
+
     else:
         return render_template('login.html', form=login_form, success=True if request.args.get(
             'register-success') == 'true' else False)
@@ -183,7 +184,6 @@ def notes():
         return render_template('notes.html', notes=[], message=str(e))
 
 
-
 @app.route('/users')
 @login_required
 def users():
@@ -235,4 +235,4 @@ def run():
     globalhost = '0.0.0.0'
 
     # change host before deploying on heroku
-    app.run(host=localhost, port=port, debug=False)
+    app.run(host=globalhost, port=port, debug=False)
