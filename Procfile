@@ -1,1 +1,1 @@
-web: gunicorn sanansaattaja.website.application:app
+web: gunicorn sanansaattaja.__main__:app
