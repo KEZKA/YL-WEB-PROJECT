@@ -16,31 +16,27 @@
         <p> Sex: {{ user.sex }} </p>
         <p> ID: {{ user.id }} </p>
     {% if current_user != user%}
-    <a class="btn btn-primary btn-lg" href="/add_message?email={{user.email}}" role="button">Texting</a>
+    <a class="btn btn-primary btn-lg" href="/add_message?email={{user.email}}" role="button">Write to {{ user.name }}</a>
     {% endif %}
 </header>
-<p>---------------</p>
+<br>
 </center>
 {% if posts == [] %}
-<div class="jumbotron jumbotron-fluid" style="margin: 0px 100px 32px 100px;">
-    <div class="container">
-        <h1 class="display-4 text-uppercase ">There's nothing here yet</h1>
-    </div>
+<div class="jumbotron">
+    <h1 class="display-4 text-uppercase" align="center">There're no posts here yet</h1>
 </div>
-
 {% endif %}
-{% for post in posts %}
-<div class="jumbotron jumbotron-fluid" style="margin: 0px 100px 32px 100px;">
-    <div class="container">
-        <p align="right" class="font-weight-light text-info ">
-            {{post.modified_date}} <br> {{post.author.name}} {{post.author.surname}}, {{post.author.email}}</p>
-        <h1 class="display-4 text-uppercase ">{{post.topic}}</h1>
-        <p class="lead"> {{post.text}}</p>
-        {% if current_user== user%}
-            <a class="btn btn-primary btn-lg" href="/user_posts/{{user.id}}?post_id={{post.id}}" role="button">Delete</a>
-        {% endif %}
 
-    </div>
+{% for post in posts %}
+<div class="jumbotron" style="margin: 0px 100px 22px 100px;">
+    <p align="left" class="font-weight-light text-info">  {{ post.get_normal_date() }} by {{post.author.email}}</p>
+    <h3> {{post.topic.upper()}} </h3>
+    <p class="lead" style="white-space: pre-line">{{post.text}}</p>
+     </br>
+    {% if current_user== user%}
+        <a class="btn btn-outline-danger" href="/user_posts/{{user.id}}?post_id={{post.id}}" role="button">Delete</a>
+    {% endif %}
 </div>
+
 {% endfor %}
 {% endblock %}

@@ -11,7 +11,6 @@ from sanansaattaja.db.data import db_session
 from sanansaattaja.db.servicees.message_service import get_all_user_messages, append_message
 from sanansaattaja.db.servicees.post_service import get_all_public_posts, append_post, get_all_user_posts, \
     get_user_notes, delete_post
-from sanansaattaja.db.servicees.date_service import get_date
 from sanansaattaja.db.servicees.user_service import add_user, get_user_by_id, get_user_by_email, \
     password_verification, edit_user, get_users, get_filer_users
 from sanansaattaja.website.forms import LoginForm, RegisterForm
@@ -42,7 +41,7 @@ def load_user(user_id):
 def index():
     try:
         posts = get_all_public_posts()
-        return render_template('main.html', posts=posts, get_date=get_date)
+        return render_template('main.html', posts=posts)
     except Exception as e:
         return render_template('main.html', posts=[], message=str(e))
 
@@ -65,7 +64,7 @@ def add_post():
 def private():
     try:
         messages = get_all_user_messages(current_user.id)
-        return render_template('private.html', messages=messages, width=800, get_date=get_date)
+        return render_template('private.html', messages=messages, width=800)
     except Exception as e:
         return render_template('private.html', messages=[], message=str(e), width=800)
 
@@ -182,6 +181,7 @@ def notes():
         return render_template('notes.html', notes=notes)
     except Exception as e:
         return render_template('notes.html', notes=[], message=str(e))
+
 
 
 @app.route('/users')

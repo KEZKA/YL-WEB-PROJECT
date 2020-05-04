@@ -3,7 +3,7 @@
 {% block head %}<title>Users list</title>{% endblock %}
 {% block subcontent %}
 <br>
-<a class="btn btn-primary btn-lg" href="/users_filter" role="button", style="margin: 0px 100px 32px 100px;">Filter</a>
+<a class="btn btn-success" href="/users_filter" role="button", style="margin: 0px 100px 32px 100px;">Filter</a>
 
 {% if users == [] %}
 <div class="jumbotron">
@@ -15,10 +15,10 @@
 {% endif %}
 {% for user in users %}
 <center>
-    <header class="card-header" style="">
-        <a class="nav-link" href='/user_posts/{{user.id}}'>
+    <header class="card w-90" style="margin: 0px 5px 15px 5px;">
+        <a class="nav-link" href='/user_posts/{{user.id}}'><b>
         {{ user.name }} {{ user.surname}}
-        </a>
+        </b></a>
         <div style="position: relative;">
             <img src="{{ user.image }}">
         </div>
@@ -26,9 +26,9 @@
         <p> Age: {{ user.age }} </p>
         <p> Sex: {{ user.sex }} </p>
         <p> ID: {{ user.id }} </p>
-        <a class="btn btn-primary btn-lg" href="/add_message?email={{user.email}}" role="button">Write to {{ user.name }}</a>
+        <a class="btn btn-primary btn-lg" href="/add_message?email={{user.email}}" role="button" style="margin: 0px 25px 15px 25px;">Write to {{ user.name }}</a>
     </header>
-    <hr class="my-4">
+    <br>
 </center>
 {% endfor %}
 {% endblock %}
