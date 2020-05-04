@@ -184,7 +184,6 @@ def notes():
         return render_template('notes.html', notes=[], message=str(e))
 
 
-
 @app.route('/users')
 @login_required
 def users():

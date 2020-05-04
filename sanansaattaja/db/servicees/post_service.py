@@ -1,26 +1,29 @@
+from sqlalchemy import not_
 from sqlalchemy.orm import selectinload
-
 from sanansaattaja.core.errors import PostError
 from sanansaattaja.db.data import db_session
 from sanansaattaja.db.data.models import Post
-
+from sqlalchemy import not_
 
 def get_all_public_posts():
     session = db_session.create_session()
-    posts = session.query(Post).options(selectinload(Post.author)).filter(Post.is_public == True).order_by(Post.modified_date.desc()).all()
+    posts = session.query(Post).options(selectinload(Post.author)).filter(Post.is_public).order_by(
+        Post.modified_date.desc()).all()
     return posts
 
 
 def get_all_user_posts(user_id):
     session = db_session.create_session()
-    posts = session.query(Post).options(selectinload(Post.author)).filter((Post.is_public == True) & (Post.author_id == user_id)).order_by(
+    posts = session.query(Post).options(selectinload(Post.author)).filter(
+        not_(Post.is_public) & (Post.author_id == user_id)).order_by(
         Post.modified_date.desc()).all()
     return posts
 
 
 def get_user_notes(cur_user_id):
     session = db_session.create_session()
-    notes = session.query(Post).filter((Post.is_public == False) & (Post.author_id == cur_user_id)).order_by(
+    notes = session.query(Post).options(selectinload(Post.author)).filter(
+        (Post.is_public) & (Post.author_id == cur_user_id)).order_by(
         Post.modified_date.desc()).all()
     return notes
 
