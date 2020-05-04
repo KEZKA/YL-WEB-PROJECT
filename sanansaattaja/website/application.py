@@ -157,7 +157,7 @@ def user_posts(user_id):
     try:
         posts = get_all_user_posts(user_id)
         user = get_user_by_id(user_id)
-        return render_template('user_posts.html', posts=posts, user=user)
+        return render_template('user_posts.html', posts=posts, user=user, get_date=get_date)
     except Exception as e:
         return render_template('main.html', posts=[], message=str(e))
 

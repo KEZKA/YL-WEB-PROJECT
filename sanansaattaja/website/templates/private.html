@@ -20,12 +20,12 @@
     <h4> <a class="nav-link" href='/user_posts/{{msg.addressee.id}}'> to  {{msg.addressee.name}} {{msg.addressee.surname}} </a></h4>
     <p align="left" class="font-weight-light text-info">  {{ get_date(msg.modified_date) }} by {{msg.author.email}}</p>
     <p class="lead" style="white-space: pre-line">{{msg.text}}</p><br>
-    <a class="btn btn-primary btn-lg" href="/add_message?email={{msg.addressee.email}}" role="button">Write again</a>
+    <a class="btn btn-primary btn-lg" href="/add_message?email={{msg.addressee.email}}" role="button">Write to {{msg.addressee.name}}</a>
     {% else %}
     <h4> <a class="nav-link" href='/user_posts/{{msg.author.id}}'> from  {{msg.author.name}} {{msg.author.surname}} </a></h4>
     <p align="left" class="font-weight-light text-info"> {{ get_date(msg.modified_date) }} by {{msg.author.email}}</p>
     <p class="lead" style="white-space: pre-line">{{msg.text}}</p><br>
-    <a class="btn btn-primary btn-lg" href="/add_message?email={{msg.author.email}}" role="button">Reply</a>
+    <a class="btn btn-primary btn-lg" href="/add_message?email={{msg.author.email}}" role="button">Reply to {{msg.author.name}}</a>
     {% endif %}
 </div>
 
