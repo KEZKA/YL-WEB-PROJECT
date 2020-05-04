@@ -213,12 +213,19 @@ def users_filter():
 
 db_session.global_init(fullname('db/sanansaattaja.db'))
 
-@app.route('/info')
+@app.route('/info/about')
 def info():
     try:
         return render_template('info.html')
     except Exception as e:
         return render_template('info.html', message=str(e))
+
+@app.route('/info/faq')
+def faq():
+    try:
+        return render_template('faq.html')
+    except Exception as e:
+        return render_template('faq.html', message=str(e))
 
 
 @app.errorhandler(404)

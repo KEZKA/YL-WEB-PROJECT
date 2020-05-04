@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block head %}<title>FAQ</title>{% endblock %}
+
+{% block content %}
+{% if message %}
+            <div class="alert alert-danger">{{ message }}</div>
+{% endif %}
+<center>
+<div class="card bg-light mb-3" style="max-width: 30rem;">
+    <div class="card-header">
+        <h5 class="card-title"><i class="fas fa-question"></i> Constantly doesn't load and crashes!</h5>
+    </div>
+    <div class="card-body">
+        <h5 class="card-title"><i class="fas fa-at"></i> Well, it doesn't work, what's the buzz.</h5>
+    </div>
+</div>
+</center>
+{% endblock %}

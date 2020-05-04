@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block head %}<title>Info</title>{% endblock %}
+
+{% block content %}
+{% if message %}
+            <div class="alert alert-danger">{{ message }}</div>
+{% endif %}
+<center>
+<h1> Sanansaattaja </h1>
+    <p> is a small and easy-to-use messenger, with a nice and </p>
+    <p> minimalistic client part. This web app is designed to </p>
+    <p> help you communicate with your friends, this is </p>
+    <p> possible due to an understandable and comfortable to </p>
+    <p> use website and a well-written server part. </p>
+</center>
+{% endblock %}
