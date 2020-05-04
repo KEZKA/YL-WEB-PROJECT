@@ -69,6 +69,8 @@
                 <a class="btn btn-secondary dropdown-toggle" href="" role="button"
                    id="user_menu" data-toggle="dropdown" aria-haspopup="true"
                    aria-expanded="false" style="background-color: #1240AB;">
+                    <img src="{{ url_for('make_image') }}?{{ range(100, 1000000000) | random }}"
+                         style="width: 30px; height: 30px; border-radius: 50%;;">
                 </a>
 
                 <div class="dropdown-menu dropdown-menu-sw" aria-labelledby="user_menu">
@@ -110,17 +112,18 @@
 <br>
 <main class="container-fluid">{% block content %}{% endblock %}</main>
 <nav class="navbar fixed-bottom navbar-expand-lg navbar-dark" style="background-color: #1240AB; margin-bottom: 0px">
-  <a class="navbar-brand" href="https://www.who.int/emergencies/diseases/novel-coronavirus-2019"><i class="fas fa-house-user"></i> Stay at home with us! </a>
-  <div class="collapse navbar-collapse" id="navbarCollapse">
-    <ul class="navbar-nav mr-auto">
-      <li class="nav-item">
-        <a class="nav-link" href="/info/about"><i class="fas fa-info-circle"></i> Info</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="/info/faq"><i class="far fa-question-circle"></i> FAQ</a>
-      </li>
-    </ul>
-  </div>
+    <a class="navbar-brand" href="https://www.who.int/emergencies/diseases/novel-coronavirus-2019"><i
+            class="fas fa-house-user"></i> Stay at home with us! </a>
+    <div class="collapse navbar-collapse" id="navbarCollapse">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="/info/about"><i class="fas fa-info-circle"></i> Info</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/info/faq"><i class="far fa-question-circle"></i> FAQ</a>
+            </li>
+        </ul>
+    </div>
 </nav>
 </body>
 
