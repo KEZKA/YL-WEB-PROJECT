@@ -5,8 +5,10 @@ from sanansaattaja.db.data.models import User
 MAX_FILE_SIZE = 1024 ** 2
 
 
-def password_check(password, password_again):
+def password_check(password, password_again, changing=False):
     if password != password_again:
+        if changing:
+            raise UserError(msg="New passwords do not match")
         raise UserError(msg="Passwords do not match")
     return True
 
@@ -36,17 +38,29 @@ def user_add_data(user: User, form, file):
     user.age = form.age.data
     user.sex = form.sex.data
     user.profile_picture = file
-    # user.set_password(form.password.data)
+    return user
+
+
+def user_change_password(user: User, password_form):
+    user.set_password(password_form.password.data)
     return user
 
 
 def edit_user(user_id: int, form, file):
     session = db_session.create_session()
     user = session.query(User).get(user_id)
-    # password_check(form.password.data, form.password_again.data)
     if form.email.data != user.email:
         email_check(form.email.data)
     user = user_add_data(user, form, file)
+    session.merge(user)
+    session.commit()
+
+
+def edit_password(user_id: int, password_form):
+    session = db_session.create_session()
+    user = session.query(User).get(user_id)
+    password_check(password_form.password.data, password_form.password_again.data, changing=True)
+    user = user_change_password(user, password_form)
     session.merge(user)
     session.commit()
 
@@ -88,7 +102,9 @@ def get_filer_users(args):
     return list(users)
 
 
-def password_verification(user: User, password: str):
+def password_verification(user: User, password: str, changing=False):
     if not user.check_password(password):
+        if changing:
+            raise UserError(msg="Wrong old password")
         raise UserError(msg="Wrong password")
     return True

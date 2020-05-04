@@ -62,35 +62,36 @@
                 </td>
             </tr>
         </table>
-        <p>{{ form.submit(type="submit", class="btn btn-primary", value="Save changes", id="confirm") }}</p>
+        <p>{{ form.submit(type="submit", class="btn btn-primary", id="confirm") }}</p>
     </form>
 
-{#    <form class="card-body" action="" method="POST" id="pass-change">#}
-{#        {{ password_form.hidden_tag() }}#}
-{#        {{ password_form.csrf_token }}#}
-{#        <br><br><br><br>#}
-{#        <table class="user-data">#}
-{#            <tr>#}
-{#                <td class="left-td">{{ password_form.old_password.label }}</td>#}
-{#                <td colspan="4">#}
-{#                    {{ password_form.old_password(class="form-control", type="password") }}#}
-{#                </td>#}
-{#            </tr>#}
-{##}
-{#            <tr>#}
-{#                <td class="left-td">{{ password_form.password.label }}</td>#}
-{#                <td colspan="4">#}
-{#                    {{ password_form.password(class="form-control", type="password") }}#}
-{#                </td>#}
-{#            </tr>#}
-{##}
-{#            <tr>#}
-{#                <td class="left-td">{{ password_form.password_again.label }}</td>#}
-{#                <td colspan="4">#}
-{#                    {{ password_form.password_again(class="form-control", type="password") }}#}
-{#                </td>#}
-{#            </tr>#}
-{#        </table>#}
-{#        <p>{{ password_form.submit(type="submit", class="btn btn-primary", value="Change Password") }}</p>#}
-{#    </form>#}
+    <br><br><br><br>
+
+    <form class="card-body" action="" method="POST" id="pass-change">
+        {{ password_form.hidden_tag() }}
+        {{ password_form.csrf_token }}
+        <table class="user-data">
+            <tr>
+                <td class="left-td">{{ password_form.old_password.label }}</td>
+                <td colspan="4">
+                    {{ password_form.old_password(class="form-control", type="password") }}
+                </td>
+            </tr>
+
+            <tr>
+                <td class="left-td">{{ password_form.password.label }}</td>
+                <td colspan="4">
+                    {{ password_form.password(class="form-control", type="password") }}
+                </td>
+            </tr>
+
+            <tr>
+                <td class="left-td">{{ password_form.password_again.label }}</td>
+                <td colspan="4">
+                    {{ password_form.password_again(class="form-control", type="password") }}
+                </td>
+            </tr>
+        </table>
+        <p>{{ password_form.submit(type="submit", class="btn btn-primary") }}</p>
+    </form>
 {% endblock %}

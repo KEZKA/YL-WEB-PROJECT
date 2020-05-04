@@ -14,4 +14,3 @@ class RegisterForm(FlaskForm):
     sex = RadioField('Sex', choices=[('male', 'Male'), ('female', 'Female'), ('helicopter', 'Helicopter')])
     photo = FileField('Add image (jpg, png, gif); max file size = 1 MB')
     submit = SubmitField('Finish')
-    check_deletion = StringField('stay')

@@ -14,7 +14,7 @@ from sanansaattaja.db.servicees.message_service import get_all_user_messages, ap
 from sanansaattaja.db.servicees.post_service import get_all_public_posts, append_post, \
     get_all_user_posts, get_user_notes, delete_post
 from sanansaattaja.db.servicees.user_service import add_user, get_user_by_id, get_user_by_email, \
-    password_verification, edit_user, get_users, get_filer_users
+    password_verification, edit_user, edit_password, get_users, get_filer_users
 from sanansaattaja.website.forms import LoginForm, RegisterForm, PasswordChangeForm, EditProfileForm
 from sanansaattaja.website.forms.message_form import MessageForm
 from sanansaattaja.website.forms.post_form import PostForm
@@ -128,7 +128,7 @@ def register():
 @login_required
 def edit_page():
     form = EditProfileForm()
-    # password_form = PasswordChangeForm()
+    password_form = PasswordChangeForm()
     if form.validate_on_submit():
         try:
             file = get_photo_from_request(request)
@@ -138,10 +138,17 @@ def edit_page():
             return redirect('edit_page')
         except Exception as e:
             return render_template('edit_page.html', current_user=current_user, title='Edit page',
-                                   form=form, message=str(e))
-    # elif password_form.validate_on_submit():
-    #     pass
-    return render_template('edit_page.html', current_user=current_user, title='Edit page', form=form)
+                                   form=form, password_form=password_form, message=str(e))
+    if password_form.validate_on_submit():
+        try:
+            password_verification(current_user, password_form.old_password.data, changing=True)
+            edit_password(current_user.id, password_form)
+            return redirect('edit_page')
+        except Exception as e:
+            return render_template('edit_page.html', current_user=current_user, title='Edit page',
+                                   form=form, password_form=password_form, message=str(e))
+    return render_template('edit_page.html', current_user=current_user, title='Edit page', form=form,
+                           password_form=password_form)
 
 
 @app.route('/make_image')
