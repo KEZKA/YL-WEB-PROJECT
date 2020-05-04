@@ -29,7 +29,7 @@
 
 {% for post in posts %}
 <div class="jumbotron" style="margin: 0px 100px 22px 100px;">
-    <p align="left" class="font-weight-light text-info">  {{ get_date(post.modified_date) }} by {{post.author.email}}</p>
+    <p align="left" class="font-weight-light text-info">  {{ post.get_normal_date() }} by {{post.author.email}}</p>
     <h3> {{post.topic.upper()}} </h3>
     <p class="lead" style="white-space: pre-line">{{post.text}}</p>
      </br>
