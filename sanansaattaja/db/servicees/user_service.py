@@ -60,9 +60,33 @@ def edit_password(user_id: int, password_form):
     session = db_session.create_session()
     user = session.query(User).get(user_id)
     password_check(password_form.password.data, password_form.password_again.data, changing=True)
+    check_password_security(password_form.password.data)
     user = user_change_password(user, password_form)
     session.merge(user)
     session.commit()
+
+
+def check_password_security(password: str):
+    keyboard = ['qwertyuiop', 'asdfghjkl', 'zxcvbnm', 'йцукенгшщзхъ', 'фывапролджэё', 'ячсмитьбю']
+
+    if len(password) < 8:
+        raise UserError(msg="Password must consist of at least 8 digits")
+    if password == password.lower() or password == password.upper():
+        raise UserError(msg="Password must contain upper and lower case letters")
+    num = False
+    for i in password:
+        if i in '0123456789':
+            num = True
+            break
+
+    if not num:
+        raise UserError(msg="Password must contain numbers")
+    work_pass = password.lower()
+    for i in range(1, len(work_pass) - 1):
+        for j in keyboard:
+            if work_pass[i - 1: i + 2] in j:
+                raise UserError(msg="Password mustn't contain any combination of 3 letters "
+                                    "standing next to each other on the keyboard")
 
 
 def get_user_by_id(user_id: int):
