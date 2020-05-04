@@ -25,6 +25,7 @@ def add_user(form, file):
     session = db_session.create_session()
     password_check(form.password.data, form.password_again.data)
     email_check(form.email.data)
+    check_password_security(form.password.data)
     user = User()
     user = user_add_data(user, form, file)
     session.add(user)
