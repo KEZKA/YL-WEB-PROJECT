@@ -73,7 +73,7 @@ def check_password_security(password: str):
     keyboard = ['qwertyuiop', 'asdfghjkl', 'zxcvbnm', 'йцукенгшщзхъ', 'фывапролджэё', 'ячсмитьбю']
 
     if len(password) < 8:
-        raise UserError(msg="Password must consist of at least 8 digits")
+        raise UserError(msg="Password must consist of at least 8 symbols")
     if password == password.lower() or password == password.upper():
         raise UserError(msg="Password must contain upper and lower case letters")
     num = False
