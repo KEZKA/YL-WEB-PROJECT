@@ -23,7 +23,7 @@
 </head>
 
 <body>
-<nav class="navbar fixed-top navbar-dark navbar-expand-sm"
+<nav class="navbar sticky-top navbar-dark navbar-expand-sm"
      style="background-color: #1240AB; margin-bottom: 20px">
     <a class="navbar-brand" href="/"><h5 style="margin-top: auto; margin-bottom: auto">SANANSAATTAJA</h5></a>
     <div class="collapse navbar-collapse">
@@ -107,10 +107,11 @@
         </ul>
     </div>
 </nav>
-<br>
+
 <main class="container-fluid">{% block content %}{% endblock %}</main>
-<nav class="navbar fixed-bottom navbar-expand-lg navbar-dark" style="background-color: #1240AB; margin-bottom: 0px">
-  <a class="navbar-brand" href="https://www.who.int/emergencies/diseases/novel-coronavirus-2019"><i class="fas fa-house-user"></i> Stay at home with us! </a>
+<nav class="navbar fixed-bottom navbar-expand-lg navbar-dark" style="background-color: #1240AB; margin-top: 22px">
+  <a class="navbar-brand" href="https://www.who.int/emergencies/diseases/novel-coronavirus-2019">
+      <i class="fas fa-house-user"></i> Stay at home with us! </a>
   <div class="collapse navbar-collapse" id="navbarCollapse">
     <ul class="navbar-nav mr-auto">
       <li class="nav-item">
