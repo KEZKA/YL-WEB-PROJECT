@@ -4,14 +4,14 @@
 
 {% block subcontent %}
 
-    <form class="card-body" action="" method="POST" enctype="multipart/form-data">
+    <form class="card-body" action="" method="POST" enctype="multipart/form-data" id="data-change">
         {{ form.hidden_tag() }}
         {{ form.csrf_token }}
         {{ form.check_deletion(class="form-control", style="display: none;", id="check-deletion", value="do-not-delete") }}
         <div style="position: relative;">
             <img class="user-image changeable"
                  title="Change image"
-                 src="{{ url_for('make_image') }}?{{ range(100, 1000000000) | random }}"
+                 src="{{ url_for('make_image') }}?user_id={{current_user.id}}&{{ range(100, 1000000000) | random }}"
                  onclick="document.getElementById('form-photo').click();">
             <i class="fa fa-times fa-2x escape changeable" title="Delete image"
                onclick="document.getElementById('check-deletion').value = 'delete'; document.getElementById('confirm').click();"
@@ -49,18 +49,6 @@
             </tr>
 
             <tr>
-                <td class="left-td">{{ form.password.label }}</td>
-                <td colspan="4">
-                    {{ form.password(class="form-control", type="password", value=current_user.password) }}
-                </td>
-            </tr>
-
-            <tr>
-                <td class="left-td">{{ form.password_again.label }}</td>
-                <td colspan="4">{{ form.password_again(class="form-control", type="password") }}</td>
-            </tr>
-
-            <tr>
                 <td class="left-td">{{ form.sex.label }}</td>
                 <td>
                     {% for subfield in form.sex %}
@@ -74,6 +62,36 @@
                 </td>
             </tr>
         </table>
-        <p> {{ form.submit(type="submit", class="btn btn-primary", value="Save changes", id="confirm") }}</p>
+        <p>{{ form.submit(type="submit", class="btn btn-primary", id="confirm") }}</p>
+    </form>
+
+    <br><br><br><br>
+
+    <form class="card-body" action="" method="POST" id="pass-change">
+        {{ password_form.hidden_tag() }}
+        {{ password_form.csrf_token }}
+        <table class="user-data">
+            <tr>
+                <td class="left-td">{{ password_form.old_password.label }}</td>
+                <td colspan="4">
+                    {{ password_form.old_password(class="form-control", type="password") }}
+                </td>
+            </tr>
+
+            <tr>
+                <td class="left-td">{{ password_form.password.label }}</td>
+                <td colspan="4">
+                    {{ password_form.password(class="form-control", type="password", title="Password should consist of upper and lower case letters, numbers, don't contain any combination of 3 letters standing next to each other on the keyboard, and be at least 8 characters in length") }}
+                </td>
+            </tr>
+
+            <tr>
+                <td class="left-td">{{ password_form.password_again.label }}</td>
+                <td colspan="4">
+                    {{ password_form.password_again(class="form-control", type="password") }}
+                </td>
+            </tr>
+        </table>
+        <p>{{ password_form.submit(type="submit", class="btn btn-primary") }}</p>
     </form>
 {% endblock %}

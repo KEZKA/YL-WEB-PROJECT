@@ -1,32 +1,28 @@
-from sanansaattaja.core.errors import UserError
+from sanansaattaja.core.errors import ClientError
+from sanansaattaja.core.password_service import password_check, check_password_security
 from sanansaattaja.db.data import db_session
 from sanansaattaja.db.data.models import User
-
-MAX_FILE_SIZE = 1024 ** 2
-
-
-def password_check(password, password_again):
-    if password != password_again:
-        raise UserError(msg="Passwords do not match")
-    return True
+from sanansaattaja.website.forms import PasswordChangeForm
 
 
 def email_check(email: str):
     try:
         get_user_by_email(email)
-    except UserError:
+    except ClientError:
         return True
-    raise UserError(msg="This email is already in use")
+    raise ClientError(msg="This email is already in use")
 
 
 def add_user(form, file):
     session = db_session.create_session()
     password_check(form.password.data, form.password_again.data)
     email_check(form.email.data)
+    check_password_security(form.password.data)
     user = User()
     user = user_add_data(user, form, file)
     session.add(user)
     session.commit()
+    session.close()
 
 
 def user_add_data(user: User, form, file):
@@ -36,40 +32,60 @@ def user_add_data(user: User, form, file):
     user.age = form.age.data
     user.sex = form.sex.data
     user.profile_picture = file
-    user.set_password(form.password.data)
+    return user
+
+
+def user_change_password(user: User, password_form: PasswordChangeForm):
+    user.set_password(password_form.password.data)
     return user
 
 
 def edit_user(user_id: int, form, file):
     session = db_session.create_session()
     user = session.query(User).get(user_id)
-    password_check(form.password.data, form.password_again.data)
     if form.email.data != user.email:
         email_check(form.email.data)
     user = user_add_data(user, form, file)
     session.merge(user)
     session.commit()
+    session.close()
+
+
+def edit_password(user_id: int, password_form):
+    session = db_session.create_session()
+    user = session.query(User).get(user_id)
+    password_check(password_form.password.data, password_form.password_again.data, changing=True)
+    if password_form.password.data == password_form.old_password.data:
+        raise ClientError(msg="Old and new passwords mustn't match")
+    check_password_security(password_form.password.data)
+    user = user_change_password(user, password_form)
+    session.merge(user)
+    session.commit()
+    session.close()
 
 
 def get_user_by_id(user_id: int):
     session = db_session.create_session()
     user = session.query(User).get(user_id)
+    session.close()
     if not user:
-        raise UserError(msg="There is no such user")
+        raise ClientError(msg="There is no such user")
     return user
 
 
 def get_users():
     session = db_session.create_session()
     users = session.query(User).all()
+    session.close()
     return users
 
 
 def get_user_by_email(email: str):
     session = db_session.create_session()
     user = session.query(User).filter(User.email == email).first()
+    session.close()
     if not user:
-        raise UserError(msg="There is no such user")
+        raise ClientError(msg="There is no such user")
     return user
 
 
@@ -88,7 +104,9 @@ def get_filer_users(args):
     return list(users)
 
 
-def password_verification(user: User, password: str):
+def password_verification(user: User, password: str, changing=False):
     if not user.check_password(password):
-        raise UserError(msg="Wrong password")
+        if changing:
+            raise ClientError(msg="Wrong old password")
+        raise ClientError(msg="Wrong password")
     return True

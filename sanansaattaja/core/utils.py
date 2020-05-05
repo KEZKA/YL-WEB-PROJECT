@@ -1,5 +1,6 @@
 import os
 
+from sanansaattaja.core.errors import ClientError
 
 def fullname(name):
     return os.path.join(os.path.dirname(__file__), '..', name)
@@ -7,6 +8,7 @@ def fullname(name):
 
 def load_image(name):
     return fullname('website/static/images/' + name)
+
 
 def get_date(datetime):
     months = ['January', 'February', 'March', 'April',
