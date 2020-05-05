@@ -2,7 +2,7 @@ from sanansaattaja.core.errors import ClientError
 from sanansaattaja.core.password_service import password_check, check_password_security
 from sanansaattaja.db.data import db_session
 from sanansaattaja.db.data.models import User
-from sanansaattaja.website.forms import PasswordChangeForm
+from sanansaattaja.website.forms import PasswordChangeForm, RegisterForm
 
 
 def email_check(email: str):
@@ -13,15 +13,18 @@ def email_check(email: str):
     raise ClientError(msg="This email is already in use")
 
 
-def add_user(form, file):
+def add_user(form: RegisterForm, file):
     session = db_session.create_session()
     password_check(form.password.data, form.password_again.data)
     email_check(form.email.data)
     check_password_security(form.password.data)
-    user = User()
-    user = user_add_data(user, form, file)
-    session.add(user)
-    session.commit()
+    try:
+        user = User()
+        user = user_add_data(user, form, file)
+        session.add(user)
+        session.commit()
+    except Exception:
+        ClientError(msg='failed to add a message')
     session.close()
 
 
