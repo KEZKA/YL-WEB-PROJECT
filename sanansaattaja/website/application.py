@@ -152,15 +152,15 @@ def make_image():
 @app.route('/user_page/<int:user_id>')
 @login_required
 def user_page(user_id):
-        post_id = request.args.get('post_id')
-        if post_id:
-            try:
-                delete_post(post_id)
+    post_id = request.args.get('post_id')
+    if post_id:
+        try:
+            post_service.delete_post(post_id)
         except ClientError:
             pass
-        user = get_user_by_id(user_id)
-        posts = get_all_user_posts(user_id)
-        return render_template('user_page.html', posts=posts, user=user)
+    user = user_service.get_user_by_id(user_id)
+    posts = post_service.get_all_user_posts(user_id)
+    return render_template('user_page.html', posts=posts, user=user)
 
 
 @app.route('/notes')
