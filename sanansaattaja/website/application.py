@@ -53,7 +53,8 @@ def add_post():
             append_post(form, current_user.id)
             return redirect('/')
         except Exception as e:
-            return render_template('new_post.html', title='Post publishing', form=form, message=str(e), width=800)
+            return render_template('new_post.html', title='Post publishing', form=form,
+                                   message=str(e), width=800)
     return render_template('new_post.html', title='Post publishing', form=form, width=800)
 
 
@@ -76,12 +77,15 @@ def add_message():
             append_message(form, current_user.id)
             return redirect(url_for('private'))
         except Exception as e:
-            return render_template('new_message.html', title='Sending message', form=form, message=str(e), width=800)
+            return render_template('new_message.html', title='Sending message', form=form,
+                                   message=str(e), width=800)
     else:
         email = request.args.get('email')
         if email:
-            return render_template('new_message.html', title='Sending message', form=form, width=800, addressee=email)
-        return render_template('new_message.html', title='Sending message', form=form, width=800, addressee="")
+            return render_template('new_message.html', title='Sending message', form=form, width=800,
+                                   addressee=email)
+        return render_template('new_message.html', title='Sending message', form=form, width=800,
+                               addressee="")
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -149,13 +153,14 @@ def edit_page():
                            password_form=password_form)
 
 
-@app.route('/make_image')
+@app.route('/make_image/<int:user_id>')
 @login_required
-def make_image():
-    if not current_user.profile_picture:
-        with open(load_image(f"{current_user.sex}.jpg"), mode='rb') as image:
+def make_image(user_id):
+    user = get_user_by_id(user_id)
+    if not user.profile_picture:
+        with open(load_image(f"{user.sex}.jpg"), mode='rb') as image:
             return send_file(io.BytesIO(image.read()), mimetype='image/*')
-    return send_file(io.BytesIO(current_user.profile_picture), mimetype='image/*')
+    return send_file(io.BytesIO(user.profile_picture), mimetype='image/*')
 
 
 @app.route('/user_page/<int:user_id>')
@@ -217,12 +222,14 @@ def users_filter():
 
 db_session.global_init(fullname('db/sanansaattaja.db'))
 
+
 @app.route('/info/about')
 def info():
     try:
         return render_template('info.html')
     except Exception as e:
         return render_template('info.html', message=str(e))
+
 
 @app.route('/info/faq')
 def faq():

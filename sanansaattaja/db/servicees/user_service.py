@@ -38,6 +38,8 @@ def user_add_data(user: User, form, file):
     user.email = form.email.data
     user.age = form.age.data
     user.sex = form.sex.data
+    if 'password' in dir(form):
+        user.set_password(form.password.data)
     user.profile_picture = file
     return user
 

@@ -71,8 +71,8 @@
                     <a class="btn btn-secondary dropdown-toggle" href="" role="button"
                        id="user_menu" data-toggle="dropdown" aria-haspopup="true"
                        aria-expanded="false" style="background-color: #1240AB;">
-                        <img src="{{ url_for('make_image') }}?{{ range(100, 1000000000) | random }}"
-                             style="width: 30px; height: 30px; border-radius: 50%;;">
+                        <img src="{{ url_for('make_image', user_id=current_user.id) }}?{{ range(100, 1000000000) | random }}"
+                             style="width: 30px; height: 30px; border-radius: 50%;">
                     </a>
 
                     <div class="dropdown-menu dropdown-menu-sw" aria-labelledby="user_menu">

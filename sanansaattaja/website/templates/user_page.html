@@ -3,41 +3,44 @@
 {% block head %}<title>{{ user.name }}'s page</title>{% endblock %}
 
 {% block content %}
-{% if message %}
-            <div class="alert alert-danger">{{ message }}</div>
-{% endif %}
-<center>
-<header  class="card-header" style="width:40%">{{ user.name }} {{ user.surname}}
-        <div style="position: relative;">
-            <img src="{{ user.image }}">
+    {% if message %}
+        <div class="alert alert-danger">{{ message }}</div>
+    {% endif %}
+    <div style="text-align: center;">
+        <header class="card-header" style="width:40%">{{ user.name }} {{ user.surname }}
+            <div style="position: relative;">
+                <img src="{{ user.image }}">
+            </div>
+            <p> Email: {{ user.email }} </p>
+            <p> Age: {{ user.age }} </p>
+            <p> Sex: {{ user.sex }} </p>
+            <p> ID: {{ user.id }} </p>
+            {% if current_user != user %}
+                <a class="btn btn-primary btn-lg" href="/add_message?email={{ user.email }}"
+                   role="button">Write to {{ user.name }}</a>
+            {% endif %}
+        </header>
+        <br>
+    </div>
+    {% if posts == [] %}
+        <div class="jumbotron">
+            <h1 class="display-4 text-uppercase" align="center">There're no posts here yet</h1>
         </div>
-        <p> Email: {{ user.email }} </p>
-        <p> Age: {{ user.age }} </p>
-        <p> Sex: {{ user.sex }} </p>
-        <p> ID: {{ user.id }} </p>
-    {% if current_user != user%}
-    <a class="btn btn-primary btn-lg" href="/add_message?email={{user.email}}" role="button">Write to {{ user.name }}</a>
     {% endif %}
-</header>
-<br>
-</center>
-{% if posts == [] %}
-<div class="jumbotron">
-    <h1 class="display-4 text-uppercase" align="center">There're no posts here yet</h1>
-</div>
-{% endif %}
 
-{% for post in posts %}
-<div class="jumbotron" style="margin: 0px 100px 22px 100px;">
-    <p align="left" class="font-weight-light text-info">  {{ post.get_normal_date() }} by {{post.author.email}}</p>
-    <h3> {{post.topic.upper()}} </h3>
-    <p class="lead" style="white-space: pre-line">{{post.text}}</p>
-     </br>
-    {% if current_user== user%}
-        <a class="btn btn-outline-danger" href="/user_page/{{user.id}}?post_id={{post.id}}" role="button">
-            <i class="far fa-trash-alt"></i> Delete</a>
-    {% endif %}
-</div>
+    {% for post in posts %}
+        <div class="jumbotron" style="margin: 0px 100px 22px 100px;">
+            <p align="left" class="font-weight-light text-info">  {{ post.get_normal_date() }}
+                by {{ post.author.email }}</p>
+            <h3> {{ post.topic.upper() }} </h3>
+            <p class="lead" style="white-space: pre-line">{{ post.text }}</p>
+            </br>
+            {% if current_user== user %}
+                <a class="btn btn-outline-danger"
+                   href="/user_page/{{ user.id }}?post_id={{ post.id }}" role="button">
+                    <i class="far fa-trash-alt"></i> Delete</a>
+            {% endif %}
+        </div>
 
-{% endfor %}
+    {% endfor %}
 {% endblock %}
