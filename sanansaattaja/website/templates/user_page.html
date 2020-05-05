@@ -7,7 +7,7 @@
         <div class="alert alert-danger">{{ message }}</div>
     {% endif %}
     <div>
-        <header class="card-header" style="width:40%; margin-left: auto; margin-right: auto">{{ user.name }} {{ user.surname }}
+        <header class="card-header" style="width:40%; margin-left: auto; margin-right: auto; text-align: center">{{ user.name }} {{ user.surname }}
             <div style="position: relative;">
                 <img src="{{ url_for('make_image', user_id=user.id) }}?{{ range(100, 1000000000) | random }}"
                      style="width: 240px; height: 240px; border-radius: 50%;">
@@ -15,7 +15,6 @@
             <p> Nickname: {{ user.nickname }} </p>
             <p> Age: {{ user.age }} </p>
             <p> Sex: {{ user.sex }} </p>
-            <p> ID: {{ user.id }} </p>
             {% if current_user != user %}
                 <a class="btn btn-primary btn-lg" href="/add_message?nickname={{ user.nickname }}"
                    role="button">Write to {{ user.name }}</a>
