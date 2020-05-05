@@ -39,6 +39,6 @@ def delete_message(message_id: int):
     session = db_session.create_session()
     message = session.query(Message).get(message_id)
     if not message:
-        raise MessageError(msg="There is no such message")
+        raise ClientError(msg="There is no such message")
     session.delete(message)
     session.commit()

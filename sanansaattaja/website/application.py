@@ -54,11 +54,12 @@ def add_post():
 @app.route('/private')
 @login_required
 def private():
-        message_id = request.args.get('message_id')
-        if message_id:
-            try:
-                delete_message(message_id)
-                pass
+    message_id = request.args.get('message_id')
+    if message_id:
+        try:
+            message_service.delete_message(message_id)
+        except ClientError:
+            pass
     messages = message_service.get_all_user_messages(current_user.id)
     return render_template('private.html', messages=messages, width=800)
 
