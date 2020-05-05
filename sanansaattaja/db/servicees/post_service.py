@@ -1,7 +1,7 @@
 from sqlalchemy import not_
 from sqlalchemy.orm import selectinload
 
-from sanansaattaja.core.errors import ClientError
+from sanansaattaja.core.errors import ClientError, IdError
 from sanansaattaja.db.data import db_session
 from sanansaattaja.db.data.models import Post
 
@@ -56,7 +56,7 @@ def delete_post(post_id: int):
     session = db_session.create_session()
     post = session.query(Post).get(post_id)
     if not post:
-        raise ClientError(msg="There is no such post")
+        raise IdError(msg="There is no such post")
     session.delete(post)
     session.commit()
     session.close()

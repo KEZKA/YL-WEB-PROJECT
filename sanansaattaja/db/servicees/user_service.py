@@ -1,4 +1,4 @@
-from sanansaattaja.core.errors import ClientError
+from sanansaattaja.core.errors import ClientError, IdError
 from sanansaattaja.core.password_service import password_check, check_password_security
 from sanansaattaja.db.data import db_session
 from sanansaattaja.db.data.models import User
@@ -68,7 +68,7 @@ def get_user_by_id(user_id: int):
     user = session.query(User).get(user_id)
     session.close()
     if not user:
-        raise ClientError(msg="There is no such user")
+        raise IdError(msg="There is no such user")
     return user
 
 
