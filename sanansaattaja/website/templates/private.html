@@ -3,39 +3,56 @@
 {% block head %}<title>Messages</title>{% endblock %}
 
 {% block content %}
-{% if message %}
-            <div class="alert alert-danger">{{ message }}</div>
-{% endif %}
-
-{% if messages == [] %}
-<div class="jumbotron">
-    <h1 class="display-4 text-uppercase" align="center">You have no messages yet</h1>
-</div>
-{% endif %}
-
-{% for msg in messages %}
-
-<div class="jumbotron" style="margin: 0px 100px 22px 100px;">
-    {% if msg.author_id == current_user.id %}
-    <h4> <a class="nav-link" href='/user_page/{{msg.addressee.id}}'> to  {{msg.addressee.name}} {{msg.addressee.surname}} </a></h4>
-    <p align="left" class="font-weight-light text-info">  {{ msg.get_normal_date() }} by {{msg.author.nickname}}</p>
-    <p class="lead" style="white-space: pre-line">{{msg.text}}</p><br>
-    <a class="btn btn-primary btn-lg" href="/add_message?nickname={{msg.addressee.nickname}}" role="button">
-        <i class="fas fa-signature"></i> Write to {{msg.addressee.name}}</a>
-    {% else %}
-    <h4> <a class="nav-link" href='/user_page/{{msg.author.id}}'> from  {{msg.author.name}} {{msg.author.surname}} </a></h4>
-    <p align="left" class="font-weight-light text-info"> {{ msg.get_normal_date() }} by {{msg.author.nickname}}</p>
-    <p class="lead" style="white-space: pre-line">{{msg.text}}</p><br>
-    <a class="btn btn-primary btn-lg" href="/add_message?nickname={{msg.author.nickname}}" role="button">
-        <i class="fas fa-reply"></i> Reply to {{msg.author.name}}</a>
+    {% if message %}
+        <div class="alert alert-danger">{{ message }}</div>
     {% endif %}
-    {% if current_user == msg.author %}
-    <br><br>
-        <a class="btn btn-outline-danger" href="/private?message_id={{msg.id}}" role="button">
-            <i class="far fa-trash-alt"></i> Delete</a>
-    {% endif %}
-</div>
 
-{% endfor %}
+    {% if messages == [] %}
+        <div class="jumbotron">
+            <h1 class="display-4 text-uppercase" align="center">You have no messages yet</h1>
+        </div>
+    {% endif %}
+
+    {% for msg in messages %}
+
+        <div class="jumbotron" style="margin: 0px 100px 22px 100px;">
+            {% if msg.author_id == current_user.id %}
+                <h4>
+                    <a class="nav-link" href='/user_page/{{ msg.addressee.id }}'>
+                        to {{ msg.addressee.name }} {{ msg.addressee.surname }}
+                    </a>
+                </h4>
+                <p style="text-align: center" class="font-weight-light text-info">
+                    {{ msg.get_normal_date() }} by {{ msg.author.nickname }}
+                </p>
+                <p class="lead" style="white-space: pre-line">{{ msg.text }}</p><br>
+                <a class="btn btn-primary btn-lg"
+                   href="/add_message?nickname={{ msg.addressee.nickname }}" role="button">
+                    <i class="fas fa-signature"></i> Write to {{ msg.addressee.name }}
+                </a>
+            {% else %}
+                <h4>
+                    <a class="nav-link" href='/user_page/{{ msg.author.id }}'>
+                        from {{ msg.author.name }} {{ msg.author.surname }}
+                    </a>
+                </h4>
+                <p style="text-align: center" class="font-weight-light text-info">
+                    {{ msg.get_normal_date() }} by {{ msg.author.nickname }}
+                </p>
+                <p class="lead" style="white-space: pre-line">{{ msg.text }}</p><br>
+                <a class="btn btn-primary btn-lg"
+                   href="/add_message?nickname={{ msg.author.nickname }}" role="button">
+                    <i class="fas fa-reply"></i> Reply to {{ msg.author.name }}
+                </a>
+            {% endif %}
+            {% if current_user == msg.author %}
+                <br><br>
+                <a class="btn btn-outline-danger" href="/private?message_id={{ msg.id }}"
+                   role="button">
+                    <i class="far fa-trash-alt"></i> Delete</a>
+            {% endif %}
+        </div>
+
+    {% endfor %}
 
 {% endblock %}

@@ -37,8 +37,10 @@
                     </tr>
                 </table>
                 {% if current_user != user %}
-                    <a class="btn btn-primary btn-lg" href="/add_message?nickname={{ user.nickname }}"
-                       role="button">Write to {{ user.name }}</a>
+                    <a class="btn btn-primary btn-lg"
+                       href="/add_message?nickname={{ user.nickname }}" role="button">
+                        Write to {{ user.name }}
+                    </a>
                 {% endif %}
             </header>
             <br>

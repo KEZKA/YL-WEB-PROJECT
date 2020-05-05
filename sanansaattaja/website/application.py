@@ -11,8 +11,7 @@ from sanansaattaja.core.utils import load_image, fullname
 from sanansaattaja.db.data import db_session
 from sanansaattaja.db.servicees import message_service, post_service, user_service
 from sanansaattaja.website.forms import LoginForm, RegisterForm, MessageForm, PostForm, FilterForm, \
-    EditProfileForm, \
-    PasswordChangeForm
+    EditProfileForm, PasswordChangeForm
 from sanansaattaja.website.utils import get_photo_from_request, get_data_from_filter_form_to_params
 
 load_dotenv()

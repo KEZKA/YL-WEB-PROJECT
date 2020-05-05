@@ -35,6 +35,7 @@ def message_add_data(message: Message, form, user_id: int, addressee_id: int):
     message.addressee_id = addressee_id
     return message
 
+
 def delete_message(message_id: int):
     session = db_session.create_session()
     message = session.query(Message).get(message_id)

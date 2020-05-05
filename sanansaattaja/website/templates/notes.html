@@ -1,28 +1,31 @@
-
 {% extends 'base.html' %}
 
 {% block head %}<title>Your notes</title>{% endblock %}
 
 {% block content %}
-{% if message %}
-            <div class="alert alert-danger">{{ message }}</div>
-{% endif %}
+    {% if message %}
+        <div class="alert alert-danger">{{ message }}</div>
+    {% endif %}
 
-{% if notes == [] %}
-<div class="jumbotron">
-    <h1 class="display-4 text-uppercase" align="center">You have no notes yet</h1>
-</div>
-{% endif %}
+    {% if notes == [] %}
+        <div class="jumbotron">
+            <h1 class="display-4 text-uppercase" style="text-align: center">
+                You have no notes yet
+            </h1>
+        </div>
+    {% endif %}
 
-{% for note in notes %}
-<div class="jumbotron" style="margin: 0px 100px 22px 100px;">
-    <p align="left" class="font-weight-light text-info">  {{ note.get_normal_date() }} by {{note.author.nickname}}</p>
-    <h3> {{note.topic.upper()}} </h3>
-    <p class="lead" style="white-space: pre-line">{{note.text}}</p>
-    </br>
-    <a class="btn btn-outline-danger" href="/notes?post_id={{note.id}}" role="button">
-        <i class="far fa-trash-alt"></i>Delete</a>
-</div>
-{% endfor %}
+    {% for note in notes %}
+        <div class="jumbotron" style="margin: 0px 100px 22px 100px;">
+            <p align="left" class="font-weight-light text-info">
+                {{ note.get_normal_date() }} by {{ note.author.nickname }}
+            </p>
+            <h3> {{ note.topic.upper() }} </h3>
+            <p class="lead" style="white-space: pre-line">{{ note.text }}</p>
+            <br>
+            <a class="btn btn-outline-danger" href="/notes?post_id={{ note.id }}" role="button">
+                <i class="far fa-trash-alt"></i>Delete</a>
+        </div>
+    {% endfor %}
 
 {% endblock %}
