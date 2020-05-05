@@ -1,24 +1,16 @@
-from sanansaattaja.core.errors import UserError
+from sanansaattaja.core.errors import ClientError
+from sanansaattaja.core.password_service import password_check, check_password_security
 from sanansaattaja.db.data import db_session
 from sanansaattaja.db.data.models import User
-
-MAX_FILE_SIZE = 1024 ** 2
-
-
-def password_check(password, password_again, changing=False):
-    if password != password_again:
-        if changing:
-            raise UserError(msg="New passwords do not match")
-        raise UserError(msg="Passwords do not match")
-    return True
+from sanansaattaja.website.forms import PasswordChangeForm
 
 
 def email_check(email: str):
     try:
         get_user_by_email(email)
-    except UserError:
+    except ClientError:
         return True
-    raise UserError(msg="This email is already in use")
+    raise ClientError(msg="This email is already in use")
 
 
 def add_user(form, file):
@@ -30,6 +22,7 @@ def add_user(form, file):
     user = user_add_data(user, form, file)
     session.add(user)
     session.commit()
+    session.close()
 
 
 def user_add_data(user: User, form, file):
@@ -44,7 +37,7 @@ def user_add_data(user: User, form, file):
     return user
 
 
-def user_change_password(user: User, password_form):
+def user_change_password(user: User, password_form: PasswordChangeForm):
     user.set_password(password_form.password.data)
     return user
 
@@ -57,6 +50,7 @@ def edit_user(user_id: int, form, file):
     user = user_add_data(user, form, file)
     session.merge(user)
     session.commit()
+    session.close()
 
 
 def edit_password(user_id: int, password_form):
@@ -64,55 +58,36 @@ def edit_password(user_id: int, password_form):
     user = session.query(User).get(user_id)
     password_check(password_form.password.data, password_form.password_again.data, changing=True)
     if password_form.password.data == password_form.old_password.data:
-        raise UserError(msg="Old and new passwords mustn't match")
+        raise ClientError(msg="Old and new passwords mustn't match")
     check_password_security(password_form.password.data)
     user = user_change_password(user, password_form)
     session.merge(user)
     session.commit()
-
-
-def check_password_security(password: str):
-    keyboard = ['qwertyuiop', 'asdfghjkl', 'zxcvbnm', 'йцукенгшщзхъ', 'фывапролджэё', 'ячсмитьбю']
-
-    if len(password) < 8:
-        raise UserError(msg="Password must consist of at least 8 symbols")
-    if password == password.lower() or password == password.upper():
-        raise UserError(msg="Password must contain upper and lower case letters")
-    num = False
-    for i in password:
-        if i in '0123456789':
-            num = True
-            break
-
-    if not num:
-        raise UserError(msg="Password must contain numbers")
-    work_pass = password.lower()
-    for i in range(1, len(work_pass) - 1):
-        for j in keyboard:
-            if work_pass[i - 1: i + 2] in j:
-                raise UserError(msg="Password mustn't contain any combination of 3 letters "
-                                    "standing next to each other on the keyboard")
+    session.close()
 
 
 def get_user_by_id(user_id: int):
     session = db_session.create_session()
     user = session.query(User).get(user_id)
+    session.close()
     if not user:
-        raise UserError(msg="There is no such user")
+        raise ClientError(msg="There is no such user")
     return user
 
 
 def get_users():
     session = db_session.create_session()
     users = session.query(User).all()
+    session.close()
     return users
 
 
 def get_user_by_email(email: str):
     session = db_session.create_session()
     user = session.query(User).filter(User.email == email).first()
+    session.close()
     if not user:
-        raise UserError(msg="There is no such user")
+        raise ClientError(msg="There is no such user")
     return user
 
 
@@ -134,6 +109,6 @@ def get_filer_users(args):
 def password_verification(user: User, password: str, changing=False):
     if not user.check_password(password):
         if changing:
-            raise UserError(msg="Wrong old password")
-        raise UserError(msg="Wrong password")
+            raise ClientError(msg="Wrong old password")
+        raise ClientError(msg="Wrong password")
     return True

@@ -9,7 +9,8 @@
     <div style="text-align: center;">
         <header class="card-header" style="width:40%">{{ user.name }} {{ user.surname }}
             <div style="position: relative;">
-                <img src="{{ user.image }}">
+                <img src="{{ url_for('make_image', user_id=user.id) }}?{{ range(100, 1000000000) | random }}"
+                     style="width: 240px; height: 240px; border-radius: 50%;">
             </div>
             <p> Email: {{ user.email }} </p>
             <p> Age: {{ user.age }} </p>
@@ -29,7 +30,7 @@
     {% endif %}
 
     {% for post in posts %}
-        <div class="jumbotron" style="margin: 0px 100px 22px 100px;">
+        <div class="jumbotron" style="margin: 0 100px 22px 100px;">
             <p align="left" class="font-weight-light text-info">  {{ post.get_normal_date() }}
                 by {{ post.author.email }}</p>
             <h3> {{ post.topic.upper() }} </h3>
