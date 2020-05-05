@@ -19,8 +19,8 @@ def get_photo_from_request(request):
 
 def get_data_from_filter_form_to_params(form: FilterForm):
     params = ['filter=True']
-    if form.email.data != '':
-        params.append(f'email={form.email.data}')
+    if form.nickname.data != '':
+        params.append(f'nickname={form.nickname.data}')
     if form.name.data != '':
         params.append(f'name={form.name.data}')
     if form.surname.data != '':

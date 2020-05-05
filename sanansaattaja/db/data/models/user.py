@@ -16,7 +16,7 @@ class User(SqlAlchemyBase, UserMixin, SerializerMixin):
     surname = Column(String, nullable=False)
     name = Column(String, nullable=False)
     age = Column(Integer, nullable=False)
-    email = Column(String, index=True, unique=True, nullable=False)
+    nickname = Column(String, index=True, unique=True, nullable=False)
     hashed_password = Column(String, nullable=False)
     modified_date = Column(DateTime, default=datetime.datetime.now)
     sex = Column(String, nullable=False)
@@ -24,7 +24,8 @@ class User(SqlAlchemyBase, UserMixin, SerializerMixin):
 
     posts = orm.relation('Post', back_populates='author')
     messages = orm.relation('Message', back_populates='author', foreign_keys=[Message.author_id])
-    received_messages = orm.relation('Message', back_populates='addressee', foreign_keys=[Message.addressee_id])
+    received_messages = orm.relation('Message', back_populates='addressee',
+                                     foreign_keys=[Message.addressee_id])
 
     def __repr__(self):
         return f'<User> {self.id} {self.surname} {self.name}'

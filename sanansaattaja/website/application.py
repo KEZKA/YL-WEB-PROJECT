@@ -10,8 +10,8 @@ from sanansaattaja.core.errors import ClientError
 from sanansaattaja.core.utils import load_image, fullname
 from sanansaattaja.db.data import db_session
 from sanansaattaja.db.servicees import message_service, post_service, user_service
-from sanansaattaja.website.forms import LoginForm, RegisterForm, MessageForm, PostForm, FilterForm, EditProfileForm, \
-    PasswordChangeForm
+from sanansaattaja.website.forms import LoginForm, RegisterForm, MessageForm, PostForm, FilterForm, \
+    EditProfileForm, PasswordChangeForm
 from sanansaattaja.website.utils import get_photo_from_request, get_data_from_filter_form_to_params
 
 load_dotenv()
@@ -47,7 +47,8 @@ def add_post():
             post_service.append_post(form, current_user.id)
             return redirect('/')
         except ClientError as e:
-            return render_template('new_post.html', title='Post publishing', form=form, message=str(e), width=800)
+            return render_template('new_post.html', title='Post publishing', form=form,
+                                   message=str(e), width=800)
     return render_template('new_post.html', title='Post publishing', form=form, width=800)
 
 
@@ -73,12 +74,13 @@ def add_message():
             message_service.append_message(form, current_user.id)
             return redirect(url_for('private'))
         except ClientError as e:
-            return render_template('new_message.html', title='Sending message', form=form, message=str(e), width=800)
+            return render_template('new_message.html', title='Sending message', form=form,
+                                   message=str(e), width=800)
     else:
-        email = request.args.get('email')
-        if email:
+        nickname = request.args.get('nickname')
+        if nickname:
             return render_template('new_message.html', title='Sending message', form=form, width=800,
-                                   addressee=email)
+                                   addressee=nickname)
         return render_template('new_message.html', title='Sending message', form=form, width=800,
                                addressee="")
 
@@ -88,7 +90,7 @@ def login():
     login_form = LoginForm()
     if login_form.validate_on_submit():
         try:
-            user = user_service.get_user_by_email(login_form.email.data)
+            user = user_service.get_user_by_nickname(login_form.nickname.data)
             user_service.password_verification(user, login_form.password.data)
             login_user(user, remember=login_form.remember_me.data)
             return redirect(url_for('index'))
@@ -133,17 +135,18 @@ def edit_page():
             return redirect('edit_page')
         except ClientError as e:
             return render_template('edit_page.html', current_user=current_user, title='Edit page',
-                form=form, password_form=password_form, message=str(e))
+                                   form=form, password_form=password_form, message=str(e))
     if password_form.validate_on_submit():
         try:
-            user_service.password_verification(current_user, password_form.old_password.data, changing=True)
+            user_service.password_verification(current_user, password_form.old_password.data,
+                                               changing=True)
             user_service.edit_password(current_user.id, password_form)
             return redirect('edit_page')
         except ClientError as e:
             return render_template('edit_page.html', current_user=current_user, title='Edit page',
-                form=form, password_form=password_form, message=str(e))
+                                   form=form, password_form=password_form, message=str(e))
     return render_template('edit_page.html', current_user=current_user, title='Edit page', form=form,
-        password_form=password_form)
+                           password_form=password_form)
 
 
 @app.route('/make_image/<int:user_id>')
@@ -215,7 +218,6 @@ def info():
     return render_template('info.html')
 
 
-
 @app.route('/info/faq')
 def faq():
     return render_template('faq.html')
@@ -242,4 +244,4 @@ def run():
     globalhost = '0.0.0.0'
 
     # change host before deploying on heroku
-    app.run(host=globalhost, port=port, debug=False)
+    app.run(host=localhost, port=port, debug=False)

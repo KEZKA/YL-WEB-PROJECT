@@ -1,6 +1,5 @@
 import os
 
-from sanansaattaja.core.errors import ClientError
 
 def fullname(name):
     return os.path.join(os.path.dirname(__file__), '..', name)

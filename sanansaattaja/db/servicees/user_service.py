@@ -5,18 +5,18 @@ from sanansaattaja.db.data.models import User
 from sanansaattaja.website.forms import RegisterForm
 
 
-def email_check(email: str):
+def nickname_check(nickname: str):
     try:
-        get_user_by_email(email)
+        get_user_by_nickname(nickname)
     except ClientError:
         return True
-    raise ClientError(msg="This email is already in use")
+    raise ClientError(msg="This nickname is already in use")
 
 
 def add_user(form: RegisterForm, file):
     session = db_session.create_session()
     password_check(form.password.data, form.password_again.data)
-    email_check(form.email.data)
+    nickname_check(form.nickname.data)
     check_password_security(form.password.data)
     user = User()
     user = user_add_data(user, form, file)
@@ -28,7 +28,7 @@ def add_user(form: RegisterForm, file):
 def user_add_data(user: User, form, file):
     user.name = form.name.data
     user.surname = form.surname.data
-    user.email = form.email.data
+    user.nickname = form.nickname.data
     if form.age.data < 5:
         raise ClientError('You must be older than 5')
     user.age = form.age.data
@@ -42,8 +42,8 @@ def user_add_data(user: User, form, file):
 def edit_user(user_id: int, form, file):
     session = db_session.create_session()
     user = session.query(User).get(user_id)
-    if form.email.data != user.email:
-        email_check(form.email.data)
+    if form.nickname.data != user.nickname:
+        nickname_check(form.nickname.data)
     user = user_add_data(user, form, file)
     session.merge(user)
     session.commit()
@@ -79,9 +79,9 @@ def get_users():
     return users
 
 
-def get_user_by_email(email: str):
+def get_user_by_nickname(nickname: str):
     session = db_session.create_session()
-    user = session.query(User).filter(User.email == email).first()
+    user = session.query(User).filter(User.nickname == nickname).first()
     session.close()
     if not user:
         raise ClientError(msg="There is no such user")
@@ -90,8 +90,8 @@ def get_user_by_email(email: str):
 
 def get_filer_users(args):
     users = get_users()
-    if 'email' in args:
-        users = filter(lambda x: args['email'] in x.email, users)
+    if 'nickname' in args:
+        users = filter(lambda x: args['nickname'] in x.nickname, users)
     if 'name' in args:
         users = filter(lambda x: args['name'] in x.name, users)
     if 'surname' in args:

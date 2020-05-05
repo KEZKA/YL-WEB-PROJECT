@@ -4,7 +4,7 @@
 
 {% block subcontent %}
 
-<header class="card-header">Write message</header>
+    <header class="card-header">Write message</header>
     <form class="card-body form-left" action="" method="POST">
         {{ form.hidden_tag() }}
         {{ form.csrf_token }}
@@ -13,7 +13,7 @@
         {% endif %}
         <p>
             {{ form.addressee.label }}<br>
-            {{ form.addressee(class="form-control", value=addressee)}}<br>
+            {{ form.addressee(class="form-control", value=addressee) }}<br>
             {% for error in form.addressee.errors %}
                 <p class="alert alert-danger" role="alert">
                     {{ error }}
