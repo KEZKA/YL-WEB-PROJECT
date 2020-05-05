@@ -3,7 +3,7 @@ from sqlalchemy.orm import selectinload
 from sanansaattaja.core import ClientError
 from sanansaattaja.db.data import db_session
 from sanansaattaja.db.data.models import Message
-from sanansaattaja.db.servicees.user_service import get_user_by_email
+from sanansaattaja.db.servicees.user_service import get_user_by_nickname
 
 
 def get_all_user_messages(user_id: int):
@@ -17,7 +17,7 @@ def get_all_user_messages(user_id: int):
 
 def append_message(form, user_id: id):
     session = db_session.create_session()
-    addressee = get_user_by_email(form.addressee.data)
+    addressee = get_user_by_nickname(form.addressee.data)
     session.merge(addressee)
     try:
         message = Message()

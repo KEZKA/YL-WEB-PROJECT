@@ -12,12 +12,12 @@
                 <img src="{{ url_for('make_image', user_id=user.id) }}?{{ range(100, 1000000000) | random }}"
                      style="width: 240px; height: 240px; border-radius: 50%;">
             </div>
-            <p> Email: {{ user.email }} </p>
+            <p> Nickname: {{ user.nickname }} </p>
             <p> Age: {{ user.age }} </p>
             <p> Sex: {{ user.sex }} </p>
             <p> ID: {{ user.id }} </p>
             {% if current_user != user %}
-                <a class="btn btn-primary btn-lg" href="/add_message?email={{ user.email }}"
+                <a class="btn btn-primary btn-lg" href="/add_message?nickname={{ user.nickname }}"
                    role="button">Write to {{ user.name }}</a>
             {% endif %}
         </header>
@@ -32,7 +32,7 @@
     {% for post in posts %}
         <div class="jumbotron" style="margin: 0 100px 22px 100px;">
             <p align="left" class="font-weight-light text-info">  {{ post.get_normal_date() }}
-                by {{ post.author.email }}</p>
+                by {{ post.author.nickname }}</p>
             <h3> {{ post.topic.upper() }} </h3>
             <p class="lead" style="white-space: pre-line">{{ post.text }}</p>
             </br>

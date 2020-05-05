@@ -3,7 +3,7 @@ from wtforms import StringField, SubmitField, IntegerField, RadioField
 
 
 class FilterForm(FlaskForm):
-    email = StringField('Email')
+    nickname = StringField('Nickname')
     name = StringField('First name')
     surname = StringField('Second name')
     age = IntegerField('More than')

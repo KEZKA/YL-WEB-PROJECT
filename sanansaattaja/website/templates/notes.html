@@ -16,7 +16,7 @@
 
 {% for note in notes %}
 <div class="jumbotron" style="margin: 0px 100px 22px 100px;">
-    <p align="left" class="font-weight-light text-info">  {{ note.get_normal_date() }} by {{note.author.email}}</p>
+    <p align="left" class="font-weight-light text-info">  {{ note.get_normal_date() }} by {{note.author.nickname}}</p>
     <h3> {{note.topic.upper()}} </h3>
     <p class="lead" style="white-space: pre-line">{{note.text}}</p>
     </br>
