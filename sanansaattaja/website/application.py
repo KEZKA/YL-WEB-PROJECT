@@ -10,9 +10,9 @@ from sanansaattaja.core.errors import PostError
 from sanansaattaja.core.utils import load_image, fullname
 from sanansaattaja.db.data import db_session
 from sanansaattaja.db.servicees import message_service, post_service, user_service
-from sanansaattaja.website.forms import LoginForm, RegisterForm, MessageForm, PostForm, FilterForm
+from sanansaattaja.website.forms import LoginForm, RegisterForm, MessageForm, PostForm, FilterForm, EditProfileForm, \
+    PasswordChangeForm
 from sanansaattaja.website.utils import get_photo_from_request, get_data_from_filter_form_to_params
-from sanansaattaja.website.utils import get_photo_from_request, get_data_from_filter_form
 
 load_dotenv()
 app = Flask(__name__)
@@ -130,17 +130,17 @@ def edit_page():
             return redirect('edit_page')
         except Exception as e:
             return render_template('edit_page.html', current_user=current_user, title='Edit page',
-                                   form=form, password_form=password_form, message=str(e))
+                form=form, password_form=password_form, message=str(e))
     if password_form.validate_on_submit():
         try:
-            password_verification(current_user, password_form.old_password.data, changing=True)
-            edit_password(current_user.id, password_form)
+            user_service.password_verification(current_user, password_form.old_password.data, changing=True)
+            user_service.edit_password(current_user.id, password_form)
             return redirect('edit_page')
         except Exception as e:
             return render_template('edit_page.html', current_user=current_user, title='Edit page',
-                                   form=form, password_form=password_form, message=str(e))
+                form=form, password_form=password_form, message=str(e))
     return render_template('edit_page.html', current_user=current_user, title='Edit page', form=form,
-                           password_form=password_form)
+        password_form=password_form)
 
 
 @app.route('/make_image')

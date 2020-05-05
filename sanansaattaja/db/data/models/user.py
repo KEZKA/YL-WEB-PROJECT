@@ -6,7 +6,7 @@ from sqlalchemy_serializer import SerializerMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from sanansaattaja.db.data.db_session import SqlAlchemyBase
-from sanansaattaja.db.data.models import Message
+from .message import Message
 
 
 class User(SqlAlchemyBase, UserMixin, SerializerMixin):
