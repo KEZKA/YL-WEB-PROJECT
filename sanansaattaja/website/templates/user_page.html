@@ -16,6 +16,7 @@
             <p> Nickname: {{ user.nickname }} </p>
             <p> Age: {{ user.age }} </p>
             <p> Sex: {{ user.sex }} </p>
+            <p> ID: {{ user.id }} </p>
             {% if current_user != user %}
                 <a class="btn btn-primary btn-lg" href="/add_message?nickname={{ user.nickname }}"
                    role="button">Write to {{ user.name }}</a>
