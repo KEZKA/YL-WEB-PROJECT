@@ -6,7 +6,6 @@ class BaseError(Exception):
     def __str__(self):
         return self.msg
 
-
 class UserError(BaseError):
     def __init__(self, msg='User error', *args, **kwargs):
         super().__init__(msg=msg, *args, **kwargs)

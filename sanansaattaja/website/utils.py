@@ -1,5 +1,5 @@
 from sanansaattaja.core.errors import PhotoError
-from sanansaattaja.website.forms.users_filter_form import FilterForm
+from sanansaattaja.website.forms import FilterForm
 
 MAX_FILE_SIZE = 1024 ** 2
 
@@ -17,7 +17,7 @@ def get_photo_from_request(request):
     return file
 
 
-def get_data_from_filter_form(form: FilterForm):
+def get_data_from_filter_form_to_params(form: FilterForm):
     params = ['filter=True']
     if form.email.data != '':
         params.append(f'email={form.email.data}')

@@ -1,9 +1,10 @@
 from sqlalchemy import not_
 from sqlalchemy.orm import selectinload
+
 from sanansaattaja.core.errors import PostError
 from sanansaattaja.db.data import db_session
 from sanansaattaja.db.data.models import Post
-from sqlalchemy import not_
+
 
 def get_all_public_posts():
     session = db_session.create_session()
@@ -15,7 +16,7 @@ def get_all_public_posts():
 def get_all_user_posts(user_id):
     session = db_session.create_session()
     posts = session.query(Post).options(selectinload(Post.author)).filter(
-        (Post.is_public) & (Post.author_id == user_id)).order_by(
+        Post.is_public & (Post.author_id == user_id)).order_by(
         Post.modified_date.desc()).all()
     return posts
 
