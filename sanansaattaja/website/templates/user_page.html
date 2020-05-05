@@ -34,7 +34,7 @@
     <p class="lead" style="white-space: pre-line">{{post.text}}</p>
      </br>
     {% if current_user== user%}
-        <a class="btn btn-outline-danger" href="/user_posts/{{user.id}}?post_id={{post.id}}" role="button">
+        <a class="btn btn-outline-danger" href="/user_page/{{user.id}}?post_id={{post.id}}" role="button">
             <i class="far fa-trash-alt"></i> Delete</a>
     {% endif %}
 </div>
