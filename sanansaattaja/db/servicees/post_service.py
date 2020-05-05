@@ -10,6 +10,7 @@ def get_all_public_posts():
     session = db_session.create_session()
     posts = session.query(Post).options(selectinload(Post.author)).filter(Post.is_public).order_by(
         Post.modified_date.desc()).all()
+    session.close()
     return posts
 
 
@@ -18,6 +19,7 @@ def get_all_user_posts(user_id):
     posts = session.query(Post).options(selectinload(Post.author)).filter(
         Post.is_public & (Post.author_id == user_id)).order_by(
         Post.modified_date.desc()).all()
+    session.close()
     return posts
 
 
@@ -26,6 +28,7 @@ def get_user_notes(cur_user_id):
     notes = session.query(Post).options(selectinload(Post.author)).filter(
         not_(Post.is_public) & (Post.author_id == cur_user_id)).order_by(
         Post.modified_date.desc()).all()
+    session.close()
     return notes
 
 
@@ -35,6 +38,7 @@ def append_post(form, user_id: int):
     post = post_add_data(post, form, user_id)
     session.add(post)
     session.commit()
+    session.close()
 
 
 def post_add_data(post: Post, form, user_id: int):
@@ -52,3 +56,4 @@ def delete_post(post_id: int):
         raise PostError(msg="There is no such post")
     session.delete(post)
     session.commit()
+    session.close()

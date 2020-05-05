@@ -10,6 +10,7 @@ def get_all_user_messages(user_id: int):
     messages = session.query(Message).options(selectinload('*')).filter(
         (Message.author_id == user_id) | (Message.addressee_id == user_id)).order_by(
         Message.modified_date.desc()).all()
+    session.close()
     return messages
 
 
@@ -21,6 +22,7 @@ def append_message(form, user_id: id):
     message = message_add_data(message, form, user_id, addressee.id)
     session.add(message)
     session.commit()
+    session.close()
 
 
 def message_add_data(message: Message, form, user_id: int, addressee_id: int):
