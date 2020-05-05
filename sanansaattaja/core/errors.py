@@ -16,6 +16,10 @@ class PostError(BaseError):
     def __init__(self, msg='Post error', *args, **kwargs):
         super().__init__(msg=msg, *args, **kwargs)
 
+class MessageError(BaseError):
+    def __init__(self, msg='Message error', *args, **kwargs):
+        super().__init__(msg=msg, *args, **kwargs)
+
 
 class PhotoError(BaseError):
     def __init__(self, msg='Photo error', *args, **kwargs):

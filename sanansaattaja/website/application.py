@@ -6,10 +6,10 @@ from dotenv import load_dotenv
 from flask import Flask, render_template, redirect, url_for, request, send_file
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 
-from sanansaattaja.core.errors import PostError
+from sanansaattaja.core.errors import PostError, MessageError
 from sanansaattaja.core.utils import load_image, fullname
 from sanansaattaja.db.data import db_session
-from sanansaattaja.db.servicees.message_service import get_all_user_messages, append_message
+from sanansaattaja.db.servicees.message_service import get_all_user_messages, append_message, delete_message
 from sanansaattaja.db.servicees.post_service import get_all_public_posts, append_post, get_all_user_posts, \
     get_user_notes, delete_post
 from sanansaattaja.db.servicees.user_service import add_user, get_user_by_id, get_user_by_email, \
@@ -61,8 +61,14 @@ def add_post():
 @login_required
 def private():
     try:
+        message_id = request.args.get('message_id')
+        if message_id:
+            try:
+                delete_message(message_id)
+            except MessageError:
+                pass
         messages = get_all_user_messages(current_user.id)
-        return render_template('private.html', messages=messages, width=800)
+        return render_template('private.html', messages=messages, width=800, user=current_user)
     except Exception as e:
         return render_template('private.html', messages=[], message=str(e), width=800)
 
@@ -243,4 +249,4 @@ def run():
     globalhost = '0.0.0.0'
 
     # change host before deploying on heroku
-    app.run(host=globalhost, port=port, debug=False)
+    app.run(host=localhost, port=port, debug=False)
