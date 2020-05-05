@@ -22,7 +22,7 @@
                         to {{ msg.addressee.name }} {{ msg.addressee.surname }}
                     </a>
                 </h4>
-                <p style="text-align: center" class="font-weight-light text-info">
+                <p style="text-align: left" class="font-weight-light text-info">
                     {{ msg.get_normal_date() }} by {{ msg.author.nickname }}
                 </p>
                 <p class="lead" style="white-space: pre-line">{{ msg.text }}</p><br>
@@ -36,7 +36,7 @@
                         from {{ msg.author.name }} {{ msg.author.surname }}
                     </a>
                 </h4>
-                <p style="text-align: center" class="font-weight-light text-info">
+                <p style="text-align: left" class="font-weight-light text-info">
                     {{ msg.get_normal_date() }} by {{ msg.author.nickname }}
                 </p>
                 <p class="lead" style="white-space: pre-line">{{ msg.text }}</p><br>
