@@ -3,97 +3,98 @@
 {% block head %}<title>Sign up</title>{% endblock %}
 
 {% block subcontent %}
-<header class="card-header">Registration</header>
-<form class="card-body form-left" action="" method="POST" enctype="multipart/form-data">
-    {{ form.hidden_tag() }}
-    {{ form.csrf_token }}
-    {% if message %}
-    <div class="alert alert-danger">{{ message }}</div>
-    {% endif %}
+    <header class="card-header">Registration</header>
+    <form class="card-body form-left" action="" method="POST" enctype="multipart/form-data">
+        {{ form.hidden_tag() }}
+        {{ form.csrf_token }}
+        {% if message %}
+            <div class="alert alert-danger">{{ message }}</div>
+        {% endif %}
 
-    <p>
-        {{ form.email.label }}<br>
-        {{ form.email(class="form-control", type="email") }}<br>
-        {% for error in form.email.errors %}
-    <p class="alert alert-danger" role="alert">
-        {{ error }}
-    </p>
-    {% endfor %}
-    </p>
-    <p>
-        {{ form.password.label }}<br>
-        {{ form.password(class="form-control", type="password") }}<br>
-        {% for error in form.password.errors %}
-    <p class="alert alert-danger" role="alert">
-        {{ error }}
-    </p>
-    {% endfor %}
-    </p>
-    <p>
-        {{ form.password_again.label }}<br>
-        {{ form.password_again(class="form-control", type="password") }}<br>
-        {% for error in form.password_again.errors %}
-    <p class="alert alert-danger" role="alert">
-        {{ error }}
-    </p>
-    {% endfor %}
-    </p>
-    <p>
-        {{ form.name.label }}<br>
-        {{ form.name(class="form-control") }}<br>
-        {% for error in form.name.errors %}
-    <p class="alert alert-danger" role="alert">
-        {{ error }}
-    </p>
-    {% endfor %}
-    </p>
-    <p>
-        {{ form.surname.label }}<br>
-        {{ form.surname(class="form-control") }}<br>
-        {% for error in form.surname.errors %}
-    <p class="alert alert-danger" role="alert">
-        {{ error }}
-    </p>
-    {% endfor %}
-    </p>
-    <p>
-        {{ form.age.label }}<br>
-        {{ form.age(class="form-control", type="number") }}<br>
-        {% for error in form.age.errors %}
-    <p class="alert alert-danger" role="alert">
-        {{ error }}
-    </p>
-    {% endfor %}
-    </p>
-    <p>
-    <table class="user-data">
-        <tr>
-            <td class="left-td">{{ form.sex.label }}</td>
-            <td>
-                {% for subfield in form.sex %}
-                {{ subfield(required="required") }}
-                {{ subfield.label }}&nbsp;&nbsp;&nbsp;&nbsp;
-                {% endfor %}
-            </td>
-        </tr>
-    </table>
-    {% for error in form.sex.errors %}
-    <p class="alert alert-danger" role="alert">
-        {{ error }}
-    </p>
-    {% endfor %}
-    </p>
+        <p>
+            {{ form.email.label }}<br>
+            {{ form.email(class="form-control", type="email") }}<br>
+            {% for error in form.email.errors %}
+                <p class="alert alert-danger" role="alert">
+                    {{ error }}
+                </p>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.password.label }}<br>
+            {{ form.password(class="form-control", type="password", title="Password should consist of upper and lower case letters, numbers, don't contain any combination of 3 letters standing next to each other on the keyboard, and be at least 8 characters in length") }}
+            <br>
+            {% for error in form.password.errors %}
+                <p class="alert alert-danger" role="alert">
+                    {{ error }}
+                </p>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.password_again.label }}<br>
+            {{ form.password_again(class="form-control", type="password") }}<br>
+            {% for error in form.password_again.errors %}
+                <p class="alert alert-danger" role="alert">
+                    {{ error }}
+                </p>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.name.label }}<br>
+            {{ form.name(class="form-control") }}<br>
+            {% for error in form.name.errors %}
+                <p class="alert alert-danger" role="alert">
+                    {{ error }}
+                </p>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.surname.label }}<br>
+            {{ form.surname(class="form-control") }}<br>
+            {% for error in form.surname.errors %}
+                <p class="alert alert-danger" role="alert">
+                    {{ error }}
+                </p>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.age.label }}<br>
+            {{ form.age(class="form-control", type="number") }}<br>
+            {% for error in form.age.errors %}
+                <p class="alert alert-danger" role="alert">
+                    {{ error }}
+                </p>
+            {% endfor %}
+        </p>
+        <p>
+        <table class="user-data">
+            <tr>
+                <td class="left-td">{{ form.sex.label }}</td>
+                <td>
+                    {% for subfield in form.sex %}
+                        {{ subfield(required="required") }}
+                        {{ subfield.label }}&nbsp;&nbsp;&nbsp;&nbsp;
+                    {% endfor %}
+                </td>
+            </tr>
+        </table>
+        {% for error in form.sex.errors %}
+            <p class="alert alert-danger" role="alert">
+                {{ error }}
+            </p>
+        {% endfor %}
+        </p>
 
 
-    <p>
-        {{ form.photo.label }}<br>
-        {{ form.photo(class="form-control-file", accept="image/*") }}<br>
-        {% for error in form.photo.errors %}
-    <p class="alert alert-danger" role="alert">
-        {{ error }}
-    </p>
-    {% endfor %}
-    </p>
-    <p>{{ form.submit(type="submit", class="btn btn-primary") }}</p>
-</form>
-    {% endblock %}
+        <p>
+            {{ form.photo.label }}<br>
+            {{ form.photo(class="form-control-file", accept="image/*") }}<br>
+            {% for error in form.photo.errors %}
+                <p class="alert alert-danger" role="alert">
+                    {{ error }}
+                </p>
+            {% endfor %}
+        </p>
+        <p>{{ form.submit(type="submit", class="btn btn-primary") }}</p>
+    </form>
+{% endblock %}
