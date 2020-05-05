@@ -53,8 +53,8 @@ def add_post():
             append_post(form, current_user.id)
             return redirect('/')
         except Exception as e:
-            return render_template('post.html', title='Post publishing', form=form, message=str(e), width=800)
-    return render_template('post.html', title='Post publishing', form=form, width=800)
+            return render_template('new_post.html', title='Post publishing', form=form, message=str(e), width=800)
+    return render_template('new_post.html', title='Post publishing', form=form, width=800)
 
 
 @app.route('/private')
@@ -76,12 +76,12 @@ def add_message():
             append_message(form, current_user.id)
             return redirect(url_for('private'))
         except Exception as e:
-            return render_template('message.html', title='Sending message', form=form, message=str(e), width=800)
+            return render_template('new_message.html', title='Sending message', form=form, message=str(e), width=800)
     else:
         email = request.args.get('email')
         if email:
-            return render_template('message.html', title='Sending message', form=form, width=800, addressee=email)
-        return render_template('message.html', title='Sending message', form=form, width=800, addressee="")
+            return render_template('new_message.html', title='Sending message', form=form, width=800, addressee=email)
+        return render_template('new_message.html', title='Sending message', form=form, width=800, addressee="")
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -148,7 +148,7 @@ def make_image():
     return send_file(io.BytesIO(current_user.profile_picture), mimetype='image/*')
 
 
-@app.route('/user_posts/<int:user_id>')
+@app.route('/user_page/<int:user_id>')
 @login_required
 def user_posts(user_id):
     try:
@@ -160,7 +160,7 @@ def user_posts(user_id):
                 pass
         user = get_user_by_id(user_id)
         posts = get_all_user_posts(user_id)
-        return render_template('user_posts.html', posts=posts, user=user)
+        return render_template('user_page.html', posts=posts, user=user)
     except Exception as e:
         return render_template('main.html', posts=[], message=str(e))
 
@@ -189,7 +189,7 @@ def users():
         users = get_filer_users(request.args)
     else:
         users = get_users()
-    return render_template('all_users.html', users=users)
+    return render_template('users_list.html', users=users)
 
 
 @app.route('/users_filter', methods=['GET', 'POST'])
@@ -201,8 +201,8 @@ def users_filter():
             params = get_data_from_filter_form(form)
             return redirect(f'/users?{params}')
         except Exception as e:
-            return render_template('user_filter.html', form=form, message=str(e))
-    return render_template('user_filter.html', form=form)
+            return render_template('users_filter.html', form=form, message=str(e))
+    return render_template('users_filter.html', form=form)
 
 
 db_session.global_init(fullname('db/sanansaattaja.db'))
