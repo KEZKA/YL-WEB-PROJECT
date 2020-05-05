@@ -150,7 +150,7 @@ def make_image():
 
 @app.route('/user_page/<int:user_id>')
 @login_required
-def user_posts(user_id):
+def user_page(user_id):
     try:
         post_id = request.args.get('post_id')
         if post_id:
