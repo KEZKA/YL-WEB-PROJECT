@@ -3,69 +3,69 @@
 {% block head %}<title>Users filter</title>{% endblock %}
 
 {% block subcontent %}
-<header class="card-header">Filter</header>
-<form class="card-body form-left" action="" method="POST">
-    {{ form.hidden_tag() }}
-    {{ form.csrf_token }}
-    {% if message %}
-    <div class="alert alert-danger">{{ message }}</div>
-    {% endif %}
+    <header class="card-header">Filter</header>
+    <form class="card-body form-left" action="" method="POST">
+        {{ form.hidden_tag() }}
+        {{ form.csrf_token }}
+        {% if message %}
+            <div class="alert alert-danger">{{ message }}</div>
+        {% endif %}
 
-    <p>
-        {{ form.nickname.label }}<br>
-        {{ form.nickname(class="form-control") }}<br>
-        {% for error in form.nickname.errors %}
+        <p>
+            {{ form.nickname.label }}<br>
+            {{ form.nickname(class="form-control") }}<br>
+            {% for error in form.nickname.errors %}
+                <p class="alert alert-danger" role="alert">
+                    {{ error }}
+                </p>
+            {% endfor %}
+        </p>
+
+        <p>
+            {{ form.name.label }}<br>
+            {{ form.name(class="form-control") }}<br>
+            {% for error in form.name.errors %}
+                <p class="alert alert-danger" role="alert">
+                    {{ error }}
+                </p>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.surname.label }}<br>
+            {{ form.surname(class="form-control") }}<br>
+            {% for error in form.surname.errors %}
+                <p class="alert alert-danger" role="alert">
+                    {{ error }}
+                </p>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.age.label }}<br>
+            {{ form.age(class="form-control", type="number") }}<br>
+            {% for error in form.age.errors %}
+                <p class="alert alert-danger" role="alert">
+                    {{ error }}
+                </p>
+            {% endfor %}
+        </p>
+        <p>
+        <table class="user-data">
+            <tr>
+                <td class="left-td">{{ form.sex.label }}</td>
+                <td>
+                    {% for subfield in form.sex %}
+                        {{ subfield(required="required") }}
+                        {{ subfield.label }}&nbsp;&nbsp;&nbsp;&nbsp;
+                    {% endfor %}
+                </td>
+            </tr>
+        </table>
+        {% for error in form.sex.errors %}
             <p class="alert alert-danger" role="alert">
-            {{ error }}
+                {{ error }}
             </p>
         {% endfor %}
-    </p>
-
-    <p>
-        {{ form.name.label }}<br>
-        {{ form.name(class="form-control") }}<br>
-        {% for error in form.name.errors %}
-    <p class="alert alert-danger" role="alert">
-        {{ error }}
-    </p>
-    {% endfor %}
-    </p>
-    <p>
-        {{ form.surname.label }}<br>
-        {{ form.surname(class="form-control") }}<br>
-        {% for error in form.surname.errors %}
-    <p class="alert alert-danger" role="alert">
-        {{ error }}
-    </p>
-    {% endfor %}
-    </p>
-    <p>
-        {{ form.age.label }}<br>
-        {{ form.age(class="form-control", type="number") }}<br>
-        {% for error in form.age.errors %}
-    <p class="alert alert-danger" role="alert">
-        {{ error }}
-    </p>
-    {% endfor %}
-    </p>
-    <p>
-    <table class="user-data">
-        <tr>
-            <td class="left-td">{{ form.sex.label }}</td>
-            <td>
-                {% for subfield in form.sex %}
-                {{ subfield(required="required") }}
-                {{ subfield.label }}&nbsp;&nbsp;&nbsp;&nbsp;
-                {% endfor %}
-            </td>
-        </tr>
-    </table>
-    {% for error in form.sex.errors %}
-    <p class="alert alert-danger" role="alert">
-        {{ error }}
-    </p>
-    {% endfor %}
-    </p>
-    <p>{{ form.submit(type="submit", class="btn btn-primary") }}</p>
-</form>
+        </p>
+        <p>{{ form.submit(type="submit", class="btn btn-primary") }}</p>
+    </form>
 {% endblock %}

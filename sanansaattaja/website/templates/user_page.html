@@ -1,4 +1,4 @@
-{% extends 'window.html' %}
+{% extends 'base.html' %}
 
 {% block head %}<title>{{ user.name }}'s page</title>{% endblock %}
 
@@ -6,8 +6,8 @@
     {% if message %}
         <div class="alert alert-danger">{{ message }}</div>
     {% endif %}
-    <div style="text-align: center;">
-        <header class="card-header" style="width:40%">{{ user.name }} {{ user.surname }}
+    <div>
+        <header class="card-header" style="width:40%; margin-left: auto; margin-right: auto">{{ user.name }} {{ user.surname }}
             <div style="position: relative;">
                 <img src="{{ url_for('make_image', user_id=user.id) }}?{{ range(100, 1000000000) | random }}"
                      style="width: 240px; height: 240px; border-radius: 50%;">
