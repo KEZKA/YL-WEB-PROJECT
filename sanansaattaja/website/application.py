@@ -215,17 +215,17 @@ def faq():
 
 @app.errorhandler(404)
 def not_found(error):
-    return render_template('error.html', text="page not found")
+    return render_template('error.html', text="page not found", error=str(error))
 
 
 @app.errorhandler(401)
 def unauthorized(error):
-    return render_template('error.html', text="you don't have access to this page")
+    return render_template('error.html', text="you don't have access to this page", error=str(error))
 
 
 @app.errorhandler(500)
 def server_error(error):
-    return render_template('error.html', text="oops something went wrong")
+    return render_template('error.html', text="", error=str(error))
 
 
 def run():

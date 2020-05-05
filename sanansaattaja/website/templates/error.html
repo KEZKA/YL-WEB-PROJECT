@@ -4,11 +4,12 @@
 {% if message %}
             <div class="alert alert-danger">{{ message }}</div>
 {% endif %}
-<div class="text-white rounded" style="background-image: url('/static/images/e404.png'); height: 85%;">
+<div class="text-white rounded" style="background-image: url('/static/images/e404.png'); height: 620px;">
     <div class="container" style="padding-top: 200px">
-      <h1 class="display-4 text-monospace">Sorry not sorry, {{text}}</h1>
-      <p class="lead mb-0"><a href="/" class="text-white font-weight-bold">
+      <h1 class="display-4 text-monospace">Sorry, {{text}}</h1>
+      <p class="lead mb-0"><a href="/" class="text-white font-weight-bold" style="margin-top: 10%">
           <i class="fas fa-long-arrow-alt-left"></i> PLEASE, GO BACK</a></p>
+        <p class='text-monospace' style="margin-top: 5%">{{error}}</p>
     </div>
   </div>
 {% endblock %}
