@@ -4,7 +4,7 @@
 #RU
 Sanansaattaja (или, как ласково мы ее назвали, Санса) - это небольшой и легкий в использовании мессенджер c милой и минималистичной клиентской частью. Это веб-приложение призвано помочь Вам в коммуникации со своими друзьями, это возможно благодаря понятному и комфортному в использовании сайту и грамотно написанному для Вас серверу. 
 
-У нас есть:
+Мы такие крутые, что у нас есть:
 - главная страница, где все люди могут писать о своих новостях;
 - личные сообщения, помогающие легко и быстро проконтактировать с определенным человеком, оставив все только между вами;
 - заметки, куда вы можете записывать дела на дом или список покупок, их легко удалить;
@@ -17,8 +17,8 @@ Sanansaattaja (или, как ласково мы ее назвали, Санс�
 #EN
 Sanansaattaja (or Sansa) is a small and easy-to-use messenger, with a nice and minimalistic client part. This web app is designed to help you communicate with your friends, this is possible due to an understandable and comfortable to use website and a well-written server part. 
 
-We have:
-- home page, where all people can write about their news;
+We are so cool, so we have:
+- home page, where all people can write their news;
 - private messages, that help you easily and quickly get in touch with a certain person, leaving everything just between you;
 - notes, which you can use to write your homework or shopping list, they are easy to delete;
 - users' pages, where you can track what they wrote, when, and who they are, and find out their information;
