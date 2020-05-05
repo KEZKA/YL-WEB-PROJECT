@@ -1,41 +1,46 @@
-{% extends "base.html" %}
+{% extends "window.html" %}
 
 {% block head %}<title>Users list</title>{% endblock %}
-{% block content %}
-<center>
-<a class="btn btn-success" href="/users_filter" role="button", style="margin: 0px 0px 0px 0px;">
-     <h5><i class="fas fa-search"></i> Filter</h5></a>
-<div style="margin: 0% 20% 0px 20%;">
-<br>
-
-{% if users == [] %}
-<div class="jumbotron">
-    <h1 class="display-4 text-uppercase" align="center">There're no users</h1>
-</div>
-{% endif %}
-{% if message %}
-            <div class="alert alert-danger">{{ message }}</div>
-{% endif %}
-{% for user in users %}
-
-    <header class="card w-90" style="margin: 0px 5px 15px 5px;">
-        <a class="nav-link" href='/user_page/{{user.id}}'><b>
-        {{ user.name }} {{ user.surname}}
-        </b></a>
-        <div style="position: relative;">
-            <img src="{{ url_for('make_image') }}?user_id={{user.id}}&{{ range(100, 1000000000) | random }}"
-                             style="width: 240px; height: 240px; border-radius: 50%;;">
-        </div>
-        <p> Email: {{ user.email }} </p>
-        <p> Age: {{ user.age }} </p>
-        <p> Sex: {{ user.sex }} </p>
-        <p> ID: {{ user.id }} </p>
-        <a class="btn btn-primary btn-lg" href="/add_message?email={{user.email}}" role="button" style="margin: 0% 25% 15px 25%;">Write to {{ user.name }}</a>
-    </header>
+{% block subcontent %}
     <br>
+    <a class="btn btn-success" href="/users_filter" role="button" ,
+       style="margin: 0px 100px 32px 100px;">
+        <h5><i class="fas fa-search"></i> Filter</h5></a>
 
-
-{% endfor %}
-</div>
+    {% if users == [] %}
+        <div class="jumbotron">
+            <h1 class="display-4 text-uppercase" align="center">There're no users</h1>
+        </div>
+    {% endif %}
+    {% if message %}
+        <div class="alert alert-danger">{{ message }}</div>
+    {% endif %}
+    {% for user in users %}
+        <div style="text-align: center;">
+            <header class="card w-90" style="margin: 0 5px 15px 5px;">
+                <a class="nav-link" href='/user_page/{{ user.id }}'><b>
+                    {{ user.name }} {{ user.surname }}
+                </b></a>
+                <table style="width: 350px; margin-left: auto; margin-right: auto; margin-bottom: 10px">
+                    <tr style="width: 30%">
+                        <td style="text-align: left;">
+                            <div style="position: relative;">
+                                <img src="{{ url_for('make_image', user_id=user.id) }}?{{ range(100, 1000000000) | random }}"
+                                     style="width: 100px; height: 100px; border-radius: 50%;">
+                            </div>
+                        </td>
+                        <td>
+                            <p> Email: {{ user.email }} </p>
+                            <p> Age: {{ user.age }} </p>
+                            <p> Sex: {{ user.sex }} </p>
+                            <p> ID: {{ user.id }} </p>
+                        </td>
+                    </tr>
+                </table>
+                <a class="btn btn-primary btn-lg" href="/add_message?email={{ user.email }}"
+                   role="button" style="margin: 0 25px 15px 25px;">Write to {{ user.name }}</a>
+            </header>
+            <br>
+        </div>
+    {% endfor %}
 {% endblock %}
-</center>

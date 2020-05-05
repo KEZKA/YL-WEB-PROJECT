@@ -2,7 +2,7 @@ from sanansaattaja.core.errors import ClientError
 from sanansaattaja.core.password_service import password_check, check_password_security
 from sanansaattaja.db.data import db_session
 from sanansaattaja.db.data.models import User
-from sanansaattaja.website.forms import PasswordChangeForm, RegisterForm
+from sanansaattaja.website.forms import RegisterForm
 
 
 def email_check(email: str):
@@ -18,13 +18,10 @@ def add_user(form: RegisterForm, file):
     password_check(form.password.data, form.password_again.data)
     email_check(form.email.data)
     check_password_security(form.password.data)
-    try:
-        user = User()
-        user = user_add_data(user, form, file)
-        session.add(user)
-        session.commit()
-    except Exception:
-        ClientError(msg='failed to add a message')
+    user = User()
+    user = user_add_data(user, form, file)
+    session.add(user)
+    session.commit()
     session.close()
 
 
@@ -32,15 +29,13 @@ def user_add_data(user: User, form, file):
     user.name = form.name.data
     user.surname = form.surname.data
     user.email = form.email.data
+    if form.age.data < 5:
+        raise ClientError('You must be older than 5')
     user.age = form.age.data
     user.sex = form.sex.data
-    user.set_password(form.password.data)
+    if 'password' in dir(form):
+        user.set_password(form.password.data)
     user.profile_picture = file
-    return user
-
-
-def user_change_password(user: User, password_form: PasswordChangeForm):
-    user.set_password(password_form.password.data)
     return user
 
 
@@ -62,7 +57,7 @@ def edit_password(user_id: int, password_form):
     if password_form.password.data == password_form.old_password.data:
         raise ClientError(msg="Old and new passwords mustn't match")
     check_password_security(password_form.password.data)
-    user = user_change_password(user, password_form)
+    user.set_password(password_form.password.data)
     session.merge(user)
     session.commit()
     session.close()

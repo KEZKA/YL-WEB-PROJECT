@@ -77,8 +77,10 @@ def add_message():
     else:
         email = request.args.get('email')
         if email:
-            return render_template('new_message.html', title='Sending message', form=form, width=800, addressee=email)
-        return render_template('new_message.html', title='Sending message', form=form, width=800, addressee="")
+            return render_template('new_message.html', title='Sending message', form=form, width=800,
+                                   addressee=email)
+        return render_template('new_message.html', title='Sending message', form=form, width=800,
+                               addressee="")
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -144,10 +146,9 @@ def edit_page():
         password_form=password_form)
 
 
-@app.route('/make_image')
+@app.route('/make_image/<int:user_id>')
 @login_required
-def make_image():
-    user_id = request.args.get('user_id')
+def make_image(user_id):
     user = user_service.get_user_by_id(user_id)
     if not user.profile_picture:
         with open(load_image(f"{user.sex}.jpg"), mode='rb') as image:
@@ -212,6 +213,7 @@ db_session.global_init(fullname('db/sanansaattaja.db'))
 @app.route('/info/about')
 def info():
     return render_template('info.html')
+
 
 
 @app.route('/info/faq')

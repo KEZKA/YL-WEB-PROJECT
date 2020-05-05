@@ -11,7 +11,7 @@
         <div style="position: relative;">
             <img class="user-image changeable"
                  title="Change image"
-                 src="{{ url_for('make_image') }}?user_id={{current_user.id}}&{{ range(100, 1000000000) | random }}"
+                 src="{{ url_for('make_image', user_id=current_user.id) }}?{{ range(100, 1000000000) | random }}"
                  onclick="document.getElementById('form-photo').click();">
             <i class="fa fa-times fa-2x escape changeable" title="Delete image"
                onclick="document.getElementById('check-deletion').value = 'delete'; document.getElementById('confirm').click();"
