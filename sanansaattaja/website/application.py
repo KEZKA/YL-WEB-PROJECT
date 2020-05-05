@@ -12,6 +12,7 @@ from sanansaattaja.db.data import db_session
 from sanansaattaja.db.servicees import message_service, post_service, user_service
 from sanansaattaja.website.forms import LoginForm, RegisterForm, MessageForm, PostForm, FilterForm
 from sanansaattaja.website.utils import get_photo_from_request, get_data_from_filter_form_to_params
+from sanansaattaja.website.utils import get_photo_from_request, get_data_from_filter_form
 
 load_dotenv()
 app = Flask(__name__)
@@ -118,7 +119,8 @@ def register():
 @app.route('/edit_page', methods=['GET', 'POST'])
 @login_required
 def edit_page():
-    form = RegisterForm()
+    form = EditProfileForm()
+    password_form = PasswordChangeForm()
     if form.validate_on_submit():
         try:
             file = get_photo_from_request(request)
@@ -127,9 +129,18 @@ def edit_page():
             user_service.edit_user(current_user.id, form, file)
             return redirect('edit_page')
         except Exception as e:
-            return render_template('edit_page.html', current_user=current_user, title='Edit page', form=form,
-                message=str(e))
-    return render_template('edit_page.html', current_user=current_user, title='Edit page', form=form)
+            return render_template('edit_page.html', current_user=current_user, title='Edit page',
+                                   form=form, password_form=password_form, message=str(e))
+    if password_form.validate_on_submit():
+        try:
+            password_verification(current_user, password_form.old_password.data, changing=True)
+            edit_password(current_user.id, password_form)
+            return redirect('edit_page')
+        except Exception as e:
+            return render_template('edit_page.html', current_user=current_user, title='Edit page',
+                                   form=form, password_form=password_form, message=str(e))
+    return render_template('edit_page.html', current_user=current_user, title='Edit page', form=form,
+                           password_form=password_form)
 
 
 @app.route('/make_image')
@@ -238,4 +249,4 @@ def run():
     globalhost = '0.0.0.0'
 
     # change host before deploying on heroku
-    app.run(host=globalhost, port=port, debug=False)
+    app.run(host=localhost, port=port, debug=False)

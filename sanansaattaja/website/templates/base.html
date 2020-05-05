@@ -18,7 +18,7 @@
             integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
             crossorigin="anonymous"></script>
     {% block head %}
-    <title>Sanansaattaja</title>
+        <title>Sanansaattaja</title>
     {% endblock %}
 </head>
 
@@ -36,75 +36,89 @@
             </li>
 
             {% if current_user.is_authenticated %}
-            <li class="nav-item">
-                <a class="nav-link" href='/users?filter=False'>
-                    <i class="fas fa-users"></i>
-                    Users
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href='/add_post'>
-                    <i class="far fa-plus-square"></i>
-                    Add post
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href='/private'>
-                    <i class="fas fa-envelope-open-text"></i>
-                    Messages
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href='/add_message'>
-                    <i class="fas fa-feather-alt"></i>
-                    Write message
-                </a>
-            </li>
+                <li class="nav-item">
+                    <a class="nav-link" href='/users?filter=False'>
+                        <i class="fas fa-users"></i>
+                        Users
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href='/add_post'>
+                        <i class="far fa-plus-square"></i>
+                        Add post
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href='/private'>
+                        <i class="fas fa-envelope-open-text"></i>
+                        Messages
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href='/add_message'>
+                        <i class="fas fa-feather-alt"></i>
+                        Write message
+                    </a>
+                </li>
             {% endif %}
 
         </ul>
         <ul class="navbar-nav ml-auto">
             {% if current_user.is_authenticated %}
-            <li class="dropdown">
-                <a class="btn btn-secondary dropdown-toggle" href="" role="button"
-                   id="user_menu" data-toggle="dropdown" aria-haspopup="true"
-                   aria-expanded="false" style="background-color: #1240AB;">
-                    <img src="{{ url_for('make_image') }}?{{ range(100, 1000000000) | random }}"
-                         style="width: 30px; height: 30px; border-radius: 50%;;">
-                </a>
+                <li class="dropdown">
+                    <a class="btn btn-secondary dropdown-toggle" href="" role="button"
+                       id="user_menu" data-toggle="dropdown" aria-haspopup="true"
+                       aria-expanded="false" style="background-color: #1240AB;">
+                        <img src="{{ url_for('make_image') }}?{{ range(100, 1000000000) | random }}"
+                             style="width: 30px; height: 30px; border-radius: 50%;;">
+                    </a>
 
-                <div class="dropdown-menu dropdown-menu-sw" aria-labelledby="user_menu">
-                    <div class="username">
-                        Signed in as <strong>{{ current_user.name }}</strong>
+                    <div class="dropdown-menu dropdown-menu-sw" aria-labelledby="user_menu">
+                        <div class="username">
+                            Signed in as <strong>{{ current_user.name }}</strong>
+                        </div>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="/user_posts/{{ current_user.id }}">
+                            <i class="far fa-file-alt"></i> Your posts
+                        </a>
+                        <a class="dropdown-item" href="/notes">
+                            <i class="fas fa-sticky-note"></i> Your notes
+                        </a>
+                        <a class="dropdown-item" href="/edit_page">
+                            <i class="far fa-address-card"></i> Edit profile
+                        </a>
+                        <a class="dropdown-item" href="/logout">
+                            <i class="fas fa-sign-out-alt"></i> Sign out
+                        </a>
                     </div>
                     <div class="dropdown-divider"></div>
                     <a class="dropdown-item" href="/user_posts/{{ current_user.id }}">
                         <i class="far fa-file-alt"></i> Your posts
                     </a>
-                    <a class="dropdown-item" href="/notes">
                         <i class="fas fa-sticky-note"></i> Your notes
+                    <a class="dropdown-item" href="/notes">
                     </a>
-                    <a class="dropdown-item disabled" href="#">
                         <i class="fas fa-user-friends"></i> Your friends
-                    </a>
                     <a class="dropdown-item" href="/edit_page">
+                    <a class="dropdown-item" href="/logout">
+                    </a>
                         <i class="far fa-address-card"></i> Edit profile
                     </a>
-                    <a class="dropdown-item" href="/logout">
+                    <a class="dropdown-item disabled" href="#">
                         <i class="fas fa-sign-out-alt"></i> Sign out
                     </a>
                 </div>
             </li>
 
             {% else %}
-            <li class="nav-item">
-                <a class="nav-link" href='/login'>
-                    <i class="fas fa-sign-in-alt"></i> Sign in
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href='/register'>Sign up</a>
-            </li>
+                <li class="nav-item">
+                    <a class="nav-link" href='/login'>
+                        <i class="fas fa-sign-in-alt"></i> Sign in
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href='/register'>Sign up</a>
+                </li>
             {% endif %}
         </ul>
     </div>
