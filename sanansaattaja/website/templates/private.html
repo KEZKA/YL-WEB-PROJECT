@@ -29,6 +29,11 @@
     <a class="btn btn-primary btn-lg" href="/add_message?email={{msg.author.email}}" role="button">
         <i class="fas fa-reply"></i> Reply to {{msg.author.name}}</a>
     {% endif %}
+    {% if current_user == msg.author %}
+    <br><br>
+        <a class="btn btn-outline-danger" href="/private?message_id={{msg.id}}" role="button">
+            <i class="far fa-trash-alt"></i> Delete</a>
+    {% endif %}
 </div>
 
 {% endfor %}
