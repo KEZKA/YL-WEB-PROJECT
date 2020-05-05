@@ -2,7 +2,8 @@
 
 {% block head %}<title>Users list</title>{% endblock %}
 {% block content %}
-<a class="btn btn-success" href="/users_filter" role="button", style="margin: 0px 1%% 0px 1%;">
+<center>
+<a class="btn btn-success" href="/users_filter" role="button", style="margin: 0px 0px 0px 0px;">
      <h5><i class="fas fa-search"></i> Filter</h5></a>
 <div style="margin: 0% 20% 0px 20%;">
 <br>
@@ -16,7 +17,7 @@
             <div class="alert alert-danger">{{ message }}</div>
 {% endif %}
 {% for user in users %}
-<center>
+
     <header class="card w-90" style="margin: 0px 5px 15px 5px;">
         <a class="nav-link" href='/user_page/{{user.id}}'><b>
         {{ user.name }} {{ user.surname}}
@@ -32,8 +33,9 @@
         <a class="btn btn-primary btn-lg" href="/add_message?email={{user.email}}" role="button" style="margin: 0% 25% 15px 25%;">Write to {{ user.name }}</a>
     </header>
     <br>
-</center>
+
 
 {% endfor %}
 </div>
 {% endblock %}
+</center>
