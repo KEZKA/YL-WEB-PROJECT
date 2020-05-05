@@ -146,10 +146,12 @@ def edit_page():
 @app.route('/make_image')
 @login_required
 def make_image():
-    if not current_user.profile_picture:
-        with open(load_image(f"{current_user.sex}.jpg"), mode='rb') as image:
+    user_id = request.args.get('user_id')
+    user = user_service.get_user_by_id(user_id)
+    if not user.profile_picture:
+        with open(load_image(f"{user.sex}.jpg"), mode='rb') as image:
             return send_file(io.BytesIO(image.read()), mimetype='image/*')
-    return send_file(io.BytesIO(current_user.profile_picture), mimetype='image/*')
+    return send_file(io.BytesIO(user.profile_picture), mimetype='image/*')
 
 
 @app.route('/user_posts/<int:user_id>')
