@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 from flask import Flask, render_template, redirect, url_for, request, send_file
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 
-from sanansaattaja.core.errors import PostError
+from sanansaattaja.core.errors import ClientError
 from sanansaattaja.core.utils import load_image, fullname
 from sanansaattaja.db.data import db_session
 from sanansaattaja.db.servicees import message_service, post_service, user_service
@@ -28,7 +28,7 @@ login_manager.init_app(app)
 def load_user(user_id):
     try:
         return user_service.get_user_by_id(user_id)
-    except Exception:
+    except ClientError:
         return None
 
 
@@ -46,7 +46,7 @@ def add_post():
         try:
             post_service.append_post(form, current_user.id)
             return redirect('/')
-        except Exception as e:
+        except ClientError as e:
             return render_template('post.html', title='Post publishing', form=form, message=str(e), width=800)
     return render_template('post.html', title='Post publishing', form=form, width=800)
 
@@ -54,11 +54,8 @@ def add_post():
 @app.route('/private')
 @login_required
 def private():
-    try:
-        messages = message_service.get_all_user_messages(current_user.id)
-        return render_template('private.html', messages=messages, width=800)
-    except Exception as e:
-        return render_template('private.html', messages=[], message=str(e), width=800)
+    messages = message_service.get_all_user_messages(current_user.id)
+    return render_template('private.html', messages=messages, width=800)
 
 
 @app.route('/add_message', methods=['GET', 'POST'])
@@ -69,7 +66,7 @@ def add_message():
         try:
             message_service.append_message(form, current_user.id)
             return redirect(url_for('private'))
-        except Exception as e:
+        except ClientError as e:
             return render_template('message.html', title='Sending message', form=form, message=str(e), width=800)
     else:
         email = request.args.get('email')
@@ -87,10 +84,8 @@ def login():
             user_service.password_verification(user, login_form.password.data)
             login_user(user, remember=login_form.remember_me.data)
             return redirect(url_for('index'))
-
-        except Exception as e:
+        except ClientError as e:
             return render_template('login.html', form=login_form, message=str(e))
-
     else:
         return render_template('login.html', form=login_form, success=True if request.args.get(
             'register-success') == 'true' else False)
@@ -111,7 +106,7 @@ def register():
             file = get_photo_from_request(request)
             user_service.add_user(form, file)
             return redirect('/login?register-success=true')
-        except Exception as e:
+        except ClientError as e:
             return render_template('register.html', title='Registration', form=form, message=str(e))
     return render_template('register.html', title='Registration', form=form)
 
@@ -128,7 +123,7 @@ def edit_page():
                 file = current_user.profile_picture
             user_service.edit_user(current_user.id, form, file)
             return redirect('edit_page')
-        except Exception as e:
+        except ClientError as e:
             return render_template('edit_page.html', current_user=current_user, title='Edit page',
                 form=form, password_form=password_form, message=str(e))
     if password_form.validate_on_submit():
@@ -136,7 +131,7 @@ def edit_page():
             user_service.password_verification(current_user, password_form.old_password.data, changing=True)
             user_service.edit_password(current_user.id, password_form)
             return redirect('edit_page')
-        except Exception as e:
+        except ClientError as e:
             return render_template('edit_page.html', current_user=current_user, title='Edit page',
                 form=form, password_form=password_form, message=str(e))
     return render_template('edit_page.html', current_user=current_user, title='Edit page', form=form,
@@ -157,34 +152,28 @@ def make_image():
 @app.route('/user_posts/<int:user_id>')
 @login_required
 def user_posts(user_id):
-    try:
-        post_id = request.args.get('post_id')
-        if post_id:
-            try:
-                post_service.delete_post(post_id)
-            except PostError:
-                pass
-        user = user_service.get_user_by_id(user_id)
-        posts = post_service.get_all_user_posts(user_id)
-        return render_template('user_posts.html', posts=posts, user=user)
-    except Exception as e:
-        return render_template('main.html', posts=[], message=str(e))
+    post_id = request.args.get('post_id')
+    if post_id:
+        try:
+            post_service.delete_post(post_id)
+        except ClientError:
+            pass
+    user = user_service.get_user_by_id(user_id)
+    posts = post_service.get_all_user_posts(user_id)
+    return render_template('user_posts.html', posts=posts, user=user)
 
 
 @app.route('/notes')
 @login_required
 def notes():
-    try:
-        post_id = request.args.get('post_id')
-        if post_id:
-            try:
-                post_service.delete_post(post_id)
-            except PostError:
-                pass
-        notes = post_service.get_user_notes(current_user.id)
-        return render_template('notes.html', notes=notes)
-    except Exception as e:
-        return render_template('notes.html', notes=[], message=str(e))
+    post_id = request.args.get('post_id')
+    if post_id:
+        try:
+            post_service.delete_post(post_id)
+        except ClientError:
+            pass
+    notes = post_service.get_user_notes(current_user.id)
+    return render_template('notes.html', notes=notes)
 
 
 @app.route('/users')
@@ -206,7 +195,7 @@ def users_filter():
         try:
             params = get_data_from_filter_form_to_params(form)
             return redirect(f'/users?{params}')
-        except Exception as e:
+        except ClientError as e:
             return render_template('user_filter.html', form=form, message=str(e))
     return render_template('user_filter.html', form=form)
 
@@ -216,18 +205,12 @@ db_session.global_init(fullname('db/sanansaattaja.db'))
 
 @app.route('/info/about')
 def info():
-    try:
-        return render_template('info.html')
-    except Exception as e:
-        return render_template('info.html', message=str(e))
+    return render_template('info.html')
 
 
 @app.route('/info/faq')
 def faq():
-    try:
-        return render_template('faq.html')
-    except Exception as e:
-        return render_template('faq.html', message=str(e))
+    return render_template('faq.html')
 
 
 @app.errorhandler(404)

@@ -1,5 +1,6 @@
 from sqlalchemy.orm import selectinload
 
+from sanansaattaja.core import ClientError
 from sanansaattaja.db.data import db_session
 from sanansaattaja.db.data.models import Message
 from sanansaattaja.db.servicees.user_service import get_user_by_email
@@ -18,10 +19,13 @@ def append_message(form, user_id: id):
     session = db_session.create_session()
     addressee = get_user_by_email(form.addressee.data)
     session.merge(addressee)
-    message = Message()
-    message = message_add_data(message, form, user_id, addressee.id)
-    session.add(message)
-    session.commit()
+    try:
+        message = Message()
+        message = message_add_data(message, form, user_id, addressee.id)
+        session.add(message)
+        session.commit()
+    except Exception:
+        raise ClientError(msg='failed to add a message')
     session.close()
 
 

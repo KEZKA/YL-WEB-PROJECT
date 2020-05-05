@@ -1,4 +1,4 @@
-from sanansaattaja.core.errors import PhotoError
+from sanansaattaja.core.errors import ClientError
 from sanansaattaja.website.forms import FilterForm
 
 MAX_FILE_SIZE = 1024 ** 2
@@ -8,10 +8,10 @@ def get_photo_from_request(request):
     if request.files['photo']:
         filename = request.files['photo'].filename
         if filename.split('.')[-1].lower() not in ('jpg', 'png', 'gif'):
-            raise PhotoError(msg="Invalid extension of image")
+            raise ClientError(msg="Invalid extension of image")
         file = request.files['photo'].read(MAX_FILE_SIZE)
         if len(file) == MAX_FILE_SIZE:
-            return PhotoError(msg="File size is too large")
+            return ClientError(msg="File size is too large")
     else:
         file = None
     return file

@@ -1,24 +1,16 @@
-from sanansaattaja.core.errors import UserError
-from sanansaattaja.core.utils import check_password_security
+from sanansaattaja.core.errors import ClientError
+from sanansaattaja.core.password_service import password_check, check_password_security
 from sanansaattaja.db.data import db_session
 from sanansaattaja.db.data.models import User
 from sanansaattaja.website.forms import PasswordChangeForm
 
 
-def password_check(password, password_again, changing=False):
-    if password != password_again:
-        if changing:
-            raise UserError(msg="New passwords do not match")
-        raise UserError(msg="Passwords do not match")
-    return True
-
-
 def email_check(email: str):
     try:
         get_user_by_email(email)
-    except UserError:
+    except ClientError:
         return True
-    raise UserError(msg="This email is already in use")
+    raise ClientError(msg="This email is already in use")
 
 
 def add_user(form, file):
@@ -64,7 +56,7 @@ def edit_password(user_id: int, password_form):
     user = session.query(User).get(user_id)
     password_check(password_form.password.data, password_form.password_again.data, changing=True)
     if password_form.password.data == password_form.old_password.data:
-        raise UserError(msg="Old and new passwords mustn't match")
+        raise ClientError(msg="Old and new passwords mustn't match")
     check_password_security(password_form.password.data)
     user = user_change_password(user, password_form)
     session.merge(user)
@@ -77,7 +69,7 @@ def get_user_by_id(user_id: int):
     user = session.query(User).get(user_id)
     session.close()
     if not user:
-        raise UserError(msg="There is no such user")
+        raise ClientError(msg="There is no such user")
     return user
 
 
@@ -93,7 +85,7 @@ def get_user_by_email(email: str):
     user = session.query(User).filter(User.email == email).first()
     session.close()
     if not user:
-        raise UserError(msg="There is no such user")
+        raise ClientError(msg="There is no such user")
     return user
 
 
@@ -115,6 +107,6 @@ def get_filer_users(args):
 def password_verification(user: User, password: str, changing=False):
     if not user.check_password(password):
         if changing:
-            raise UserError(msg="Wrong old password")
-        raise UserError(msg="Wrong password")
+            raise ClientError(msg="Wrong old password")
+        raise ClientError(msg="Wrong password")
     return True

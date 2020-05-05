@@ -1,7 +1,7 @@
 from sqlalchemy import not_
 from sqlalchemy.orm import selectinload
 
-from sanansaattaja.core.errors import PostError
+from sanansaattaja.core.errors import ClientError
 from sanansaattaja.db.data import db_session
 from sanansaattaja.db.data.models import Post
 
@@ -34,10 +34,13 @@ def get_user_notes(cur_user_id):
 
 def append_post(form, user_id: int):
     session = db_session.create_session()
-    post = Post()
-    post = post_add_data(post, form, user_id)
-    session.add(post)
-    session.commit()
+    try:
+        post = Post()
+        post = post_add_data(post, form, user_id)
+        session.add(post)
+        session.commit()
+    except Exception:
+        raise ClientError(msg='failed to add a post')
     session.close()
 
 
@@ -53,7 +56,7 @@ def delete_post(post_id: int):
     session = db_session.create_session()
     post = session.query(Post).get(post_id)
     if not post:
-        raise PostError(msg="There is no such post")
+        raise ClientError(msg="There is no such post")
     session.delete(post)
     session.commit()
     session.close()
