@@ -20,6 +20,9 @@
             {% if current_user != user %}
                 <a class="btn btn-primary btn-lg" href="/add_message?nickname={{ user.nickname }}"
                    role="button">Write to {{ user.name }}</a>
+            {% else %}
+                <a class="btn btn-primary btn-lg" href="/add_message?nickname={{ user.nickname }}"
+                   role="button">Write to yourself</a>
             {% endif %}
         </header>
         <br>
