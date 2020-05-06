@@ -31,8 +31,8 @@ def user_add_data(user: User, form, file):
     user.nickname = form.nickname.data
     if form.age.data < 5:
         raise ClientError('You must be older than 5')
-    if form.age.data > 115:
-        raise ClientError('Oh you are Anna Eugenie Blanchard?')
+    if form.age.data > 122:
+        raise ClientError('Oh you are Jeanne Calman? Be serious choose a normal age..')
     user.age = form.age.data
     user.sex = form.sex.data
     if 'password' in dir(form):
