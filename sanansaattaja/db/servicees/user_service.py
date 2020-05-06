@@ -1,4 +1,4 @@
-from sanansaattaja.core.errors import ClientError
+from sanansaattaja.core.errors import ClientError, IdError
 from sanansaattaja.core.password_service import password_check, check_password_security
 from sanansaattaja.db.data import db_session
 from sanansaattaja.db.data.models import User
@@ -31,6 +31,8 @@ def user_add_data(user: User, form, file):
     user.nickname = form.nickname.data
     if form.age.data < 5:
         raise ClientError('You must be older than 5')
+    if form.age.data > 122:
+        raise ClientError('Oh you are Jeanne Calman? Be serious choose a normal age..')
     user.age = form.age.data
     user.sex = form.sex.data
     if 'password' in dir(form):
@@ -68,7 +70,7 @@ def get_user_by_id(user_id: int):
     user = session.query(User).get(user_id)
     session.close()
     if not user:
-        raise ClientError(msg="There is no such user")
+        raise IdError(msg="There is no such user")
     return user
 
 

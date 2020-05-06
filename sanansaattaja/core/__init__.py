@@ -1,3 +1,3 @@
-from sanansaattaja.core.errors import ClientError
+from sanansaattaja.core.errors import ClientError, IdError
 
-__all__ = ['ClientError']
+__all__ = ['ClientError', "IdError"]

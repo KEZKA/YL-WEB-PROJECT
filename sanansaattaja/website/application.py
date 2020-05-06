@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 from flask import Flask, render_template, redirect, url_for, request, send_file
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 
-from sanansaattaja.core.errors import ClientError
+from sanansaattaja.core.errors import ClientError, IdError
 from sanansaattaja.core.utils import load_image, fullname
 from sanansaattaja.db.data import db_session
 from sanansaattaja.db.servicees import message_service, post_service, user_service
@@ -28,7 +28,7 @@ login_manager.init_app(app)
 def load_user(user_id):
     try:
         return user_service.get_user_by_id(user_id)
-    except ClientError:
+    except IdError:
         return None
 
 
@@ -48,7 +48,7 @@ def add_post():
             return redirect('/')
         except ClientError as e:
             return render_template('new_post.html', title='Post publishing', form=form,
-                                   message=str(e), width=800)
+                message=str(e), width=800)
     return render_template('new_post.html', title='Post publishing', form=form, width=800)
 
 
@@ -59,7 +59,7 @@ def private():
     if message_id:
         try:
             message_service.delete_message(message_id)
-        except ClientError:
+        except IdError:
             pass
     messages = message_service.get_all_user_messages(current_user.id)
     return render_template('private.html', messages=messages, width=800)
@@ -75,14 +75,14 @@ def add_message():
             return redirect(url_for('private'))
         except ClientError as e:
             return render_template('new_message.html', title='Sending message', form=form,
-                                   message=str(e), width=800)
+                message=str(e), width=800)
     else:
         nickname = request.args.get('nickname')
         if nickname:
             return render_template('new_message.html', title='Sending message', form=form, width=800,
-                                   addressee=nickname)
+                addressee=nickname)
         return render_template('new_message.html', title='Sending message', form=form, width=800,
-                               addressee="")
+            addressee="")
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -135,18 +135,18 @@ def edit_page():
             return redirect('edit_page')
         except ClientError as e:
             return render_template('edit_page.html', current_user=current_user, title='Edit page',
-                                   form=form, password_form=password_form, message=str(e))
+                form=form, password_form=password_form, message=str(e))
     if password_form.validate_on_submit():
         try:
             user_service.password_verification(current_user, password_form.old_password.data,
-                                               changing=True)
+                changing=True)
             user_service.edit_password(current_user.id, password_form)
             return redirect('edit_page')
         except ClientError as e:
             return render_template('edit_page.html', current_user=current_user, title='Edit page',
-                                   form=form, password_form=password_form, message=str(e))
+                form=form, password_form=password_form, message=str(e))
     return render_template('edit_page.html', current_user=current_user, title='Edit page', form=form,
-                           password_form=password_form)
+        password_form=password_form)
 
 
 @app.route('/make_image/<int:user_id>')
@@ -166,9 +166,12 @@ def user_page(user_id):
     if post_id:
         try:
             post_service.delete_post(post_id)
-        except ClientError:
+        except IdError:
             pass
-    user = user_service.get_user_by_id(user_id)
+    try:
+        user = user_service.get_user_by_id(user_id)
+    except IdError as error:
+        return render_template('error.html', text="page not found", error=str(error))
     posts = post_service.get_all_user_posts(user_id)
     return render_template('user_page.html', posts=posts, user=user)
 
