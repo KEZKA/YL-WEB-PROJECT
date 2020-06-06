@@ -3,6 +3,16 @@
 {% block head %}<title>Main</title>{% endblock %}
 
 {% block content %}
+<form class="form-inline my-2 my-lg-0" action="" method="POST">
+        {{ form.hidden_tag() }}
+        {{ form.csrf_token }}
+        {% if message %}
+            <div class="alert alert-danger">{{ message }}</div>
+        {% endif %}
+        {{ form.text(class="form-control mr-sm-2", placeholder="Search") }}  {{ form.submit(class="btn btn-secondary my-2 my-sm-0", type="submit") }}
+    </form>
+<br>
+
     {% if message %}
         <div class="alert alert-danger">{{ message }}</div>
     {% endif %}
@@ -12,6 +22,8 @@
             <h1 class="display-4 text-uppercase" align="center">There're no posts here yet</h1>
         </div>
     {% endif %}
+
+
 
     {% for post in posts %}
 

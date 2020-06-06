@@ -1,10 +1,11 @@
-from sqlalchemy import not_
+from sqlalchemy import not_, func
 from sqlalchemy.orm import selectinload
 
 from sanansaattaja.core.errors import ClientError, IdError
 from sanansaattaja.db.data import db_session
 from sanansaattaja.db.data.models import Post
 from sanansaattaja.db.servicees.comment_service import delete_all_comment
+from sanansaattaja.website.forms import PostSearchForm
 
 
 def get_all_public_posts():
@@ -69,3 +70,11 @@ def delete_post(post_id: int):
     session.delete(post)
     session.commit()
     session.close()
+
+
+def search_posts(form: PostSearchForm):
+    session = db_session.create_session()
+    text = "%" + form.text.data + "%"
+    posts = session.query(Post).options(selectinload(Post.author)).filter(Post.is_public, (Post.topic.like(text) | Post.text.like(text))).order_by(
+    Post.modified_date.desc()).all()
+    return posts

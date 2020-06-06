@@ -11,8 +11,7 @@ from sanansaattaja.core.utils import load_image, fullname
 from sanansaattaja.db.data import db_session
 from sanansaattaja.db.servicees import message_service, post_service, user_service, comment_service
 from sanansaattaja.website.forms import LoginForm, RegisterForm, MessageForm, PostForm, FilterForm, \
-    EditProfileForm, PasswordChangeForm
-from sanansaattaja.website.forms.comment_form import CommentForm
+    EditProfileForm, PasswordChangeForm, CommentForm, PostSearchForm
 from sanansaattaja.website.utils import get_photo_from_request, get_data_from_filter_form_to_params
 
 load_dotenv()
@@ -33,10 +32,17 @@ def load_user(user_id):
         return None
 
 
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 def index():
-    posts = post_service.get_all_public_posts()
-    return render_template('main.html', posts=posts)
+    if current_user.is_authenticated:
+        form = PostSearchForm()
+        if form.validate_on_submit():
+            posts = post_service.search_posts(form)
+        else:
+            posts = post_service.get_all_public_posts()
+        return render_template('main.html', posts=posts, form=form)
+    else:
+        return redirect('/info/about')
 
 
 @app.route('/add_post', methods=['GET', 'POST'])
@@ -190,7 +196,8 @@ def comments(block_type, block_id):
     block = comment_service.get_block(block_type, block_id)
     if block is None:
         return render_template('error.html', text="page not found", error='There is no such post')
-    return render_template('comments.html', comments=block_comments, block=block, block_type=block_type, block_id=block_id)
+    return render_template('comments.html', comments=block_comments, block=block, block_type=block_type,
+        block_id=block_id)
 
 
 @app.route('/add_comment/<block_type>/<int:block_id>', methods=['GET', 'POST'])
@@ -253,6 +260,7 @@ def info():
 
 
 @app.route('/info/faq')
+@login_required
 def faq():
     return render_template('faq.html')
 

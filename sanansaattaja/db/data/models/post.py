@@ -12,9 +12,9 @@ class Post(SqlAlchemyBase):
     id = Column(Integer, primary_key=True, autoincrement=True)
     author_id = Column(Integer, ForeignKey('users.id'))
     modified_date = Column(DateTime, default=datetime.datetime.now)
-    text = Column(Text, nullable=False)
+    text = Column(Text(collation='NOCASE'), nullable=False)
     is_public = Column(Boolean, default=False)
-    topic = Column(String, nullable=False)
+    topic = Column(String(collation='NOCASE'), nullable=False)
     author = orm.relation('User')
 
     def __repr__(self):

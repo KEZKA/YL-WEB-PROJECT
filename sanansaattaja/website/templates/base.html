@@ -30,14 +30,13 @@
     </h1>
     <div class="collapse navbar-collapse">
         <ul class="navbar-nav mr-auto">
-            <li class="nav-item">
-                <a class="nav-link" href='/'>
-                    <i class="far fa-newspaper"></i>
-                    Main
-                </a>
-            </li>
-
             {% if current_user.is_authenticated %}
+                <li class="nav-item">
+                    <a class="nav-link" href='/'>
+                        <i class="far fa-newspaper"></i>
+                        Main
+                    </a>
+                </li>
                 <li class="nav-item">
                     <a class="nav-link" href='/users?filter=False'>
                         <i class="fas fa-users"></i>
@@ -122,9 +121,12 @@
             <li class="nav-item">
                 <a class="nav-link" href="/info/about"><i class="fas fa-info-circle"></i> Info</a>
             </li>
+            {% if current_user.is_authenticated %}
+
             <li class="nav-item">
                 <a class="nav-link" href="/info/faq"><i class="far fa-question-circle"></i> FAQ</a>
             </li>
+            {% endif %}
         </ul>
     </div>
 </nav>
