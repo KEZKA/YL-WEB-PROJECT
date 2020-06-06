@@ -9,9 +9,10 @@ from flask_login import LoginManager, login_user, logout_user, login_required, c
 from sanansaattaja.core.errors import ClientError, IdError
 from sanansaattaja.core.utils import load_image, fullname
 from sanansaattaja.db.data import db_session
-from sanansaattaja.db.servicees import message_service, post_service, user_service
+from sanansaattaja.db.servicees import message_service, post_service, user_service, comment_service
 from sanansaattaja.website.forms import LoginForm, RegisterForm, MessageForm, PostForm, FilterForm, \
     EditProfileForm, PasswordChangeForm
+from sanansaattaja.website.forms.comment_form import CommentForm
 from sanansaattaja.website.utils import get_photo_from_request, get_data_from_filter_form_to_params
 
 load_dotenv()
@@ -176,6 +177,36 @@ def user_page(user_id):
     return render_template('user_page.html', posts=posts, user=user)
 
 
+@app.route('/comments/<block_type>/<int:block_id>')
+@login_required
+def comments(block_type, block_id):
+    comment = request.args.get('comment')
+    if comment:
+        try:
+            comment_service.delete_comment(comment)
+        except IdError:
+            pass
+    block_comments = comment_service.get_comments(block_type, block_id)
+    block = comment_service.get_block(block_type, block_id)
+    if block is None:
+        return render_template('error.html', text="page not found", error='There is no such post')
+    return render_template('comments.html', comments=block_comments, block=block, block_type=block_type, block_id=block_id)
+
+
+@app.route('/add_comment/<block_type>/<int:block_id>', methods=['GET', 'POST'])
+@login_required
+def add_comment(block_type, block_id):
+    form = CommentForm()
+    if form.validate_on_submit():
+        try:
+            comment_service.add_comment(form, current_user.id, block_type, block_id)
+            return redirect(f'/comments/{block_type}/{block_id}')
+        except ClientError as e:
+            return render_template('new_comment.html', form=form, message=str(e), width=800)
+    else:
+        return render_template('new_comment.html', form=form, width=800)
+
+
 @app.route('/notes')
 @login_required
 def notes():
@@ -183,7 +214,7 @@ def notes():
     if post_id:
         try:
             post_service.delete_post(post_id)
-        except ClientError:
+        except IdError:
             pass
     notes = post_service.get_user_notes(current_user.id)
     return render_template('notes.html', notes=notes)

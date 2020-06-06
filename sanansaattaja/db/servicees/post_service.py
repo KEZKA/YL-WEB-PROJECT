@@ -4,6 +4,7 @@ from sqlalchemy.orm import selectinload
 from sanansaattaja.core.errors import ClientError, IdError
 from sanansaattaja.db.data import db_session
 from sanansaattaja.db.data.models import Post
+from sanansaattaja.db.servicees.comment_service import delete_all_comment
 
 
 def get_all_public_posts():
@@ -21,6 +22,13 @@ def get_all_user_posts(user_id):
         Post.modified_date.desc()).all()
     session.close()
     return posts
+
+
+def get_post_by_id(post_id):
+    session = db_session.create_session()
+    post = session.query(Post).options(selectinload(Post.author)).get(post_id)
+    session.close()
+    return post
 
 
 def get_user_notes(cur_user_id):
@@ -57,6 +65,7 @@ def delete_post(post_id: int):
     post = session.query(Post).get(post_id)
     if not post:
         raise IdError(msg="There is no such post")
+    delete_all_comment('post', post.id)
     session.delete(post)
     session.commit()
     session.close()

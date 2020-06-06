@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+
+{% block head %}<title>Comments</title>{% endblock %}
+
+{% block content %}
+    {% if message %}
+        <div class="alert alert-danger">{{ message }}</div>
+    {% endif %}
+
+    {% if block_type == "post" %}
+        <a role="button" class="btn btn-outline-info" href="/" >
+            <i class="fas fa-undo"></i> Return</a>
+    {% else %}
+        <a role="button" class="btn btn-outline-info" href="/comments/{{block.block_type}}/{{block.block_id}}" >
+            <i class="fas fa-undo"></i> Return</a>
+    {% endif %}
+
+    {% if block_type == "comment" and block.is_delete %}
+        <div class="jumbotron">
+            <h1 class="display-4 text-uppercase" align="center"> {{block_type}} was deleted </h1>
+                        <br>
+            <a class="btn btn-primary btn-lg"
+                   href="/add_comment/{{block_type}}/{{block_id}}" role="button">
+                    <i class="far fa-comment"></i> Сomment </a>
+        </div>
+    {% else %}
+    <div class="jumbotron" style="margin: 0px 0px 10px 0px;">
+            <h4>
+                <a class="nav-link" href='/user_page/{{ block.author.id }}'>
+                    {{ block.author.name }} {{ block.author.surname }}
+                </a>
+            </h4>
+            <p class="font-weight-light text-info" style="text-align: left">
+                {{ block.get_normal_date() }} by {{ block.author.nickname }}
+            </p>
+            {% if block_type == "post" %}
+            <h3> {{ block.topic.upper() }} </h3>
+            {% endif %}
+
+            <p class="lead" style="white-space: pre-line">{{ block.text }}</p>
+            <br>
+            <a class="btn btn-primary btn-lg"
+                   href="/add_comment/{{block_type}}/{{block_id}}" role="button">
+                    <i class="far fa-comment"></i> Сomment </a>
+        </div>
+    {% endif %}
+
+
+
+    {% if comments == [] %}
+        <div class="jumbotron">
+            <h1 class="display-4 text-uppercase" align="center">There're no comments here yet</h1>
+        </div>
+    {% endif %}
+
+    {% for comment in comments %}
+    {% if comment.is_delete %}
+            <div class="jumbotron" style="margin: 0px 100px 22px 100px;">
+            <h1 class="display-4 text-uppercase" align="center"> comment was deleted </h1>
+                <br>
+                <a class="btn btn-primary btn-lg"
+                   href="/add_comment/comment/{{comment.id}}" role="button">
+                    <i class="far fa-comment"></i> Сomment </a>
+            <a class="btn btn-primary btn-lg"
+                   href="/comments/comment/{{comment.id}}" role="button">
+                    <i class="far fa-comments"></i> Comments </a>
+        </div>
+    {% else %}
+        <div class="jumbotron" style="margin: 0px 100px 22px 100px;">
+            <h4>
+                <a class="nav-link" href='/user_page/{{ comment.author.id }}'>
+                    {{ comment.author.name }} {{ comment.author.surname }}
+                </a>
+            </h4>
+            <p class="font-weight-light text-info" style="text-align: left">
+                {{ comment.get_normal_date() }} by {{ comment.author.nickname }}
+            </p>
+            <p class="lead" style="white-space: pre-line">{{ comment.text }}</p>
+            <br>
+            <a class="btn btn-primary btn-lg"
+                   href="/add_comment/comment/{{comment.id}}" role="button">
+                    <i class="far fa-comment"></i> Сomment </a>
+            <a class="btn btn-primary btn-lg"
+                   href="/comments/comment/{{comment.id}}" role="button">
+                    <i class="far fa-comments"></i> Comments </a>
+
+            {% if current_user == comment.author %}
+                <a class="btn btn-outline-danger" href="/comments/{{block_type}}/{{block_id}}?comment={{comment.id}}"
+                   role="button">
+                    <i class="far fa-trash-alt"></i> Delete</a>
+            {% endif %}
+        </div>
+    {% endif %}
+    {% endfor %}
+
+{% endblock %}

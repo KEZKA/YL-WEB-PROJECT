@@ -26,6 +26,14 @@
             </p>
             <h3> {{ post.topic.upper() }} </h3>
             <p class="lead" style="white-space: pre-line">{{ post.text }}</p>
+            <br>
+            <a class="btn btn-primary btn-lg"
+                   href="/add_comment/post/{{post.id}}" role="button">
+                    <i class="far fa-comment"></i> Сomment </a>
+            <a class="btn btn-primary btn-lg"
+                   href="/comments/post/{{post.id}}" role="button">
+                    <i class="far fa-comments"></i> Comments </a>
+
         </div>
 
     {% endfor %}

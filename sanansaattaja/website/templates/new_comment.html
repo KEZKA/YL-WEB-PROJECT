@@ -1,0 +1,25 @@
+{% extends "window.html" %}
+
+{% block head %}<title>New comment</title>{% endblock %}
+
+{% block subcontent %}
+
+    <header class="card-header">Write comment</header>
+    <form class="card-body form-left" action="" method="POST">
+        {{ form.hidden_tag() }}
+        {{ form.csrf_token }}
+        {% if message %}
+            <div class="alert alert-danger">{{ message }}</div>
+        {% endif %}
+        <p>
+            {{ form.text.label }}<br>
+            {{ form.text(class="form-control") }}<br>
+            {% for error in form.text.errors %}
+                <p class="alert alert-danger" role="alert">
+                    {{ error }}
+                </p>
+            {% endfor %}
+        </p>
+        <p>{{ form.submit(type="submit", class="btn btn-primary") }}</p>
+    </form>
+{% endblock %}
